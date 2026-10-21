@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    // Czyta app/google-services.json – konfigurację projektu Firebase "szczytomania".
+    alias(libs.plugins.google.services)
 }
 
 // Klucz MapTiler trzymamy w local.properties (poza repozytorium): MAPTILER_API_KEY=...
@@ -65,4 +67,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.maplibre.android)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 }

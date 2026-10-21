@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749482028188",
+    "project_id": "szczytomania",
+    "storage_bucket": "szczytomania.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749482028188:android:062f4fc57aefa7fac5d159",
+        "android_client_info": {
+          "package_name": "pl.szczytomania"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWrgd9QS3JSNHZbVBegTEFHYrATGLUAsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
