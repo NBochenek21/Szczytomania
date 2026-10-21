@@ -1,0 +1,17 @@
+# Gradle
+.gradle/
+build/
+
+# Android Studio
+.idea/
+*.iml
+.cxx/
+captures/
+.externalNativeBuild/
+
+# Lokalne ustawienia (ścieżka do SDK, klucz MapTiler) – nie commitować
+local.properties
+
+# System
+.DS_Store
+Thumbs.db

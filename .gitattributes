@@ -1,0 +1,4 @@
+# Skrypt gradlew musi mieć końcówki LF, żeby działał na macOS i Linuksie
+gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
