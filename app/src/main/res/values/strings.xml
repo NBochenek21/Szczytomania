@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Szczytomania</string>
+
+    <string name="location_permission_denied">Szczytomania potrzebuje dostępu do lokalizacji, żeby pokazać Cię na mapie i potwierdzić zdobycie szczytu.</string>
+    <string name="location_permission_approximate">Masz włączoną tylko przybliżoną lokalizację. Do zdobycia szczytu potrzebna jest dokładna (do 150 m od wierzchołka).</string>
+    <string name="location_permission_grant">Zezwól</string>
+    <string name="location_permission_open_settings">Otwórz ustawienia</string>
+</resources>
