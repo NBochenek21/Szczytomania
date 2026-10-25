@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -53,16 +54,33 @@ class LocationPermissionState internal constructor(private val activity: Activit
 
     internal lateinit var launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>
 
+    private val prefs = activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private var rationaleBeforeRequest = false
+
     /** Pyta o dokładną lokalizację albo, jeśli to już niemożliwe, otwiera ustawienia aplikacji. */
     fun request() {
-        if (permanentlyDenied) openAppSettings() else launcher.launch(LOCATION_PERMISSIONS)
+        if (permanentlyDenied) {
+            openAppSettings()
+            return
+        }
+        rationaleBeforeRequest = shouldShowRationale()
+        launcher.launch(LOCATION_PERMISSIONS)
     }
 
     internal fun onResult() {
         refresh()
-        permanentlyDenied = access != LocationAccess.PRECISE &&
-            !activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (access == LocationAccess.PRECISE) return
+
+        val rationaleAfter = shouldShowRationale()
+        // System zwraca "bez wyjaśnienia" zarówno po trwałej odmowie, jak i po zwykłym zamknięciu okna
+        // (Wstecz, stuknięcie obok). Za trwałą uznajemy ją więc tylko, jeśli użytkownik już wcześniej odmówił.
+        val deniedBefore = rationaleBeforeRequest || prefs.getBoolean(KEY_DENIED_BEFORE, false)
+        if (rationaleAfter) prefs.edit { putBoolean(KEY_DENIED_BEFORE, true) }
+        permanentlyDenied = !rationaleAfter && deniedBefore
     }
+
+    private fun shouldShowRationale() =
+        activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
 
     internal fun refresh() {
         access = activity.locationAccess()
@@ -74,6 +92,11 @@ class LocationPermissionState internal constructor(private val activity: Activit
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 .setData(Uri.fromParts("package", activity.packageName, null)),
         )
+    }
+
+    private companion object {
+        const val PREFS_NAME = "location_permission"
+        const val KEY_DENIED_BEFORE = "denied_before"
     }
 }
 
