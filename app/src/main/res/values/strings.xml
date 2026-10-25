@@ -6,4 +6,6 @@
     <string name="location_permission_approximate">Masz włączoną tylko przybliżoną lokalizację. Do zdobycia szczytu potrzebna jest dokładna (do 150 m od wierzchołka).</string>
     <string name="location_permission_grant">Zezwól</string>
     <string name="location_permission_open_settings">Otwórz ustawienia</string>
+
+    <string name="map_center_on_me">Pokaż moją pozycję</string>
 </resources>

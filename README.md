@@ -12,6 +12,31 @@ Szczytomania to aplikacja na Androida dla osób, które chodzą po polskich gór
    Bez klucza aplikacja używa darmowego stylu OpenFreeMap (też dane OpenStreetMap).
 3. Uruchom konfigurację `app` na telefonie albo emulatorze (Android 8.0+).
 
+Emulator musi używać grafiki sprzętowej (*Device Manager → Edit → Graphics: Hardware*). Przy grafice
+programowej (`swiftshader`) MapLibre nie rysuje symboli: nie widać nazw, szczytów ani pozycji użytkownika.
+Pozycję GPS w emulatorze ustawisz w *Extended Controls → Location*.
+
+## Plik szczytów
+
+Szczyty są w `app/src/main/assets/peaks/peaks.json` (dane z OpenStreetMap, działają bez zasięgu):
+
+```json
+{
+  "version": 1,
+  "source": "© OpenStreetMap contributors (ODbL)",
+  "peaks": [
+    { "id": "node/4366169405", "name": "Rysy", "elevation": 2499, "lat": 49.1795756, "lon": 20.0881081, "range": "Tatry" }
+  ]
+}
+```
+
+- `id` – identyfikator obiektu w OpenStreetMap (`node/…`, `way/…` lub `relation/…`), stały między importami,
+- `elevation` – wysokość w metrach (liczba całkowita), `range` – pasmo górskie,
+- dodatkowe pola są ignorowane, więc można je dopisywać bez zmiany wersji.
+
+Test `PeaksAssetTest` (`./gradlew testDebugUnitTest`) sprawdza plik: unikalne id, współrzędne w Polsce,
+wypełnione pola.
+
 ## Struktura projektu
 
 ```
