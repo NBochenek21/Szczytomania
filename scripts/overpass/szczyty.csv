@@ -1,0 +1,351 @@
+﻿id;nazwa;wysokosc;lat;lon;kgp;pasmo;pasmo_wikidata;uwzglednij;wikidata;uwagi
+node/4366169405;Rysy;2499;49.1795756;20.0881081;tak;Tatry;Karpaty | Tatry | Tatry Wysokie;tak;Q672936;KGP: sprawdź współrzędne
+node/477984782;Babia Góra;1723;49.5730231;19.5293303;tak;Beskid Żywiecki;Oravské Beskydy | Beskid Żywiecki;tak;Q595780;KGP: sprawdź współrzędne
+node/1850303773;Śnieżka;1603;50.7360326;15.7396072;tak;Karkonosze;Sudety | Karkonosze;tak;Q617511;KGP: sprawdź współrzędne
+node/26863429;Śnieżnik;1423;50.2074081;16.847424;tak;Masyw Śnieżnika;Masyw Śnieżnika;tak;Q1397501;KGP: sprawdź współrzędne
+node/1347929065;Tarnica;1346;49.0747705;22.726323;tak;Bieszczady;Bieszczady;tak;Q577655;KGP: sprawdź współrzędne
+node/26864983;Turbacz;1310;49.5428239;20.1113839;tak;Gorce;Gorce;tak;Q7853729;KGP: sprawdź współrzędne
+node/1198299196;Radziejowa;1266;49.4493044;20.6041221;tak;Beskid Sądecki;Beskid Sądecki;tak;Q9302749;KGP: sprawdź współrzędne
+node/26864701;Skrzyczne;1257;49.6845736;19.0302741;tak;Beskid Śląski;Beskid Śląski;tak;Q771297;KGP: sprawdź współrzędne
+node/1236685520;Mogielica;1171;49.6553199;20.2766736;tak;Beskid Wyspowy;Beskid Wyspowy;tak;Q11784602;KGP: sprawdź współrzędne
+node/707906070;Wysoka Kopa;1127;50.85;15.4202778;tak;Góry Izerskie;Sudety | Góry Izerskie;tak;Q3506201;KGP: sprawdź współrzędne
+node/1793427200;Rudawiec;1106;50.2448039;16.9768585;tak;Góry Bialskie;Góry Złote;tak;Q9323684;KGP: sprawdź współrzędne
+node/2418877544;Orlica;1084;50.3532494;16.3606287;tak;Góry Orlickie;Góry Orlickie;tak;Q1451932;KGP: sprawdź współrzędne
+node/615627232;Wysoka;1050;49.3802606;20.5555018;tak;Pieniny;Pieniny | Małe Pieniny;tak;Q1955808;KGP: sprawdź współrzędne
+node/458891184;Wielka Sowa;1015;50.6802778;16.4855556;tak;Góry Sowie;Sudety | Góry Sowie;tak;Q989527;KGP: sprawdź współrzędne
+node/4366115862;Lackowa;997;49.4265468;21.1024789;tak;Beskid Niski;Beskid Niski;tak;Q11752559;KGP: sprawdź współrzędne
+node/2421373077;Kowadło;988;50.2644312;17.0132176;tak;Góry Złote;Góry Złote;tak;Q11744454;KGP: sprawdź współrzędne
+node/2418865417;Jagodna;977;50.2524573;16.5644186;tak;Góry Bystrzyckie;;tak;Q11716157;KGP: sprawdź współrzędne
+node/1219704819;Skalnik;945;50.8084793;15.9000581;tak;Rudawy Janowickie;Rudawy Janowickie;tak;Q9337576;KGP: sprawdź współrzędne
+node/2470310941;Waligóra;934;50.6808246;16.2780881;tak;Góry Kamienne;Sudety;tak;Q9370545;KGP: sprawdź współrzędne
+node/3046822323;Czupel;930;49.767881;19.1610286;tak;Beskid Mały;;tak;Q9199727;KGP: sprawdź współrzędne
+node/492775426;Szczeliniec Wielki;922;50.4848143;16.3410065;tak;Góry Stołowe;Góry Stołowe;tak;Q478005;KGP: sprawdź współrzędne
+node/2845608415;Lubomir;904;49.7668805;20.0596718;tak;Beskid Makowski;;tak;Q11763126;KGP: sprawdź współrzędne
+node/991934327;Biskupia Kopa;889;50.2566949;17.4285752;tak;Góry Opawskie;Sudety | Góry Opawskie;tak;Q494558;KGP: sprawdź współrzędne
+node/428725380;Chełmiec;851;50.7795495;16.2109745;tak;Góry Wałbrzyskie;Sudety | Góry Wałbrzyskie | Masyw Chełmca;tak;Q1071478;KGP: sprawdź współrzędne
+node/529512640;Kłodzka Góra;757;50.45167;16.7532205;tak;Góry Bardzkie;;tak;Q11752132;KGP: sprawdź współrzędne
+node/4593556759;Skopiec;724;50.9439267;15.8847061;tak;Góry Kaczawskie;;tak;;KGP: sprawdź współrzędne
+node/349062696;Ślęża;718;50.8640875;16.7074963;tak;Masyw Ślęży;Sudety | Masyw Ślęży;tak;Q387148;KGP: sprawdź współrzędne
+node/1844240120;Łysica;613;50.8916162;20.8965979;tak;Góry Świętokrzyskie;Góry Świętokrzyskie;tak;Q384265;KGP: sprawdź współrzędne
+node/615589377;Mięguszowiecki Szczyt Wielki;2438;49.18703;20.0592982;nie;Tatry;Tatry Wysokie;tak;Q3132319;
+node/385106041;Wołowa Turnia;2373;49.1789015;20.0751157;nie;;Tatry Wysokie;nie;Q1714138;
+node/3508689204;Żabia Turnia Mięguszowiecka;2336;49.1786039;20.0771327;nie;;Tatry Wysokie;nie;Q9397111;
+node/9296056231;Cubryńska Strażnica;2335;49.1884679;20.0553146;nie;;Tatry Wysokie;nie;Q110416641;
+node/3343362920;Świnica;2302;49.2194211;20.0093063;nie;Tatry;Tatry Wysokie;tak;Q2741323;popularny
+node/9957754032;Świnicka Kopa;2298;49.2193742;20.0096116;nie;;Tatry Wysokie;nie;Q9396450;
+node/460928401;Kozi Wierch;2291;49.2183172;20.0287051;nie;Tatry;Tatry Wysokie;tak;Q1765870;
+node/3508683869;Żabi Koń;2291;49.1785869;20.0793064;nie;;Tatry Wysokie;nie;Q3594409;
+node/2721684697;Gąsienicowa Turnia;2280;49.2193136;20.0120128;nie;;Tatry Wysokie;nie;Q11703156;
+node/1103563228;Niebieska Turnia;2262;49.219653;20.013733;nie;;Tatry Wysokie;nie;Q11791252;
+node/3494334728;Zawratowa Turnia;2247;49.2199092;20.0153375;nie;;Tatry Wysokie;nie;Q9387610;
+node/1294543835;Starorobociański Wierch;2176;49.1995255;19.8198353;nie;Tatry;Tatry Zachodnie;tak;Q3544114;popularny
+node/355985949;Kościelec;2155;49.2251794;20.0145834;nie;Tatry;Tatry Wysokie;tak;Q3695958;popularny
+node/2302916813;Wołowiec;2064;49.2075694;19.7631281;nie;Tatry;Tatry Zachodnie;tak;Q2783579;popularny
+node/3560695684;Kopa Kondracka;2005;49.2365407;19.9322676;nie;Tatry;Tatry Zachodnie;tak;Q11743304;popularny
+node/3552158247;Kasprowy Wierch;1987;49.2318014;19.9815609;nie;Tatry;Tatry Zachodnie;tak;Q1735189;popularny
+node/1294543790;Łopata;1958;49.2050038;19.7785794;nie;Tatry;Tatry Zachodnie;tak;Q9394322;
+node/1295278143;Giewont;1895;49.2509538;19.9341016;nie;Tatry;Tatry Zachodnie;tak;Q9372923;popularny
+node/946080669;Rakoń;1879;49.215958;19.7584624;nie;Tatry;Tatry Zachodnie;tak;Q9303722;
+node/1295379308;Czerwony Wierch;1766;49.2135399;19.7815741;nie;;Tatry Zachodnie;nie;Q9198932;
+node/615736220;Bobrowiec;1665;49.2462266;19.7846935;nie;Tatry;Tatry Zachodnie;tak;Q9174818;
+node/478027497;Gówniak;1617;49.5751277;19.540206;nie;;Beskidy | Beskid Żywiecki;nie;Q9283931;
+node/1295379316;Jamborowy Wierch;1565;49.2453567;19.7784434;nie;;Tatry Zachodnie;nie;Q11716735;
+node/26864278;Pilsko;1557;49.5279702;19.3167987;nie;Beskid Żywiecki;Oravské Beskydy | Beskid Żywiecki;tak;Q1431424;popularny
+node/569645734;Góra Pięciu Kopców;1534;49.5310902;19.3187968;nie;;Beskid Żywiecki;nie;Q9283478;
+node/478060244;Kępa;1521;49.5799685;19.5568158;nie;;Beskid Żywiecki;nie;Q11752001;
+node/653952691;Mała Babia Góra;1517;49.581283;19.4995545;nie;Beskid Żywiecki;Oravské Beskydy | Beskid Żywiecki;tak;Q11772027;
+node/4026496252;Wielki Szyszak;1510;50.7769175;15.5677871;nie;Karkonosze;Sudety | Karkonosze | Śląski Grzbiet;tak;Q1562236;popularny
+node/9066718028;Vysoká pláň;1497;50.7787692;15.5572991;nie;;Karkonosze;nie;Q11947073;
+node/576469980;Smogornia;1490;50.7558333;15.6755556;nie;Karkonosze;Karkonosze;tak;Q3487004;
+node/343645604;Łabski Szczyt;1472;50.7804462;15.5456429;nie;Karkonosze;Sudety | Karkonosze;tak;Q1546756;
+node/366573664;Śmielec;1424;50.7802778;15.5783333;nie;Karkonosze;Karkonosze;tak;Q3488142;
+node/1905390829;Tępy Szczyt;1388;50.7616667;15.6583333;nie;;Sudety | Karkonosze;nie;Q9363853;
+node/2148169298;Kopa;1377;50.7466406;15.7303155;nie;Karkonosze;Karkonosze;tak;Q3198841;
+node/832409784;Polica;1369;49.6234504;19.619744;nie;Beskid Żywiecki;Beskid Żywiecki;tak;Q6980315;
+node/478060242;Sokolica;1367;49.5845729;19.5633214;nie;;Beskidy | Beskid Żywiecki;nie;Q9339200;
+node/3826109660;Romanka;1366;49.5607529;19.241923;nie;Beskid Żywiecki;Beskid Żywiecki;tak;Q11835335;
+node/565695369;Szrenica;1361;50.7914786;15.5140644;nie;Karkonosze;Sudety | Karkonosze;tak;Q1424223;popularny
+node/1071623810;Munczolik (Szczawinka);1356;49.5335981;19.297005;nie;;Oravské Beskydy;nie;Q11786603;
+node/1071624237;BRTS;1340;49.5353724;19.2814019;nie;;Beskidy | Oravské Beskydy;nie;Q11802329;
+node/513454985;Krzemień;1335;49.0861;22.73852;nie;Bieszczady;Bieszczady Zachodnie;tak;Q5159023;
+node/33797223;Halicz;1333;49.0720824;22.7687895;nie;Bieszczady;Bieszczady;tak;Q5642081;popularny
+node/3440756977;Czernic;1328;49.6136379;19.6267146;nie;;;nie;Q9199937;
+node/2470127377;Mały Śnieżnik;1326;50.1924132;16.8147027;nie;Masyw Śnieżnika;Masyw Śnieżnika;tak;Q3509399;
+node/1366409184;Goworek;1320;50.1881547;16.8092278;nie;;Masyw Śnieżnika;nie;Q9274912;
+node/513454982;Kopa Bukowska;1320;49.08232;22.75663;nie;Bieszczady;Bieszczady Zachodnie;tak;Q6430910;
+node/513454988;Bukowe Berdo;1314;49.0924736;22.7408729;nie;Bieszczady;Bieszczady Zachodnie;tak;Q9181803;
+node/513454892;Wielka Rawka;1304;49.0999751;22.5757847;nie;Bieszczady;Bieszczady Zachodnie;tak;Q9372827;popularny
+node/5562278525;Kiczorka;1298;49.622603;19.5903617;nie;;;nie;Q11691811;
+node/513454971;Kruhly Wierch;1297;49.1381868;22.6034936;nie;Bieszczady;;tak;Q11748441;
+node/1211055972;Jaworzyna Kamienicka;1288;49.5477659;20.157368;nie;Gorce;;tak;Q11723470;
+node/292521318;Skalny Stół;1284;50.7529209;15.7921639;nie;Karkonosze;Karkonosze;tak;Q9337581;
+node/1211056092;Kiczora;1282;49.5396829;20.1491473;nie;Gorce;Gorce;tak;Q11738924;
+node/33810159;Rozsypaniec;1280;49.0618039;22.7704203;nie;Bieszczady;Bieszczady Zachodnie;tak;Q9323329;
+node/3301316387;Kudłoń;1274;49.5726403;20.1761169;nie;Gorce;;tak;Q11750776;
+node/1215361524;Czoło Turbacza;1259;49.552254;20.1152861;nie;;;nie;Q9199582;
+node/513454868;Kińczyk Bukowski;1251;49.0347998;22.8089627;nie;;;nie;Q11739581;
+node/6139356229;Mostownica;1251;49.5555983;20.1305978;nie;Gorce;Gorce;tak;Q11785999;
+node/1779073359;Boraczy Wierch;1248;49.5271475;19.1990692;nie;;;nie;Q9177438;
+node/9118902726;Pólko;1248;49.6165319;19.5884472;nie;;Karpaty | Beskid Żywiecki | Pasmo Policy;nie;Q126164489;
+node/832410541;Jasna Grapa;1247;49.6260119;19.6388012;nie;;Beskid Żywiecko-Orawski;nie;Q19401731;
+node/926465691;Wielka Racza;1236;49.4133416;18.9688043;nie;Beskid Żywiecki;Kysucké Beskydy;tak;Q571753;popularny
+node/2620457274;Sadzonki;1230;50.2014049;16.8616239;nie;;Masyw Śnieżnika;nie;Q9332693;
+node/1196049580;Gorc;1228;49.5651317;20.2530125;nie;Gorce;Gorce;tak;Q11708059;popularny
+node/5538203159;Wielka Rycerzowa;1226;49.4158543;19.0917829;nie;Beskid Żywiecki;Kysucké Beskydy;tak;Q9372830;
+node/2927609654;Złomisty Wierch;1224;49.4603277;20.5777395;nie;;;nie;Q9393331;
+node/513454697;Smerek;1222;49.1862691;22.4801396;nie;Bieszczady;Bieszczady Zachodnie;tak;Q9338647;popularny
+node/771428974;Barania Góra;1220;49.6114783;19.0105355;nie;Beskid Śląski;Beskid Śląski;tak;Q787991;popularny
+node/565701938;Mumlawski Wierch;1218;50.7976601;15.4705117;nie;;Karkonosze;nie;Q3564686;
+node/576417927;Ptasi Kamień;1216;50.7641685;15.6283752;nie;;Karkonosze;nie;Q11381695;
+node/1196539230;Lubań;1211;49.489321;20.3389281;nie;Gorce;Gorce;tak;Q11762970;popularny
+node/1487328546;Małe Skrzyczne;1211;49.6766389;19.0125471;nie;Beskid Śląski;Beskid Śląski;tak;Q11772197;
+node/2470127426;Średniak;1210;50.2123975;16.8210818;nie;;;nie;Q9395769;
+node/2927609655;Bukowinki;1209;49.4540235;20.5809055;nie;;Beskid Sądecki;nie;Q9181861;
+node/848664444;Mała Radziejowa;1207;49.452562;20.5956289;nie;;;nie;Q11772093;
+node/1616994875;Mała Rycerzowa;1207;49.4230395;19.0945541;nie;;Beskidy;nie;Q11772099;
+node/492090815;Czarna Góra;1205;50.2518594;16.8049354;nie;Masyw Śnieżnika;Masyw Śnieżnika;tak;Q11691921;
+node/1347965555;Paportna;1198;49.112763;22.4416291;nie;;;nie;Q11802910;
+node/2620457253;Wysoczka;1196;50.1920866;16.8020837;nie;;;nie;Q9380155;
+node/861174226;Rabia Skała;1191;49.1029313;22.4409559;nie;Bieszczady;Bieszczady Zachodnie;tak;Q9310198;
+node/2926283067;Wielka Przehyba;1191;49.4671776;20.5710412;nie;Beskid Sądecki;;tak;Q9372823;
+node/604538595;Puchacz;1190;50.1716359;16.7987889;nie;;Masyw Śnieżnika;nie;Q11830851;
+node/3440643901;Rozdziele;1188;49.5495169;20.0977332;nie;;Gorce;nie;Q9323138;
+node/3440643899;Solnisko;1183;49.5458055;20.0882081;nie;;Gorce;nie;Q17619475;
+node/1451488164;Wielki Rogacz;1182;49.4399307;20.61034;nie;Beskid Sądecki;;tak;Q9372966;
+node/2470127405;Stroma;1167;50.2257651;16.8508981;nie;;;nie;Q9346719;
+node/513454674;Płasza;1163;49.1128705;22.4019559;nie;Bieszczady;Bieszczady Zachodnie;tak;Q11832520;
+node/513454684;Czoło;1159;49.1006052;22.4671418;nie;;Bieszczady Zachodnie;nie;Q11692316;
+node/513454688;Duże Jasło;1153;49.1580248;22.3609415;nie;Bieszczady;;tak;Q11723322;
+node/2470127421;Żmijowiec;1153;50.2340904;16.8248544;nie;;;nie;Q9397509;
+node/2332769854;Malinowska Skała;1152;49.6558772;19.0012201;nie;Beskid Śląski;Beskid Śląski;tak;Q11766836;
+node/5214804555;Zielony Kopiec;1152;49.6432271;19.0024416;nie;;Beskid Śląski;nie;Q9391039;
+node/7294864863;Redykalny Wierch;1146;49.5273468;19.184472;nie;;Beskidy;nie;Q9305165;
+node/513454871;Rozsypaniec;1146;49.0230285;22.8226383;nie;;;nie;Q9323328;
+node/478073416;Syhlec;1146;49.5928369;19.5920749;nie;;;nie;Q31793585;
+node/1771188970;Bendoszka Wielka;1144;49.427795;19.0441166;nie;;Beskidy;nie;Q9168688;
+node/3440676577;Miejski Wierch;1143;49.5319265;20.0834923;nie;;;nie;Q114694546;
+node/771428949;Magurka Wiślańska;1140;49.6286368;19.0163889;nie;Beskid Śląski;Beskid Śląski;tak;Q280831;
+node/9066672146;Wielka Czerwenkowa;1131;49.3958075;19.0045273;nie;;Kysucké Beskydy;nie;Q9372782;
+node/4560354312;Smrek;1123;50.8897222;15.2797222;nie;Góry Izerskie;Góry Izerskie;tak;Q13425160;
+node/707906064;Sine Skałki;1122;50.8573497;15.4058633;nie;;Góry Izerskie;nie;Q9337118;
+node/3440643900;Średni Wierch;1122;49.5472024;20.0755819;nie;;Gorce;nie;Q17619481;
+node/2622522631;Orło;1119;49.3952709;18.9798538;nie;;Kysucké Beskydy;nie;Q11799433;
+node/4784525459;Łysa Skałka;1119;49.2653526;20.1131456;nie;;;nie;Q9394915;
+node/1888072566;Klimczok;1117;49.7398208;18.9952681;nie;Beskid Śląski;Karpaty;tak;Q976723;popularny
+node/2354921458;Malinów;1115;49.6602005;18.9775731;nie;Beskid Śląski;Beskid Śląski;tak;Q11766838;
+node/437325757;Jaworzyna Krynicka;1114;49.4180461;20.8955129;nie;Beskid Sądecki;Karpaty;tak;Q3163203;popularny
+node/304270801;Magurka;1114;49.6213864;19.4744905;nie;;;nie;Q11766274;
+node/1972852702;Przednia Kopa;1114;50.8598698;15.4141014;nie;;Góry Izerskie;nie;Q11828338;
+node/2153011464;Jałowiec;1111;49.6607947;19.4777522;nie;Beskid Żywiecki;Beskid Żywiecki;tak;Q11723595;
+node/495538389;Stóg Izerski;1108;50.8910033;15.3038222;nie;Góry Izerskie;Góry Izerskie;tak;Q9347609;
+node/3440676576;Obidowiec;1106;49.5601737;20.0690341;nie;Gorce;;tak;Q11794672;
+node/4979191023;Wielka Bukowa;1104;49.4188962;20.8692969;nie;;Beskid Sądecki;nie;Q11837739;
+node/478073419;Głowniak;1093;49.5980495;19.5937181;nie;;;nie;Q31793581;
+node/4591064362;Ostroga;1090;50.7905556;15.5627778;nie;;Karkonosze;nie;Q11800716;
+node/1972852729;Złote Jamy;1087;50.84565;15.4084167;nie;;Góry Izerskie;nie;Q9393395;
+node/3019035745;Izerskie Garby;1084;50.8517276;15.4365727;nie;;Góry Izerskie;nie;Q11714811;
+node/4979209627;Czubakowska;1082;49.4382669;20.8747171;nie;;;nie;Q9199654;
+node/1215771661;Runek;1080;49.4412122;20.873847;nie;Beskid Sądecki;Beskid Sądecki;tak;Q9324022;
+node/4979211982;Bukowa;1077;49.4278243;20.8744814;nie;;Beskid Sądecki;nie;Q9181786;
+node/1843836472;Ćwilin;1072;49.688763;20.1914332;nie;Beskid Wyspowy;Beskid Wyspowy;tak;Q9393773;popularny
+node/513454733;Wołosań;1071;49.2398738;22.2501334;nie;Bieszczady;;tak;Q9378008;
+node/513454756;Łopiennik;1069;49.2454287;22.3388269;nie;Bieszczady;Bieszczady Zachodnie;tak;Q9394335;
+node/2516319017;Jasień;1063;49.6303333;20.2243333;nie;Beskid Wyspowy;Beskid Wyspowy;tak;Q11721155;
+node/3698497641;Czerniawa Sucha;1062;49.6438685;19.468575;nie;;;nie;Q11692114;
+node/4343533170;Pusta Wielka;1061;49.4062239;20.82575;nie;Beskid Sądecki;;tak;Q11831880;
+node/2516319019;Kutrzyca;1054;49.6331341;20.2269105;nie;;;nie;Q11751441;
+node/6117192408;Górków Wierch;1046;49.308939;20.1675932;nie;;Pogórze Spiskie;nie;Q9283679;
+node/2445965607;Lachów Groń;1045;49.6555267;19.4374747;nie;;;nie;Q665899;
+node/6681413866;Dudasowski Wierch;1038;49.3570986;20.2025032;nie;;Pogórze Spiskie;nie;Q11695265;
+node/6117187142;Kurasówka;1038;49.3653126;20.1983366;nie;;Pogórze Spiskie;nie;Q11751153;
+node/6127154417;Holowiec;1035;49.349177;20.2084024;nie;;Pogórze Spiskie;nie;Q9293379;
+node/3909071361;Modyń;1029;49.6212274;20.3760535;nie;Beskid Wyspowy;;tak;Q31788746;
+node/1175014505;Szyndzielnia;1028;49.7524566;18.9996172;nie;Beskid Śląski;Beskid Śląski;tak;Q1754435;popularny
+node/703286376;Opołonek;1028;49.0023924;22.847096;nie;Bieszczady;Karpaty Wschodnie;tak;Q153114;
+node/1375585214;Luboń Wielki;1022;49.6535245;19.9919222;nie;Beskid Wyspowy;Beskid Wyspowy;tak;Q11763182;popularny
+node/4221363360;Wielki Wierch;1016;49.6121897;20.2559401;nie;;Gorce;nie;Q9372983;
+node/5732151589;Krzystonów;1012;49.6402918;20.2410221;nie;;;nie;Q11749049;
+node/513454729;Sasów;1010;49.2339549;22.2662953;nie;;;nie;Q9333979;
+node/513454732;Feliszówka;1006;49.22656;22.26092;nie;;Ukraińskie Karpaty;nie;Q4482474;
+node/513454731;Przysłup;1006;49.2324176;22.244078;nie;;;nie;Q11830285;
+node/513454727;Chryszczata;998;49.30565;22.18796;nie;Bieszczady;Karpaty;tak;Q4240556;
+node/658734058;Czantoria Wielka;995;49.6788561;18.8046022;nie;Beskid Śląski;Beskid Śląski;tak;Q1305490;popularny
+node/284599363;Kiczory;990;49.595319;18.8390809;nie;;Beskid Śląski;nie;Q11738939;
+node/7528987807;Jagodna Północna;985;50.2609381;16.5607655;nie;;;nie;Q11716157;
+node/253737989;Trzy Korony;982;49.4138332;20.4142155;nie;Pieniny;Pieniny;tak;Q7849064;popularny
+node/1939588898;Szczebel;977;49.6884774;20.0104518;nie;Beskid Wyspowy;;tak;Q9350962;
+node/534422989;Mała Sowa;972;50.6825078;16.4652803;nie;;Sudety | Góry Sowie;nie;Q11772101;
+node/1196252994;Lubogoszcz;968;49.7126166;20.0988261;nie;Beskid Wyspowy;Beskid Wyspowy;tak;Q11763116;
+node/2622523026;Wierchliczka;966;49.383047;20.5921523;nie;;Małe Pieniny;nie;Q9373226;
+node/4806554812;Sasanka;965;50.2639793;16.5631162;nie;;;nie;Q9333947;
+node/4426860760;Suchoń;965;50.2729716;16.7761964;nie;;;nie;Q9347821;
+node/3601218975;Kalenica;964;50.6427778;16.5463889;nie;Góry Sowie;Sudety | Góry Sowie;tak;Q6352117;
+node/703286375;Piniaszkowy;960;49.0042522;22.8691997;nie;;Bieszczady Zachodnie;nie;Q11817142;
+node/6574884888;Watrisko;960;49.3844898;20.5795838;nie;;Małe Pieniny;nie;Q9371548;
+node/1291694678;Słoneczna;949;50.6486802;16.5429434;nie;;Góry Sowie;nie;Q9353354;
+node/2143973743;Ostra Mała;945;50.807381;15.8940614;nie;;Rudawy Janowickie;nie;Q11800673;
+node/513454725;Krąglica;943;49.25295;22.19668;nie;;;nie;Q11750260;
+node/5060703464;Borsuczyny;939;49.3855475;20.5464609;nie;;Małe Pieniny;nie;Q9177820;
+node/513455051;Trohaniec;939;49.23308;22.6578;nie;;;nie;Q9361699;
+node/3719671239;Ostry Wierch;938;49.4384727;21.122961;nie;;;nie;Q16584870;
+node/2470127357;Jasień;936;50.144505;16.781837;nie;;Sudety;nie;Q11721156;
+node/5060703492;Durbaszka;934;49.3869522;20.5365867;nie;;Małe Pieniny;nie;Q9213000;
+node/1058751663;Kozia Równia;930;50.6636832;16.5099579;nie;;Góry Sowie;nie;Q11744574;
+node/2469088585;Suchawa;929;50.6807108;16.2655951;nie;;Sudety;nie;Q9347800;
+node/772174210;Łamana Skała;929;49.7636633;19.3961107;nie;Beskid Mały;;tak;Q11765842;
+node/772174240;Leskowiec;922;49.7887467;19.4431583;nie;Beskid Mały;;tak;Q11754829;popularny
+node/771384372;Cieślar;918;49.6230402;18.8206016;nie;;Beskid Śląski;nie;Q11379614;
+node/131807743;Równica;884;49.7246955;18.8565564;nie;Beskid Śląski;Beskid Śląski;tak;Q9325670;popularny
+node/441565942;Sokolica;747;49.4176509;20.4403754;nie;Pieniny;Pieninki;tak;Q9339203;popularny
+node/501901186;Chojnik;612;50.8338279;15.6440624;nie;Karkonosze;Karkonosze;tak;Q9190217;popularny
+node/2575206183;Łysiec;594;50.8603921;21.0475366;nie;Góry Świętokrzyskie;Łysogóry;tak;Q384267;popularny
+node/2007077683;Jaworz;918;49.7207468;20.5209231;nie;;;nie;Q11723447;
+node/7188417378;Repowa;918;49.3890094;20.57655;nie;;Małe Pieniny;nie;Q9306527;
+node/1280966260;Skalniak;915;50.4721581;16.3216014;nie;;Góry Stołowe;nie;Q9337568;
+node/2620457278;Przednia;914;50.255904;16.779447;nie;;;nie;Q11828334;
+node/613013862;Rymarz;913;50.650715;16.5336695;nie;;Góry Sowie;nie;Q9324422;
+node/513454922;Magura Hulszczańska;911;49.21274;22.5218;nie;;Bieszczady Zachodnie;nie;Q11766273;
+node/5204426716;Jaworniki;909;49.3401147;22.7129086;nie;;;nie;Q11723422;
+node/2007789469;Sałasz;909;49.7222855;20.4877505;nie;;;nie;Q9334126;
+node/2469088578;Kostrzyna;906;50.6798864;16.2603335;nie;;Sudety;nie;Q11744165;
+node/615616356;Wysoki Groń;906;49.2021588;22.1244516;nie;;Laborecka Wierchowina;nie;Q18341559;
+node/2469088588;Włostowa;904;50.6791513;16.2556542;nie;;Góry Suche;nie;Q9382944;
+node/2469106025;Jeleniec;902;50.6905518;16.3114572;nie;;Sudety;nie;Q11724085;
+node/3180511719;Łomnicka Równia;897;50.3455556;16.5222222;nie;;;nie;Q9394303;
+node/4374611016;Jeżowa Woda;895;49.6406525;20.406114;nie;;;nie;Q11727128;
+node/8396259091;Sałasz Dupne;894;49.5828805;18.8541244;nie;;;nie;Q120920036;
+node/6272805563;Trzy Kopce;894;49.7703816;20.0529303;nie;;;nie;Q9362319;
+node/4225433006;Wysokie Bereście;894;49.366256;21.0263427;nie;;;nie;Q9380256;
+node/410194494;Czerniec;891;50.1892862;16.5800415;nie;;;nie;Q9198683;
+node/6272799901;Łysina;891;49.7759078;20.0483418;nie;;Beskid Wyspowy;nie;Q9394953;
+node/1291660497;Żmij;887;50.6366326;16.5463517;nie;;Góry Sowie;nie;Q9397501;
+node/3680476839;Hutnicza Kopa;884;50.3249645;16.4057631;nie;;;nie;Q9295251;
+node/513454728;Maguryczne;884;49.27239;22.15908;nie;;;nie;Q11766287;
+node/6270349456;Mała Góra;884;49.6805523;20.0118801;nie;;;nie;Q49048507;
+node/3717497506;Dzicza Góra;881;50.8316007;15.9290131;nie;;Rudawy Janowickie;nie;Q8024247;
+node/5657430209;Jaworzyna Konieczniańska;881;49.4472269;21.2631468;nie;;Busov;nie;Q11723472;
+node/956479087;Wołek;878;50.838024;15.9354411;nie;;Rudawy Janowickie;nie;Q8024074;
+node/764665549;Jawornik Wielki;872;50.4068621;16.8510926;nie;;Góry Złote;nie;Q11723420;
+node/4751495856;Bielec;871;50.8244444;15.9284307;nie;;Rudawy Janowickie;nie;Q9171236;
+node/3641501992;Wielka Kopa;871;50.8125914;15.9579995;nie;;;nie;Q9372800;
+node/3181949363;Smolna;870;50.3690055;16.4605284;nie;;;nie;Q9338739;
+node/1280966206;Szczeliniec Mały;870;50.4836462;16.3336199;nie;;Góry Stołowe;nie;Q9351027;
+node/4225433007;Bereście;869;49.363493;21.0181414;nie;;;nie;Q11687742;
+node/2007789468;Sałasz Zachodni;869;49.7276848;20.4715482;nie;;;nie;Q9334127;
+node/2375055396;Czantoria Mała;866;49.6942534;18.7770924;nie;;Beskid Śląski;nie;Q11772038;
+node/513455030;Kiczera Beniowska;861;49.04786;22.85783;nie;;;nie;Q11738911;
+node/3181656753;Lesista Wielka;858;50.7023556;16.1914111;nie;;Góry Kamienne;nie;Q11754821;
+node/3393000522;Kamień;857;49.3972593;21.8206963;nie;;;nie;Q11734445;
+node/5241140715;Besida;856;49.3316607;22.7087164;nie;;;nie;Q11687795;
+node/3182002311;Wolarz;852;50.3819444;16.4577778;nie;;;nie;Q9377625;
+node/1973677001;Narożnik;849;50.4598397;16.3472383;nie;;Góry Stołowe;nie;Q11789753;
+node/1895297334;Kozie Żebro;848;49.4602638;21.2045306;nie;;;nie;Q11744593;
+node/513455046;Hulskie;846;49.2660769;22.5487833;nie;;;nie;Q31789363;
+node/5448380147;Wątkowa;846;49.575417;21.3662348;nie;;;nie;Q9381321;
+node/1291657322;Malinowa;839;50.5972218;16.6006727;nie;;Góry Sowie;nie;Q11766831;
+node/7531966102;Młoda Góra;838;49.5757827;18.8662324;nie;;Beskid Śląski;nie;Q11787968;
+node/3909071360;Jasieńczyk;836;49.6146185;20.4124845;nie;;;nie;Q18590961;
+node/3955823780;Ptak;835;50.4639128;16.3452167;nie;;;nie;Q11830746;
+node/4807004639;Biesiec;833;50.3458333;16.4441667;nie;;;nie;Q9171432;
+node/772174308;Groniczki;833;49.8159899;19.1447142;nie;;;nie;Q9280919;
+node/3054327805;Kanasiówka;831;49.353213;21.9503173;nie;;;nie;Q9163667;
+node/4221451362;Garby;830;49.3457636;20.9395818;nie;;;nie;Q11699376;
+node/5448380151;Kornuty;830;49.5854127;21.3368922;nie;;;nie;Q11743716;
+node/5448380141;Magura;829;49.570431;21.3738236;nie;;;nie;Q11766261;
+node/772174143;Chrobacza Łąka;828;49.8226676;19.1649797;nie;;Beskid Mały;nie;Q9294453;
+node/9549052863;Kamienny Horb;828;49.3519902;21.0217866;nie;;;nie;Q11734421;
+node/4382592057;Zbójnicka Góra;828;50.3647424;16.4318716;nie;;;nie;Q9388825;
+node/7177166019;Pusta;822;49.3552809;21.0012677;nie;;;nie;Q11831874;
+node/3731743475;Mrowiniec;817;50.6444803;16.0014157;nie;;Góry Kamienne;nie;Q23825502;
+node/772174436;Gaiki;816;49.8091092;19.1237061;nie;;;nie;Q9265277;
+node/3731743474;Końska Góra;813;50.6480016;16.0060213;nie;;Sudety | Góry Krucze;nie;Q11744824;
+node/3296629806;Magura Małastowska;813;49.5537389;21.2191331;nie;;;nie;Q11766263;
+node/1883990644;Orłowa;813;49.6969792;18.8784718;nie;;Beskid Śląski;nie;Q11799436;
+node/2470764071;Gołębia;810;50.5905556;16.6052778;nie;;Góry Sowie;nie;Q9275029;
+node/3717497509;Stróżnik;808;50.8194026;15.951321;nie;;Rudawy Janowickie;nie;Q9347260;
+node/1474319236;Kamienny Garb;806;50.1725;16.7636111;nie;;;nie;Q11734418;
+node/2610887855;Płaziny;806;49.4025008;21.2081493;nie;;;nie;Q124649111;
+node/5263685858;Świerzowa;805;49.5722946;21.4123692;nie;;;nie;Q9396410;
+node/6194309260;Kobyla;802;49.6249912;18.8546108;nie;;Beskid Śląski;nie;Q11740538;
+node/3296639884;Mareszka;801;49.5426309;21.3645873;nie;;;nie;Q11768641;
+node/2503079044;Gancarz;798;49.8106084;19.4224847;nie;;;nie;Q11699349;
+node/4221099076;Wielka Polana;794;49.3279717;20.88194;nie;;;nie;Q9283526;
+node/2620457255;Gawlik;788;50.1829472;16.7609393;nie;;;nie;Q9266267;
+node/12330020470;Józefula;779;49.6389373;18.8320709;nie;;;nie;;
+node/3868563338;Sucha Góra;777;50.7075;16.1747222;nie;;;nie;Q34932525;
+node/4357684870;Czerniawska Kopa;776;50.9113662;15.2896235;nie;;;nie;Q9198664;
+node/4751495870;Wilkowyja;776;50.7896842;15.9119469;nie;;;nie;Q9374621;
+node/3128839296;Czoło;775;49.8059445;19.43466;nie;;Beskid Mały;nie;Q25413185;
+node/1997912845;Szeroka Góra;766;50.4536637;16.7584602;nie;;Sudety;nie;Q9351336;
+node/3296658998;Jawornik;762;49.4812087;21.8507518;nie;;;nie;Q11723414;
+node/2433719762;Złota Górka;757;49.8176691;19.2961943;nie;;Beskid Mały;nie;Q9393342;
+node/1997912784;Jelenia Kopa;754;50.4478171;16.7579978;nie;;Góry Bardzkie;nie;Q11724081;
+node/4975264772;Maślana Góra;753;49.6433194;21.0590347;nie;;;nie;Q11772666;
+node/4975108572;Rosochatka;753;49.6269952;20.8579585;nie;;;nie;Q9322819;
+node/1997912824;Ostra Góra;752;50.4660241;16.745905;nie;;Sudety | Góry Bardzkie;nie;Q11800666;
+node/4548012075;Porębski Groń;743;49.8149839;19.2916944;nie;;;nie;Q16590403;
+node/1280966267;Gomola;733;50.401539;16.3463799;nie;;;nie;Q9274421;
+node/1996751175;Bujakowska Góra;729;49.8280866;19.1894023;nie;;;nie;Q9181731;
+node/35344674;Piotruś;728;49.4765803;21.7495671;nie;;Beskid Niski;nie;Q7197134;
+node/2090686556;Okole;725;50.9807356;15.8179415;nie;;Góry Kaczawskie;nie;Q11797017;
+node/34832584;Cergowa;716;49.5305361;21.717625;nie;;;nie;Q9186707;
+node/4975107951;Jodłowa Góra;715;49.6347876;20.8329169;nie;;;nie;Q11727607;
+node/768174178;Trzeboń;711;50.4172222;16.8463889;nie;;;nie;Q31792816;
+node/7195231520;Nowińska Góra;710;49.3797208;20.909319;nie;;;nie;Q11793725;
+node/6966142955;Rzepedka;707;49.4060157;22.0852748;nie;;;nie;Q9325243;
+node/2469883461;Szerzawa;706;50.8147773;15.632424;nie;;Karkonosze;nie;Q9351382;
+node/7195214060;Wielki Łazek;698;49.3698745;20.9116373;nie;;;nie;Q9373020;
+node/3293517070;Bania Szklarska;695;49.4776912;21.8256229;nie;;;nie;Q9164928;
+node/3325132258;Chyrowa;694;49.529688;21.6489484;nie;;;nie;Q9191907;
+node/3421288054;Zielona Góra;690;49.6525145;21.0398319;nie;;Beskid Niski;nie;Q9390973;
+node/5255771818;Klin;689;49.3579832;21.7883517;nie;;;nie;Q25412995;
+node/2654429482;Młynik;689;50.8361111;15.6016667;nie;;Karkonosze;nie;Q11788173;
+node/5254040413;Połoński Wierch;688;49.4158018;22.0629714;nie;;;nie;Q31791936;
+node/2654429495;Żar;685;50.8297222;15.6405556;nie;;Karkonosze;nie;Q9397221;
+node/4975262663;Jelenia Góra;684;49.6395469;21.073191;nie;;;nie;Q11724077;
+node/4402341774;Uklejna;680;49.8103758;19.976164;nie;;;nie;Q9364548;
+node/5241145238;Brańcowa;677;49.511934;22.5816416;nie;;;nie;Q9179132;
+node/768174184;Kikoł;671;50.4205202;16.8682109;nie;;;nie;Q31792831;
+node/2455901946;Słonny;668;49.5761985;22.2789871;nie;;;nie;Q9353385;
+node/5242809516;Wierch;660;49.4076187;22.6161767;nie;;;nie;Q31792009;
+node/3879014731;Przysłup;658;49.5519167;22.3450624;nie;;;nie;Q11830286;
+node/3265374223;Gromadzyń;655;49.4193066;22.5955401;nie;;;nie;Q9280906;
+node/768174187;Ciecierza;654;50.4244921;16.8513942;nie;;;nie;Q31792824;
+node/6579610537;Czupel;654;49.800959;19.1071409;nie;;;nie;Q11692348;
+node/7209011206;Ferdel;648;49.6230881;21.313608;nie;;;nie;Q9258948;
+node/7204257940;Miejska Góra;643;49.6058858;21.1040005;nie;;;nie;Q11780192;
+node/3723602616;Pohary;641;49.4034661;22.1890366;nie;;;nie;Q30904830;
+node/2455901944;Słonna;639;49.5758508;22.3080443;nie;;;nie;Q9353384;
+node/7177090319;Zapała;639;49.3468146;20.8401442;nie;;;nie;Q9386943;
+node/3300262450;Bartnia Góra;632;49.609215;21.130685;nie;;;nie;Q9166082;
+node/3879014730;Kamionka;631;49.522747;22.409068;nie;;;nie;Q11734585;
+node/3440740341;Trzebuńska Góra;625;49.8051257;19.8264881;nie;;;nie;Q9362197;
+node/2460210350;Węgielnik;621;50.8165612;16.202597;nie;;;nie;Q9381387;
+node/292521008;Grodzisko;618;49.8164402;20.1459263;nie;;Beskid Wyspowy;nie;Q11701437;
+node/513455124;Suchy Obycz;618;49.5987091;22.6466776;nie;;;nie;Q9347832;
+node/965820238;Sularzówka;617;49.8073358;19.8777061;nie;;;nie;Q9347983;
+node/1844339192;Agata;614;50.8890736;20.905947;nie;;;nie;Q86680256;
+node/3879014729;Gródek;585;49.6352029;22.3755311;nie;;;nie;Q11702858;
+node/1737489379;Sucha Góra;585;49.7553193;21.8154915;nie;;;nie;Q9347761;
+node/1506928462;Gruszka;583;49.4504637;22.2960542;nie;;;nie;Q9281572;
+node/4367511045;Andělský vrch;573;50.9317334;15.2676692;nie;;Frýdlant Uplands;nie;Q10822693;
+node/7010737395;Snoza;568;49.806667;19.230556;nie;;;nie;Q25415672;
+node/4959581848;Barnasiówka;566;49.837167;19.883639;nie;;;nie;Q9165930;
+node/8817376511;Cubla Góra;565;49.8004236;20.1534494;nie;;;nie;Q19400539;
+node/3109124758;Królewska Góra;564;49.7563571;21.7846225;nie;;;nie;Q11750148;
+node/634624841;Liwocz;562;49.8131863;21.3515096;nie;;;nie;Q11762218;
+node/2960190975;Jaroszowicka Góra;545;49.8463143;19.53705;nie;;;nie;Q11720779;
+node/513455130;Kopystańka;541;49.6840871;22.6257876;nie;;;nie;Q11743566;
+node/4792358188;Góra Kamienista;535;50.8006222;16.2019541;nie;;Sudety;nie;Q11734379;
+node/639332386;Brzanka;534;49.8446902;21.0871971;nie;;;nie;Q16533858;
+node/5021671774;Rogozowa;531;49.8215329;20.5197897;nie;;;nie;Q11835135;
+node/3121894070;Chełm;528;49.8902816;21.55542;nie;;;nie;Q9189578;
+node/7884758072;Glichowiec;523;49.8237007;20.0765868;nie;;;nie;Q11699930;
+node/5121503168;Wał;523;49.8846862;20.9103551;nie;;;nie;Q9371673;
+node/1437266258;Góra Zamkowa;516;50.4514069;19.5538222;nie;;Wyżyna Częstochowska;nie;Q9283422;
+node/3121894201;Kiczora;516;49.7769347;21.8082613;nie;;;nie;;
+node/5019771950;Szpilówka;516;49.8353298;20.5620257;nie;;;nie;Q9352106;
+node/1885779718;Piekarska Góra;515;49.8326533;20.5380465;nie;;;nie;Q11816508;
+node/1803434148;Grodzisko;513;50.2001018;19.7697674;nie;;;nie;Q9276474;
+node/3325136661;Cieklinka;512;49.6495793;21.3577917;nie;;;nie;Q9192405;
+node/2725867580;Stróżowskie Łazy;503;49.5143738;22.177859;nie;;;nie;Q11813346;

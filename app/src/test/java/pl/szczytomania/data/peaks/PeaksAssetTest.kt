@@ -40,6 +40,11 @@ class PeaksAssetTest {
         }
     }
 
+    @Test
+    fun containsWholeKoronaGorPolski() {
+        assertEquals("Szczyty KGP w pliku", 28, peaks.count { it.kgp })
+    }
+
     private companion object {
         val OSM_ID = Regex("""^(node|way|relation)/\d+$""")
     }

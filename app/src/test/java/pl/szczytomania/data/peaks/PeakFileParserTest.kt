@@ -51,4 +51,24 @@ class PeakFileParserTest {
             PeakFileParser.parse("""{ "version": 2, "source": "OSM", "peaks": [] }""")
         }
     }
+
+    @Test
+    fun parsesKgpFlag() {
+        val peaks = PeakFileParser.parse(
+            """
+            {
+              "version": 1,
+              "source": "OSM",
+              "peaks": [
+                { "id": "node/1", "name": "Tarnica", "elevation": 1346, "lat": 49.07, "lon": 22.72, "range": "Bieszczady", "kgp": true },
+                { "id": "node/2", "name": "Halicz", "elevation": 1333, "lat": 49.07, "lon": 22.77, "range": "Bieszczady", "kgp": false },
+                { "id": "node/3", "name": "Krzemień", "elevation": 1335, "lat": 49.07, "lon": 22.76, "range": "Bieszczady" }
+              ]
+            }
+            """,
+        )
+
+        // Brak pola kgp (starsze pliki) oznacza szczyt spoza Korony.
+        assertEquals(listOf(true, false, false), peaks.map { it.kgp })
+    }
 }
