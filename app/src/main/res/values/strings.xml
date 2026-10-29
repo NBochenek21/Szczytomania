@@ -8,4 +8,30 @@
     <string name="location_permission_open_settings">Otwórz ustawienia</string>
 
     <string name="map_center_on_me">Pokaż moją pozycję</string>
+
+    <string name="auth_tagline">ZDOBYWAJ POLSKIE SZCZYTY</string>
+    <string name="auth_tab_login">Logowanie</string>
+    <string name="auth_tab_register">Rejestracja</string>
+    <string name="auth_nick">Nick</string>
+    <string name="auth_email">E-mail</string>
+    <string name="auth_email_placeholder">adres@poczta.pl</string>
+    <string name="auth_password">Hasło</string>
+    <string name="auth_password_placeholder">co najmniej 8 znaków</string>
+    <string name="auth_submit_login">Zaloguj się</string>
+    <string name="auth_submit_register">Załóż konto</string>
+    <string name="auth_forgot_password">Nie pamiętasz hasła?</string>
+    <string name="auth_reset_sent">Jeśli konto %1$s istnieje, wysłaliśmy na nie link do zmiany hasła.</string>
+    <string name="auth_error_nick_length">Nick musi mieć od 3 do 20 znaków.</string>
+    <string name="auth_error_email_invalid">Wpisz poprawny adres e-mail.</string>
+    <string name="auth_error_password_short">Hasło musi mieć co najmniej 8 znaków.</string>
+    <string name="auth_error_password_empty">Wpisz hasło.</string>
+    <string name="auth_error_reset_needs_email">Wpisz swój adres e-mail, a wyślemy link do zmiany hasła.</string>
+    <string name="auth_error_wrong_credentials">Nieprawidłowy e-mail lub hasło.</string>
+    <string name="auth_error_email_taken">Konto z tym adresem e-mail już istnieje.</string>
+    <string name="auth_error_user_disabled">To konto zostało zablokowane.</string>
+    <string name="auth_error_network">Brak połączenia z internetem. Logowanie i rejestracja wymagają zasięgu.</string>
+    <string name="auth_error_too_many_requests">Zbyt wiele prób. Spróbuj ponownie za kilka minut.</string>
+    <string name="auth_error_unknown">Coś poszło nie tak. Spróbuj ponownie.</string>
+
+    <string name="osm_attribution">Dane o szczytach i mapy: © OpenStreetMap contributors</string>
 </resources>

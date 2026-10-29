@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// Reguły bezpieczeństwa Cloud Firestore. Źródłem prawdy jest ten plik –
+// po zmianie wklej go w konsoli Firebase: Firestore Database → Rules → Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Profil użytkownika: dokument users/{uid}.
+    match /users/{uid} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == uid;
+      }
+
+      function validNick() {
+        return request.resource.data.nick is string
+          && request.resource.data.nick.size() >= 3
+          && request.resource.data.nick.size() <= 20;
+      }
+
+      // Nick i zdjęcie widzi każdy zalogowany (potrzebne do wyszukiwania znajomych).
+      allow read: if request.auth != null;
+
+      // Profil zakłada tylko właściciel, z czasem serwera i bez dodatkowych pól.
+      allow create: if isOwner()
+        && request.resource.data.keys().hasOnly(['nick', 'photoUrl', 'createdAt'])
+        && validNick()
+        && request.resource.data.createdAt == request.time;
+
+      // Właściciel może zmienić nick i zdjęcie, ale nie datę założenia konta.
+      allow update: if isOwner()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nick', 'photoUrl'])
+        && validNick();
+
+      // Usuwanie konta zrobimy w tygodniu 7 (razem z danymi i zdjęciami).
+      allow delete: if false;
+    }
+
+    // Wszystko inne pozostaje zablokowane, dopóki nie dopiszemy reguł.
+  }
+}
