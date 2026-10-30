@@ -18,6 +18,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,11 +40,15 @@ import pl.szczytomania.data.model.Peak
 
 /** Ekran "Wszystkie szczyty" (mockup 05_Wszystkie_szczyty): lista szczytów z wyszukiwarką. */
 @Composable
-fun PeaksScreen(viewModel: PeaksViewModel = viewModel(factory = PeaksViewModel.Factory)) {
+fun PeaksScreen(
+    onMenuClick: () -> Unit = {},
+    viewModel: PeaksViewModel = viewModel(factory = PeaksViewModel.Factory),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     PeaksContent(
         state = state,
         onQueryChange = viewModel::onQueryChange,
+        onMenuClick = onMenuClick,
         // TODO: otwieranie karty szczytu (tydzień 5–6).
         onPeakClick = {},
     )
@@ -51,6 +58,7 @@ fun PeaksScreen(viewModel: PeaksViewModel = viewModel(factory = PeaksViewModel.F
 fun PeaksContent(
     state: PeaksUiState,
     onQueryChange: (String) -> Unit,
+    onMenuClick: () -> Unit,
     onPeakClick: (Peak) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -61,13 +69,21 @@ fun PeaksContent(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Column {
-                Text(stringResource(R.string.peaks_title), style = MaterialTheme.typography.headlineMedium)
-                Text(
-                    stringResource(R.string.peaks_subtitle),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_menu),
+                        contentDescription = stringResource(R.string.menu_open),
+                    )
+                }
+                Column(modifier = Modifier.padding(start = 8.dp)) {
+                    Text(stringResource(R.string.peaks_title), style = MaterialTheme.typography.headlineMedium)
+                    Text(
+                        stringResource(R.string.peaks_subtitle),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
             OutlinedTextField(
                 value = state.query,
@@ -162,6 +178,7 @@ private fun PeaksContentPreview() {
                 ),
             ),
             onQueryChange = {},
+            onMenuClick = {},
             onPeakClick = {},
         )
     }
