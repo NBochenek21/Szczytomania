@@ -33,5 +33,17 @@
     <string name="auth_error_too_many_requests">Zbyt wiele prób. Spróbuj ponownie za kilka minut.</string>
     <string name="auth_error_unknown">Coś poszło nie tak. Spróbuj ponownie.</string>
 
+    <string name="menu_open">Otwórz menu</string>
+    <string name="nav_map">Mapa</string>
+    <string name="nav_peaks">Wszystkie szczyty</string>
+
+    <string name="peaks_title">Wszystkie szczyty</string>
+    <string name="peaks_subtitle">Szczyty Polski z OpenStreetMap</string>
+    <string name="peaks_search_placeholder">Szukaj szczytu lub pasma</string>
+    <string name="peaks_elevation">%1$d m</string>
+    <string name="peaks_kgp_badge">KGP</string>
+    <string name="peaks_no_results">Brak szczytów dla „%1$s”.</string>
+    <string name="peaks_load_error">Nie udało się wczytać listy szczytów.</string>
+
     <string name="osm_attribution">Dane o szczytach i mapy: © OpenStreetMap contributors</string>
 </resources>

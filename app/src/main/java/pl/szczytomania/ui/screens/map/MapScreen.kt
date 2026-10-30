@@ -12,6 +12,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,7 +45,10 @@ import pl.szczytomania.map.showUserLocation
 private class LoadedMap(val map: MapLibreMap, val style: Style)
 
 @Composable
-fun MapScreen(viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory)) {
+fun MapScreen(
+    onMenuClick: () -> Unit = {},
+    viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory),
+) {
     val context = LocalContext.current
     val locationPermission = rememberLocationPermissionState()
     val peaks by viewModel.peaks.collectAsStateWithLifecycle()
@@ -83,6 +87,17 @@ fun MapScreen(viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory
                 loadedMap = LoadedMap(map, style)
             },
         )
+
+        SmallFloatingActionButton(
+            onClick = onMenuClick,
+            containerColor = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.align(Alignment.TopStart).padding(16.dp),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_menu),
+                contentDescription = stringResource(R.string.menu_open),
+            )
+        }
 
         Column(
             modifier = Modifier

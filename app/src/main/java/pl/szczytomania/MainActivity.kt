@@ -10,8 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.auth.FirebaseAuth
 import pl.szczytomania.data.auth.AuthRepository
+import pl.szczytomania.ui.navigation.AppNavigation
 import pl.szczytomania.ui.screens.auth.AuthScreen
-import pl.szczytomania.ui.screens.map.MapScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,13 +19,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MaterialTheme {
-                // Niezalogowany widzi ekran logowania, zalogowany – mapę. Wartość początkowa
+                // Niezalogowany widzi ekran logowania, zalogowany – mapę z menu. Wartość początkowa
                 // z FirebaseAuth, żeby po starcie aplikacji nie mignął ekran logowania.
                 val authRepository = remember { AuthRepository() }
                 val user by authRepository.currentUser
                     .collectAsStateWithLifecycle(initialValue = FirebaseAuth.getInstance().currentUser)
 
-                if (user == null) AuthScreen() else MapScreen()
+                if (user == null) AuthScreen() else AppNavigation()
             }
         }
     }

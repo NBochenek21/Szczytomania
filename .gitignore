@@ -15,3 +15,7 @@ local.properties
 # System
 .DS_Store
 Thumbs.db
+
+# Import szczytów: surowe odpowiedzi Overpass (duże, odtwarzalne skryptem pobierz.py)
+scripts/overpass/surowe/
+__pycache__/

@@ -32,7 +32,10 @@ Szczyty są w `app/src/main/assets/peaks/peaks.json` (dane z OpenStreetMap, dzia
 
 - `id` – identyfikator obiektu w OpenStreetMap (`node/…`, `way/…` lub `relation/…`), stały między importami,
 - `elevation` – wysokość w metrach (liczba całkowita), `range` – pasmo górskie,
+- `kgp` – `true` dla 28 szczytów Korony Gór Polski (brak pola = `false`),
 - dodatkowe pola są ignorowane, więc można je dopisywać bez zmiany wersji.
+
+Plik generują skrypty w `scripts/overpass/` (opis w [scripts/overpass/README.md](scripts/overpass/README.md)).
 
 Test `PeaksAssetTest` (`./gradlew testDebugUnitTest`) sprawdza plik: unikalne id, współrzędne w Polsce,
 wypełnione pola.

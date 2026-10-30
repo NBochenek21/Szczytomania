@@ -14,4 +14,6 @@ data class Peak(
     val lon: Double,
     /** Pasmo górskie, np. "Tatry". */
     val range: String,
+    /** Czy szczyt należy do Korony Gór Polski. Brak pola w pliku = false. */
+    val kgp: Boolean = false,
 )
