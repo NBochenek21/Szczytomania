@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "source": "Szczyt testowy – tylko w buildzie debug",
+  "peaks": [
+    { "id": "test/agh", "name": "Szczyt testowy AGH", "elevation": 210, "lat": 50.064547, "lon": 19.9232975, "range": "Testowe" }
+  ]
+}

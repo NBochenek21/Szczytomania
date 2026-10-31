@@ -70,6 +70,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.maplibre.android)
+    implementation(libs.play.services.location)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)

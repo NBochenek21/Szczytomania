@@ -1,5 +1,6 @@
 package pl.szczytomania.ui.screens.map
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,9 +52,14 @@ fun MapScreen(
     viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory),
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current.density
     val locationPermission = rememberLocationPermissionState()
     val peaks by viewModel.peaks.collectAsStateWithLifecycle()
+    val selectedPeak by viewModel.selectedPeak.collectAsStateWithLifecycle()
+    val summitCheck by viewModel.summitCheck.collectAsStateWithLifecycle()
     var loadedMap by remember { mutableStateOf<LoadedMap?>(null) }
+
+    BackHandler(enabled = selectedPeak != null) { viewModel.selectPeak(null) }
 
     // Pytamy o lokalizację raz, przy pierwszym otwarciu mapy (także po obrocie ekranu nie ponawiamy).
     var askedOnStart by rememberSaveable { mutableStateOf(false) }
@@ -84,6 +91,10 @@ fun MapScreen(
             modifier = Modifier.fillMaxSize(),
             onStyleLoaded = { map, style ->
                 PeakLayer.addTo(style, context)
+                map.addOnMapClickListener { point ->
+                    viewModel.selectPeak(PeakLayer.peakIdAt(map, point, density))
+                    true
+                }
                 loadedMap = LoadedMap(map, style)
             },
         )
@@ -125,6 +136,21 @@ fun MapScreen(
 
             if (locationPermission.access != LocationAccess.PRECISE) {
                 LocationPermissionBanner(state = locationPermission)
+            }
+
+            selectedPeak?.let { peak ->
+                SummitCheckCard(
+                    peak = peak,
+                    state = summitCheck,
+                    onCheck = {
+                        if (locationPermission.access == LocationAccess.PRECISE) {
+                            viewModel.checkSummit()
+                        } else {
+                            locationPermission.request()
+                        }
+                    },
+                    onClose = { viewModel.selectPeak(null) },
+                )
             }
         }
     }
