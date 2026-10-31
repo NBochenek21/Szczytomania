@@ -5,7 +5,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.RectF
 import androidx.core.graphics.createBitmap
+import org.maplibre.android.geometry.LatLng
+import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Style
 import org.maplibre.android.style.expressions.Expression.get
 import org.maplibre.android.style.expressions.Expression.literal
@@ -31,6 +34,7 @@ import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
 import org.maplibre.geojson.Point
 import pl.szczytomania.data.model.Peak
+import pl.szczytomania.location.distanceMeters
 import kotlin.math.roundToInt
 
 /** Warstwa szczytów na mapie: szary trójkąt i nazwa pod nim. */
@@ -45,6 +49,9 @@ object PeakLayer {
 
     // Poniżej tego przybliżenia (widok całej Polski) pokazujemy same trójkąty, bez nazw.
     private const val NAMES_MIN_ZOOM = 7f
+
+    // Trójkąt ma 20 dp – pole stuknięcia jest większe, żeby łatwo było trafić palcem.
+    private const val TAP_RADIUS_DP = 24
 
     // Czcionka musi istnieć na serwerze stylu – "Noto Sans Regular" mają OpenFreeMap i MapTiler.
     private val FONT = arrayOf("Noto Sans Regular")
@@ -80,6 +87,18 @@ object PeakLayer {
             }
         }
         style.getSourceAs<GeoJsonSource>(SOURCE_ID)?.setGeoJson(FeatureCollection.fromFeatures(features))
+    }
+
+    /** Identyfikator szczytu najbliższego stuknięciu w [point] albo null, gdy stuknięto obok. */
+    fun peakIdAt(map: MapLibreMap, point: LatLng, density: Float): String? {
+        val tap = map.projection.toScreenLocation(point)
+        val slop = TAP_RADIUS_DP * density
+        return map.queryRenderedFeatures(RectF(tap.x - slop, tap.y - slop, tap.x + slop, tap.y + slop), LAYER_ID)
+            .minByOrNull { feature ->
+                val peak = feature.geometry() as Point
+                distanceMeters(point.latitude, point.longitude, peak.latitude(), peak.longitude())
+            }
+            ?.getStringProperty(PROPERTY_ID)
     }
 
     private fun peakIcon(density: Float): Bitmap {

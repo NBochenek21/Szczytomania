@@ -9,6 +9,23 @@
 
     <string name="map_center_on_me">Pokaż moją pozycję</string>
 
+    <string name="summit_check">Sprawdź GPS</string>
+    <string name="summit_check_again">Sprawdź ponownie</string>
+    <string name="summit_close">Zamknij</string>
+    <string name="summit_checking">Szukam sygnału GPS…</string>
+    <string name="summit_location_off">Lokalizacja w telefonie jest wyłączona. Włącz ją i sprawdź ponownie.</string>
+    <string name="summit_no_signal">Brak sygnału GPS. Wyjdź na otwartą przestrzeń i sprawdź ponownie.</string>
+    <string name="summit_headline_passed">Jesteś na szczycie</string>
+    <string name="summit_headline_too_far">Jesteś za daleko od wierzchołka</string>
+    <string name="summit_headline_inaccurate">Za słaby sygnał GPS</string>
+    <string name="summit_headline_mocked">Lokalizacja jest symulowana</string>
+    <string name="summit_distance">Odległość od wierzchołka</string>
+    <string name="summit_distance_value">%1$d / %2$d m</string>
+    <string name="summit_accuracy">Dokładność GPS</string>
+    <string name="summit_accuracy_value">±%1$d / %2$d m</string>
+    <string name="summit_not_mocked">Lokalizacja nie jest symulowana</string>
+    <string name="summit_mocked">Wykryto fałszywą lokalizację</string>
+
     <string name="auth_tagline">ZDOBYWAJ POLSKIE SZCZYTY</string>
     <string name="auth_tab_login">Logowanie</string>
     <string name="auth_tab_register">Rejestracja</string>

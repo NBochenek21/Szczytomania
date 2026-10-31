@@ -45,6 +45,14 @@ class PeaksAssetTest {
         assertEquals("Szczyty KGP w pliku", 28, peaks.count { it.kgp })
     }
 
+    // Testowy szczyt ma być tylko w buildzie debug – nie może trafić do pliku generowanego skryptami.
+    @Test
+    fun testPeakIsOnlyInDebugBuild() {
+        val testPeaks = PeakFileParser.parse(File("src/debug/assets/peaks/peaks_test.json").readText())
+        assertEquals(listOf("test/agh"), testPeaks.map { it.id })
+        assertTrue(peaks.none { it.id == "test/agh" })
+    }
+
     private companion object {
         val OSM_ID = Regex("""^(node|way|relation)/\d+$""")
     }

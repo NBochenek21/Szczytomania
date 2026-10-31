@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import pl.szczytomania.data.model.Peak
 import pl.szczytomania.data.peaks.PeakFileParser
 
-/** Szczyty wczytywane z pliku w aplikacji – dostępne także bez zasięgu. */
+/** Szczyty wczytywane z plików w aplikacji – dostępne także bez zasięgu. */
 class PeakRepository(private val assets: AssetManager) {
 
     private val mutex = Mutex()
@@ -16,11 +16,14 @@ class PeakRepository(private val assets: AssetManager) {
 
     suspend fun getAll(): List<Peak> = mutex.withLock {
         cache ?: withContext(Dispatchers.IO) {
-            assets.open(PEAKS_FILE).bufferedReader().use { PeakFileParser.parse(it.readText()) }
+            // Build debug ma dodatkowy plik z testowym szczytem (src/debug/assets/peaks/).
+            assets.list(PEAKS_DIR).orEmpty().filter { it.endsWith(".json") }.flatMap { file ->
+                assets.open("$PEAKS_DIR/$file").bufferedReader().use { PeakFileParser.parse(it.readText()) }
+            }
         }.also { cache = it }
     }
 
-    companion object {
-        const val PEAKS_FILE = "peaks/peaks.json"
+    private companion object {
+        const val PEAKS_DIR = "peaks"
     }
 }

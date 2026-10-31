@@ -8,6 +8,7 @@ composeBom = "2025.10.01"
 maplibre = "13.7.1"
 firebaseBom = "34.19.0"
 googleServices = "4.5.0"
+playServicesLocation = "21.4.0"
 # 1.9.x jest budowane Kotlinem 2.2 – nowsze wymagają Kotlina 2.3+.
 kotlinxSerialization = "1.9.0"
 junit = "4.13.2"
@@ -28,6 +29,7 @@ maplibre-android = { group = "org.maplibre.gl", name = "android-sdk-opengl", ver
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
