@@ -12,6 +12,9 @@ captures/
 # Lokalne ustawienia (ścieżka do SDK, klucz MapTiler) – nie commitować
 local.properties
 
+# Własne szczyty testowe (np. przy domu) – repozytorium jest publiczne, więc zostają tylko u siebie
+app/src/debug/assets/peaks/peaks_local.json
+
 # System
 .DS_Store
 Thumbs.db

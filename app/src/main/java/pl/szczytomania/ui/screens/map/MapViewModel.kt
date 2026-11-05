@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import pl.szczytomania.data.firestore.ConquestRepository
 import pl.szczytomania.data.model.Peak
 import pl.szczytomania.data.repository.PeakRepository
 import pl.szczytomania.location.SummitCheckResult
@@ -26,6 +27,7 @@ sealed interface SummitCheckState {
 class MapViewModel(
     private val peakRepository: PeakRepository,
     private val summitChecker: SummitChecker,
+    private val conquestRepository: ConquestRepository,
 ) : ViewModel() {
 
     private val _peaks = MutableStateFlow<List<Peak>>(emptyList())
@@ -60,7 +62,12 @@ class MapViewModel(
         checkJob?.cancel()
         _summitCheck.value = SummitCheckState.Checking
         checkJob = viewModelScope.launch {
-            _summitCheck.value = SummitCheckState.Done(summitChecker.check(peak))
+            val result = summitChecker.check(peak)
+            _summitCheck.value = SummitCheckState.Done(result)
+            // Zdjęcie przed zapisem dojdzie razem z ekranem zdobywania (tydzień 4).
+            if (result is SummitCheckResult.Checked && result.check.passed) {
+                conquestRepository.save(peak, result.check.reading)
+            }
         }
     }
 
@@ -70,7 +77,7 @@ class MapViewModel(
         val Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY])
-                MapViewModel(PeakRepository(application.assets), SummitChecker(application))
+                MapViewModel(PeakRepository(application.assets), SummitChecker(application), ConquestRepository())
             }
         }
     }
