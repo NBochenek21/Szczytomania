@@ -1,5 +1,7 @@
 package pl.szczytomania
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,8 +14,16 @@ import pl.szczytomania.data.auth.AuthRepository
 import pl.szczytomania.ui.navigation.AppNavigation
 import pl.szczytomania.ui.screens.auth.AuthScreen
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
+    // Aplikacja jest tylko po polsku – także na telefonie z innym językiem odmiana (plurals)
+    // i formaty mają być polskie.
+    override fun attachBaseContext(newBase: Context) {
+        val config = Configuration(newBase.resources.configuration).apply { setLocale(Locale.forLanguageTag("pl")) }
+        super.attachBaseContext(newBase.createConfigurationContext(config))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

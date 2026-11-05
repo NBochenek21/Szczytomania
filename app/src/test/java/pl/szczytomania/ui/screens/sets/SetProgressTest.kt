@@ -49,8 +49,8 @@ class SetProgressTest {
     @Test
     fun filtersKeepSetOrder() {
         val progress = SetProgress.of(set, peaks, setOf("node/1", "node/3"))
-        assertEquals(listOf("Rysy", "Babia Góra", "Śnieżka"), SetFilter.ALL.select(progress.peaks).map { it.peak.name })
-        assertEquals(listOf("Rysy", "Śnieżka"), SetFilter.CONQUERED.select(progress.peaks).map { it.peak.name })
-        assertEquals(listOf("Babia Góra"), SetFilter.TO_CONQUER.select(progress.peaks).map { it.peak.name })
+        assertEquals(listOf("Rysy", "Babia Góra", "Śnieżka"), progress.peaks.filter(SetFilter.ALL::matches).map { it.peak.name })
+        assertEquals(listOf("Rysy", "Śnieżka"), progress.peaks.filter(SetFilter.CONQUERED::matches).map { it.peak.name })
+        assertEquals(listOf("Babia Góra"), progress.peaks.filter(SetFilter.TO_CONQUER::matches).map { it.peak.name })
     }
 }

@@ -58,6 +58,7 @@ import pl.szczytomania.map.followUserLocation
 import pl.szczytomania.map.showUserLocation
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.SquareIconButton
+import pl.szczytomania.ui.components.framed
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
 
 /** Mapa z wczytanym stylem – dopiero wtedy można dodawać warstwy i lokalizację. */
@@ -201,14 +202,8 @@ fun MapScreen(
 /** Nazwa aplikacji w ramce ze znakiem szlaku – górny pasek mapy (mockup 02_Mapa_ekran_glowny). */
 @Composable
 private fun AppTitlePill(modifier: Modifier = Modifier) {
-    val shape = RoundedCornerShape(14.dp)
     Row(
-        modifier = modifier
-            .height(48.dp)
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surface)
-            .border(1.5.dp, MaterialTheme.colorScheme.outline, shape)
-            .padding(horizontal = 16.dp),
+        modifier = modifier.height(48.dp).framed(radius = 14.dp, borderWidth = 1.5.dp).padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {

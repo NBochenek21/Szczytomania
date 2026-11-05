@@ -1,8 +1,12 @@
+Czcionki Rokkitt, Work Sans i IBM Plex Mono (app/src/main/res/font) – licencja SIL Open Font License 1.1:
+
+Copyright 2016 The Rokkit Project Authors (https://github.com/googlefonts/RokkittFont)
+Copyright 2019 The Work Sans Project Authors (https://github.com/weiweihuanghuang/Work-Sans)
 Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
-
-This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
 
 
 -----------------------------------------------------------

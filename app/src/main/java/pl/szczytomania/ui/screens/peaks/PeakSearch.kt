@@ -1,18 +1,20 @@
 package pl.szczytomania.ui.screens.peaks
 
+import androidx.annotation.StringRes
+import pl.szczytomania.R
 import pl.szczytomania.data.model.Peak
 import java.text.Collator
 import java.text.Normalizer
 import java.util.Locale
 
-/** Kolejność listy szczytów – przyciski "Sortuj" z mockupu. */
-enum class PeakSort {
-    /** Od najwyższego (domyślnie). */
-    ELEVATION,
-    /** Alfabetycznie, po polsku: Łysica po Lubomirze, Śnieżka po Szrenicy. */
-    NAME,
-    /** Alfabetycznie po paśmie, w paśmie od najwyższego. */
-    RANGE,
+/**
+ * Kolejność listy szczytów – przyciski "Sortuj" z mockupu: od najwyższego (domyślnie),
+ * alfabetycznie po polsku (Łysica po Lubomirze) i po paśmie (w paśmie od najwyższego).
+ */
+enum class PeakSort(@param:StringRes val label: Int) {
+    ELEVATION(R.string.peaks_sort_elevation),
+    NAME(R.string.peaks_sort_name),
+    RANGE(R.string.peaks_sort_range),
 }
 
 /** Wyszukiwanie szczytów po nazwie lub paśmie – bez rozróżniania wielkości liter i polskich znaków. */

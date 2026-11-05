@@ -9,9 +9,7 @@
 
     <string name="map_center_on_me">Pokaż moją pozycję</string>
 
-    <string name="summit_check">Sprawdź GPS</string>
     <string name="summit_check_again">Sprawdź ponownie</string>
-    <string name="summit_close">Zamknij</string>
     <string name="summit_checking">Szukam sygnału GPS…</string>
     <string name="summit_location_off">Lokalizacja w telefonie jest wyłączona. Włącz ją i sprawdź ponownie.</string>
     <string name="summit_no_signal">Brak sygnału GPS. Wyjdź na otwartą przestrzeń i sprawdź ponownie.</string>
@@ -53,7 +51,6 @@
     <string name="menu_open">Otwórz menu</string>
     <string name="nav_map">Mapa</string>
     <string name="nav_sets">Zestawy gór</string>
-    <string name="nav_peaks">Wszystkie szczyty</string>
     <string name="drawer_footer">wersja %1$s · © OpenStreetMap contributors</string>
     <string name="back">Wstecz</string>
     <string name="close">Zamknij</string>
@@ -71,16 +68,19 @@
     <string name="profile_highest">najwyżej</string>
     <string name="profile_highest_peak">najwyżej · %1$s</string>
     <string name="profile_sign_out">Wyloguj się</string>
-    <!-- Formy po liczbie: 1 / 2–4 / 5+. Wybiera je polishPlural() – plurals Androida brałyby
-         zasady z języka telefonu, a aplikacja jest tylko po polsku. -->
-    <string name="profile_peaks_one">szczyt</string>
-    <string name="profile_peaks_few">szczyty</string>
-    <string name="profile_peaks_many">szczytów</string>
-    <string name="profile_sets_one">zestaw</string>
-    <string name="profile_sets_few">zestawy</string>
-    <string name="profile_sets_many">zestawów</string>
+    <plurals name="profile_peaks">
+        <item quantity="one">szczyt</item>
+        <item quantity="few">szczyty</item>
+        <item quantity="many">szczytów</item>
+        <item quantity="other">szczytu</item>
+    </plurals>
+    <plurals name="profile_sets">
+        <item quantity="one">zestaw</item>
+        <item quantity="few">zestawy</item>
+        <item quantity="many">zestawów</item>
+        <item quantity="other">zestawu</item>
+    </plurals>
 
-    <string name="sets_title">Zestawy gór</string>
     <string name="sets_tab_ready">Gotowe</string>
     <string name="sets_tab_own">Własne · %1$d</string>
     <string name="sets_own_empty">Tu pojawią się Twoje własne zestawy gór. Tworzenie zestawów już wkrótce.</string>

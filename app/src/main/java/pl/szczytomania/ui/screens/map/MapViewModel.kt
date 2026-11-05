@@ -84,7 +84,7 @@ class MapViewModel(
         val Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY])
-                MapViewModel(PeakRepository(application.assets), SummitChecker(application))
+                MapViewModel(PeakRepository.get(application.assets), SummitChecker(application))
             }
         }
     }

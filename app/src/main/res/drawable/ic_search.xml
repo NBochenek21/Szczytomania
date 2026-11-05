@@ -1,15 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Lupa – pole wyszukiwania -->
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="#00000000"
-        android:strokeColor="#FF000000"
-        android:strokeWidth="1.8"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M10,4 A6,6 0 1,1 10,16 A6,6 0 1,1 10,4 Z M14.5,14.5 L20,20" />
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#00000000" android:strokeColor="#FF000000" android:strokeWidth="1.8"
+        android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M10,4 A6,6 0 1,1 10,16 A6,6 0 1,1 10,4 Z M14.5,14.5 L20,20" />
 </vector>

@@ -70,7 +70,7 @@ class PeaksViewModel(
         val Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY])
-                PeaksViewModel(PeakRepository(application.assets), ConqueredPeaks.ids)
+                PeaksViewModel(PeakRepository.get(application.assets), ConqueredPeaks.ids)
             }
         }
     }

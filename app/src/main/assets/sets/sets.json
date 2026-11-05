@@ -1,97 +1,13 @@
 {
   "version": 1,
   "sets": [
-    {
-      "id": "kgp",
-      "name": "Korona Gór Polski",
-      "badge": "Odznaka klasyczna",
-      "description": "Najwyższe szczyty 28 pasm górskich Polski – od Łysicy po Rysy.",
-      "peakIds": [
-        "node/4366169405",
-        "node/477984782",
-        "node/1850303773",
-        "node/26863429",
-        "node/1347929065",
-        "node/26864983",
-        "node/1198299196",
-        "node/26864701",
-        "node/1236685520",
-        "node/707906070",
-        "node/1793427200",
-        "node/2418877544",
-        "node/615627232",
-        "node/458891184",
-        "node/4366115862",
-        "node/2421373077",
-        "node/2418865417",
-        "node/1219704819",
-        "node/2470310941",
-        "node/3046822323",
-        "node/492775426",
-        "node/2845608415",
-        "node/991934327",
-        "node/428725380",
-        "node/529512640",
-        "node/4593556759",
-        "node/349062696",
-        "node/1844240120"
-      ]
-    },
-    {
-      "id": "beskidy",
-      "name": "Najwyższe szczyty Beskidów",
-      "description": "Szczyty Korony Gór Polski w pasmach Beskidów – od Babiej Góry po Lubomir.",
-      "peakIds": [
-        "node/477984782",
-        "node/1198299196",
-        "node/26864701",
-        "node/1236685520",
-        "node/4366115862",
-        "node/3046822323",
-        "node/2845608415"
-      ]
-    },
-    {
-      "id": "sudety",
-      "name": "Sudety – szczyty pasm",
-      "description": "Najwyższe szczyty pasm Sudetów – od Śnieżki po Skopiec.",
-      "peakIds": [
-        "node/1850303773",
-        "node/26863429",
-        "node/707906070",
-        "node/1793427200",
-        "node/2418877544",
-        "node/458891184",
-        "node/2421373077",
-        "node/2418865417",
-        "node/1219704819",
-        "node/2470310941",
-        "node/492775426",
-        "node/991934327",
-        "node/428725380",
-        "node/529512640",
-        "node/4593556759"
-      ]
-    },
-    {
-      "id": "tatry",
-      "name": "Tatry Polskie",
-      "description": "Najważniejsze tatrzańskie szczyty po polskiej stronie – od Rysów po Giewont.",
-      "peakIds": [
-        "node/4366169405",
-        "node/615589377",
-        "node/3343362920",
-        "node/460928401",
-        "node/1294543835",
-        "node/355985949",
-        "node/2302916813",
-        "node/3560695684",
-        "node/3552158247",
-        "node/1294543790",
-        "node/1295278143",
-        "node/946080669",
-        "node/615736220"
-      ]
-    }
+    {"id": "kgp", "name": "Korona Gór Polski", "badge": "Odznaka klasyczna", "description": "Najwyższe szczyty 28 pasm górskich Polski – od Łysicy po Rysy.",
+      "peakIds": ["node/4366169405", "node/477984782", "node/1850303773", "node/26863429", "node/1347929065", "node/26864983", "node/1198299196", "node/26864701", "node/1236685520", "node/707906070", "node/1793427200", "node/2418877544", "node/615627232", "node/458891184", "node/4366115862", "node/2421373077", "node/2418865417", "node/1219704819", "node/2470310941", "node/3046822323", "node/492775426", "node/2845608415", "node/991934327", "node/428725380", "node/529512640", "node/4593556759", "node/349062696", "node/1844240120"]},
+    {"id": "beskidy", "name": "Najwyższe szczyty Beskidów", "description": "Szczyty Korony Gór Polski w pasmach Beskidów – od Babiej Góry po Lubomir.",
+      "peakIds": ["node/477984782", "node/1198299196", "node/26864701", "node/1236685520", "node/4366115862", "node/3046822323", "node/2845608415"]},
+    {"id": "sudety", "name": "Sudety – szczyty pasm", "description": "Najwyższe szczyty pasm Sudetów – od Śnieżki po Skopiec.",
+      "peakIds": ["node/1850303773", "node/26863429", "node/707906070", "node/1793427200", "node/2418877544", "node/458891184", "node/2421373077", "node/2418865417", "node/1219704819", "node/2470310941", "node/492775426", "node/991934327", "node/428725380", "node/529512640", "node/4593556759"]},
+    {"id": "tatry", "name": "Tatry Polskie", "description": "Najważniejsze tatrzańskie szczyty po polskiej stronie – od Rysów po Giewont.",
+      "peakIds": ["node/4366169405", "node/615589377", "node/3343362920", "node/460928401", "node/1294543835", "node/355985949", "node/2302916813", "node/3560695684", "node/3552158247", "node/1294543790", "node/1295278143", "node/946080669", "node/615736220"]}
   ]
 }

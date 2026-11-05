@@ -22,8 +22,6 @@ private fun variable(resId: Int, weight: FontWeight) = Font(
 
 /** Nagłówki: nazwy szczytów, tytuły ekranów. */
 val Rokkitt = FontFamily(
-    variable(R.font.rokkitt, FontWeight.Medium),
-    variable(R.font.rokkitt, FontWeight.SemiBold),
     variable(R.font.rokkitt, FontWeight.Bold),
     variable(R.font.rokkitt, FontWeight.ExtraBold),
 )
@@ -55,7 +53,6 @@ internal val SzczytomaniaTypography = Typography(
     bodySmall = TextStyle(fontFamily = WorkSans, fontWeight = FontWeight.Normal, fontSize = 12.sp, lineHeight = 16.sp),
     labelLarge = TextStyle(fontFamily = WorkSans, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, lineHeight = 20.sp),
     labelMedium = TextStyle(fontFamily = WorkSans, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, lineHeight = 16.sp),
-    labelSmall = TextStyle(fontFamily = WorkSans, fontWeight = FontWeight.Medium, fontSize = 11.sp, lineHeight = 14.sp),
 )
 
 /** Style liczb – nie ma ich w schemacie Material 3. */

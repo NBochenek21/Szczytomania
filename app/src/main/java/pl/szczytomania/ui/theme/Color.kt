@@ -31,8 +31,6 @@ data class SzczytomaniaColors(
     val conquered: Color,
     /** Czerwony szlak: plakietki KGP, nadtytuły. */
     val trail: Color,
-    /** Lokalizacja użytkownika i odległości. */
-    val location: Color,
     /** Cienkie, przerywane linie między wierszami i nieaktywny postęp. */
     val lines: Color,
     /** Wypełnienie zaznaczonej zakładki lub przycisku sortowania i tekst na nim. */
@@ -43,7 +41,6 @@ data class SzczytomaniaColors(
 internal val LightExtraColors = SzczytomaniaColors(
     conquered = LightGreen,
     trail = LightTrailRed,
-    location = LightLocation,
     lines = LightLines,
     selected = LightText,
     onSelected = LightCard,
@@ -52,7 +49,6 @@ internal val LightExtraColors = SzczytomaniaColors(
 internal val DarkExtraColors = SzczytomaniaColors(
     conquered = DarkGreen,
     trail = DarkTrailRed,
-    location = DarkLocation,
     lines = DarkBorders,
     selected = DarkText,
     onSelected = DarkBackground,

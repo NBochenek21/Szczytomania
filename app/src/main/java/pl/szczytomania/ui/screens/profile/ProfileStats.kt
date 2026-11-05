@@ -29,18 +29,5 @@ data class ProfileStats(
     }
 }
 
-/** Polska forma rzeczownika po liczbie: 1 szczyt, 2 szczyty, 5 szczytów, 22 szczyty, 12 szczytów. */
-enum class PolishPlural { ONE, FEW, MANY }
-
-fun polishPlural(n: Int): PolishPlural {
-    val lastDigit = n % 10
-    val lastTwo = n % 100
-    return when {
-        n == 1 -> PolishPlural.ONE
-        lastDigit in 2..4 && lastTwo !in 12..14 -> PolishPlural.FEW
-        else -> PolishPlural.MANY
-    }
-}
-
 /** Pierwsza litera nicku do awatara, np. "Norbert" -> "N". */
 fun avatarInitial(nick: String): String = nick.trim().firstOrNull()?.uppercase() ?: "?"

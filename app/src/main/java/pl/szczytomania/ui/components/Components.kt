@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,6 +41,15 @@ import androidx.compose.ui.unit.dp
 import pl.szczytomania.ui.theme.NumberStyles
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
 
+/** Ramka z mockupów: zaokrąglone rogi, tło karty i obramowanie w kolorze tekstu. */
+@Composable
+fun Modifier.framed(radius: Dp = 18.dp, borderWidth: Dp = 1.dp): Modifier {
+    val shape = RoundedCornerShape(radius)
+    return clip(shape)
+        .background(MaterialTheme.colorScheme.surface)
+        .border(borderWidth, MaterialTheme.colorScheme.outline, shape)
+}
+
 /** Kwadratowy przycisk z ikoną w ramce (hamburger, strzałka wstecz) – lewy górny róg ekranów. */
 @Composable
 fun SquareIconButton(
@@ -46,13 +58,10 @@ fun SquareIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(14.dp)
     Box(
         modifier = modifier
             .size(48.dp)
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surface)
-            .border(1.5.dp, MaterialTheme.colorScheme.outline, shape)
+            .framed(radius = 14.dp, borderWidth = 1.5.dp)
             .clickable(onClick = onClick, role = Role.Button),
         contentAlignment = Alignment.Center,
     ) {
@@ -85,14 +94,32 @@ fun ScreenHeader(
     }
 }
 
-/** Cienka przerywana linia między wierszami list. */
+/** Komunikat na środku ekranu (brak wyników, błąd wczytywania). */
 @Composable
-fun DashedDivider(modifier: Modifier = Modifier, color: Color = SzczytomaniaTheme.colors.lines) {
-    Canvas(modifier = modifier.fillMaxWidth().height(1.dp)) {
+fun CenteredMessage(text: String) {
+    Box(Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+fun LoadingBox() {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+}
+
+/** Cienka przerywana linia: pozioma między wierszami list albo pionowa między statystykami. */
+@Composable
+fun DashedDivider(modifier: Modifier = Modifier, vertical: Boolean = false, color: Color = SzczytomaniaTheme.colors.lines) {
+    Canvas(modifier = if (vertical) modifier.width(1.dp).fillMaxHeight() else modifier.fillMaxWidth().height(1.dp)) {
         drawLine(
             color = color,
-            start = Offset(0f, size.height / 2),
-            end = Offset(size.width, size.height / 2),
+            start = if (vertical) Offset(size.width / 2, 0f) else Offset(0f, size.height / 2),
+            end = if (vertical) Offset(size.width / 2, size.height) else Offset(size.width, size.height / 2),
             strokeWidth = 1.dp.toPx(),
             pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 3.dp.toPx())),
         )
@@ -101,74 +128,51 @@ fun DashedDivider(modifier: Modifier = Modifier, color: Color = SzczytomaniaThem
 
 /** Trójkąt szczytu: wypełniony = zdobyty, kontur = do zdobycia. */
 @Composable
-fun PeakTriangle(conquered: Boolean, modifier: Modifier = Modifier, iconSize: Dp = 24.dp) {
+fun PeakTriangle(conquered: Boolean, modifier: Modifier = Modifier) {
     val fill = SzczytomaniaTheme.colors.conquered
     val outline = MaterialTheme.colorScheme.onSurfaceVariant
-    Canvas(modifier = modifier.size(iconSize)) {
+    Canvas(modifier = modifier.size(24.dp)) {
         val stroke = 2.dp.toPx()
-        val w = size.width
-        val h = size.height
         val path = Path().apply {
-            moveTo(w / 2, stroke)
-            lineTo(w - stroke / 2, h * 0.88f)
-            lineTo(stroke / 2, h * 0.88f)
+            moveTo(size.width / 2, stroke)
+            lineTo(size.width - stroke / 2, size.height * 0.88f)
+            lineTo(stroke / 2, size.height * 0.88f)
             close()
         }
         if (conquered) drawPath(path, fill) else drawPath(path, outline, style = Stroke(width = stroke))
     }
 }
 
-/** Mała plakietka w ramce, np. "KGP", "KORONA GÓR POLSKI", "DO ZDOBYCIA". */
+/** Mała plakietka w ramce, np. "KGP", "KORONA GÓR POLSKI", przerywana: "DO ZDOBYCIA". */
 @Composable
-fun Tag(
-    text: String,
-    color: Color,
-    modifier: Modifier = Modifier,
-    dashed: Boolean = false,
-) {
-    val shape = RoundedCornerShape(4.dp)
-    Box(
-        modifier = modifier.then(
-            if (dashed) {
-                Modifier.dashedBorder(color, 4.dp)
-            } else {
-                Modifier.border(1.dp, color, shape)
-            },
-        ),
-    ) {
-        Text(
-            text = text.uppercase(),
-            style = NumberStyles.tag,
-            color = color,
-            modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp),
-        )
-    }
-}
-
-private fun Modifier.dashedBorder(color: Color, radius: Dp) = drawBehind {
-    drawRoundRect(
+fun Tag(text: String, color: Color, modifier: Modifier = Modifier, dashed: Boolean = false) {
+    Text(
+        text = text.uppercase(),
+        style = NumberStyles.tag,
         color = color,
-        cornerRadius = CornerRadius(radius.toPx()),
-        style = Stroke(
-            width = 1.dp.toPx(),
-            pathEffect = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 2.dp.toPx())),
-        ),
+        modifier = modifier
+            .drawBehind {
+                drawRoundRect(
+                    color = color,
+                    cornerRadius = CornerRadius(4.dp.toPx()),
+                    style = Stroke(
+                        width = 1.dp.toPx(),
+                        pathEffect = if (dashed) PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 2.dp.toPx())) else null,
+                    ),
+                )
+            }
+            .padding(horizontal = 7.dp, vertical = 3.dp),
     )
 }
 
 /** Zaokrąglony przycisk-pigułka: sortowanie, filtry. Zaznaczony jest wypełniony. */
 @Composable
-fun PillButton(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    count: Int? = null,
-) {
+fun PillButton(text: String, selected: Boolean, onClick: () -> Unit, count: Int? = null) {
     val colors = SzczytomaniaTheme.colors
     val shape = RoundedCornerShape(50)
+    val content = if (selected) colors.onSelected else MaterialTheme.colorScheme.onBackground
     Row(
-        modifier = modifier
+        modifier = Modifier
             .clip(shape)
             .background(if (selected) colors.selected else Color.Transparent)
             .border(1.5.dp, if (selected) colors.selected else MaterialTheme.colorScheme.outline, shape)
@@ -176,7 +180,6 @@ fun PillButton(
             .padding(horizontal = 16.dp, vertical = 9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val content = if (selected) colors.onSelected else MaterialTheme.colorScheme.onBackground
         Text(text, style = MaterialTheme.typography.labelLarge, color = content)
         if (count != null) {
             Spacer(Modifier.width(8.dp))
@@ -185,23 +188,11 @@ fun PillButton(
     }
 }
 
-/** Dwie lub więcej zakładek w jednej ramce (np. "Gotowe | Własne"). */
+/** Kilka zakładek w jednej ramce (np. "Gotowe | Własne"). */
 @Composable
-fun SegmentedTabs(
-    labels: List<String>,
-    selectedIndex: Int,
-    onSelect: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun SegmentedTabs(labels: List<String>, selectedIndex: Int, onSelect: (Int) -> Unit) {
     val colors = SzczytomaniaTheme.colors
-    val shape = RoundedCornerShape(14.dp)
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surface)
-            .border(1.5.dp, MaterialTheme.colorScheme.outline, shape),
-    ) {
+    Row(modifier = Modifier.fillMaxWidth().framed(radius = 14.dp, borderWidth = 1.5.dp)) {
         labels.forEachIndexed { index, label ->
             val selected = index == selectedIndex
             Box(
@@ -216,49 +207,30 @@ fun SegmentedTabs(
                     text = label,
                     style = MaterialTheme.typography.labelLarge,
                     color = if (selected) colors.onSelected else MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
                 )
             }
         }
     }
 }
 
-/** Ciągły pasek postępu (karty zestawów). */
+/** Ciągły pasek postępu (karty zestawów, profil). */
 @Composable
-fun ProgressBar(fraction: Float, modifier: Modifier = Modifier) {
+fun ProgressBar(fraction: Float) {
     val colors = SzczytomaniaTheme.colors
-    val shape = RoundedCornerShape(50)
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(10.dp)
-            .clip(shape)
-            .background(colors.lines.copy(alpha = 0.5f)),
-    ) {
-        if (fraction > 0f) {
-            Box(
-                Modifier
-                    .fillMaxWidth(fraction.coerceIn(0f, 1f))
-                    .height(10.dp)
-                    .clip(shape)
-                    .background(colors.conquered),
-            )
-        }
+    Box(Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(50)).background(colors.lines.copy(alpha = 0.5f))) {
+        Box(Modifier.fillMaxWidth(fraction.coerceIn(0f, 1f)).fillMaxHeight().clip(RoundedCornerShape(50)).background(colors.conquered))
     }
 }
 
 /** Postęp z osobnym kwadracikiem na każdy szczyt (Korona Gór Polski, szczegóły zestawu). */
 @Composable
-fun SegmentedProgress(conquered: List<Boolean>, modifier: Modifier = Modifier) {
+fun SegmentedProgress(conquered: List<Boolean>) {
     val colors = SzczytomaniaTheme.colors
-    Row(
-        modifier = modifier.fillMaxWidth().height(28.dp),
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
-    ) {
+    val shape = RoundedCornerShape(4.dp)
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
         conquered.forEach { done ->
-            val shape = RoundedCornerShape(4.dp)
             Box(
-                modifier = Modifier
+                Modifier
                     .weight(1f)
                     .height(28.dp)
                     .clip(shape)

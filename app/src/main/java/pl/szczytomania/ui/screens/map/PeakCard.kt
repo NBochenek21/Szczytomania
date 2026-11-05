@@ -27,7 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.szczytomania.R
 import pl.szczytomania.data.model.Peak
@@ -39,11 +38,8 @@ import pl.szczytomania.ui.theme.NumberStyles
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
 
 /**
- * Karta szczytu wysuwana z dołu mapy (mockup 02_Mapa_ekran_glowny): plakietki, nazwa,
- * wysokość i pasmo, wynik sprawdzania GPS i przycisk "Zdobądź szczyt".
- *
- * Zdjęcie i zapis zdobyczy dochodzą z ekranem zdobywania (tydzień 4) – na razie przycisk
- * uruchamia sprawdzenie GPS.
+ * Karta szczytu z dołu mapy (mockup 02_Mapa_ekran_glowny). "Zdobądź szczyt" na razie tylko
+ * sprawdza GPS – zdjęcie i zapis zdobyczy dochodzą z ekranem zdobywania (tydzień 4).
  */
 @Composable
 fun PeakCard(
@@ -139,19 +135,5 @@ fun PeakCard(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PeakCardPreview() {
-    SzczytomaniaTheme {
-        PeakCard(
-            peak = Peak("node/477984782", "Babia Góra", 1723, 49.573, 19.529, "Beskid Żywiecki", kgp = true),
-            conquered = false,
-            checkState = SummitCheckState.Idle,
-            onConquer = {},
-            onClose = {},
-        )
     }
 }

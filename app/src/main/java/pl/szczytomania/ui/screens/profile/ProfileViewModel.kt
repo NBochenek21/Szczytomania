@@ -16,13 +16,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import pl.szczytomania.data.auth.AuthRepository
-import pl.szczytomania.data.firestore.UserProfile
 import pl.szczytomania.data.firestore.UserRepository
-import pl.szczytomania.data.model.Peak
-import pl.szczytomania.data.model.PeakSet
 import pl.szczytomania.data.repository.ConqueredPeaks
 import pl.szczytomania.data.repository.PeakRepository
-import pl.szczytomania.data.repository.PeakSetRepository
+import pl.szczytomania.ui.screens.sets.SetsData
+import pl.szczytomania.ui.screens.sets.loadSetsData
 import java.util.Date
 
 data class ProfileUiState(
@@ -41,21 +39,20 @@ class ProfileViewModel(
     email: String?,
     private val authRepository: AuthRepository,
     userRepository: UserRepository,
-    private val peakRepository: PeakRepository,
-    private val setRepository: PeakSetRepository,
+    repository: PeakRepository,
     conqueredIds: Flow<Set<String>>,
 ) : ViewModel() {
 
-    private class Loaded(val peaksById: Map<String, Peak>, val sets: List<PeakSet>)
-
-    private val loaded = MutableStateFlow<Loaded?>(null)
+    private val loaded = MutableStateFlow<SetsData?>(null)
 
     // Zanim profil dotrze z Firestore (albo gdy go nie ma), pokazujemy początek adresu e-mail.
     private val fallbackNick = email?.substringBefore('@').orEmpty()
 
-    private val profile: Flow<UserProfile?> = if (uid == null) flowOf(null) else userRepository.profile(uid)
-
-    val state: StateFlow<ProfileUiState> = combine(profile, loaded, conqueredIds) { profile, data, conquered ->
+    val state: StateFlow<ProfileUiState> = combine(
+        if (uid == null) flowOf(null) else userRepository.profile(uid),
+        loaded,
+        conqueredIds,
+    ) { profile, data, conquered ->
         ProfileUiState(
             nick = profile?.nick?.takeIf { it.isNotBlank() } ?: fallbackNick,
             memberSince = profile?.createdAt,
@@ -65,9 +62,9 @@ class ProfileViewModel(
 
     init {
         viewModelScope.launch {
-            runCatching { Loaded(peakRepository.getAll().associateBy { it.id }, setRepository.getAll()) }
+            runCatching { repository.loadSetsData() }
                 .onSuccess { loaded.value = it }
-                .onFailure { Log.e(TAG, "Nie udało się wczytać szczytów i zestawów", it) }
+                .onFailure { Log.e("ProfileViewModel", "Nie udało się wczytać szczytów i zestawów", it) }
         }
     }
 
@@ -75,19 +72,15 @@ class ProfileViewModel(
     fun signOut() = authRepository.signOut()
 
     companion object {
-        private const val TAG = "ProfileViewModel"
-
         val Factory = viewModelFactory {
             initializer {
-                val application = checkNotNull(this[APPLICATION_KEY])
                 val user = FirebaseAuth.getInstance().currentUser
                 ProfileViewModel(
                     uid = user?.uid,
                     email = user?.email,
                     authRepository = AuthRepository(),
                     userRepository = UserRepository(),
-                    peakRepository = PeakRepository(application.assets),
-                    setRepository = PeakSetRepository(application.assets),
+                    repository = PeakRepository.get(checkNotNull(this[APPLICATION_KEY]).assets),
                     conqueredIds = ConqueredPeaks.ids,
                 )
             }

@@ -46,20 +46,6 @@ class ProfileStatsTest {
     }
 
     @Test
-    fun polishPluralForms() {
-        assertEquals(PolishPlural.MANY, polishPlural(0))
-        assertEquals(PolishPlural.ONE, polishPlural(1))
-        assertEquals(PolishPlural.FEW, polishPlural(2))
-        assertEquals(PolishPlural.FEW, polishPlural(4))
-        assertEquals(PolishPlural.MANY, polishPlural(5))
-        assertEquals(PolishPlural.MANY, polishPlural(12))
-        assertEquals(PolishPlural.MANY, polishPlural(14))
-        assertEquals(PolishPlural.FEW, polishPlural(22))
-        assertEquals(PolishPlural.MANY, polishPlural(28))
-        assertEquals(PolishPlural.MANY, polishPlural(111))
-    }
-
-    @Test
     fun avatarInitialIsFirstLetterUppercase() {
         assertEquals("N", avatarInitial("norbert"))
         assertEquals("Ł", avatarInitial("  łukasz"))

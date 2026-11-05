@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -54,24 +55,19 @@ import pl.szczytomania.ui.screens.peaks.PeaksScreen
 import pl.szczytomania.ui.screens.profile.ProfileScreen
 import pl.szczytomania.ui.screens.profile.ProfileUiState
 import pl.szczytomania.ui.screens.profile.ProfileViewModel
-import pl.szczytomania.ui.screens.profile.peaksLabel
 import pl.szczytomania.ui.screens.sets.SetDetailScreen
 import pl.szczytomania.ui.screens.sets.SetsScreen
 import pl.szczytomania.ui.theme.NumberStyles
 
 /**
- * Ekrany po zalogowaniu. [inMenu] – pozycja w menu (hamburgerze); profil otwiera się z ikony
- * w prawym górnym rogu mapy i z nagłówka menu. Kolejne pozycje z mockupu dojdą razem z ich ekranami.
+ * Ekrany po zalogowaniu. Te z ikoną są w menu (hamburgerze); profil otwiera się z awatara
+ * na mapie i z nagłówka menu. Kolejne pozycje z mockupu dojdą razem z ich ekranami.
  */
-enum class AppScreen(
-    @param:StringRes val label: Int,
-    @param:DrawableRes val icon: Int,
-    val inMenu: Boolean = true,
-) {
+enum class AppScreen(@param:StringRes val label: Int, @param:DrawableRes val icon: Int? = null) {
     MAP(R.string.nav_map, R.drawable.ic_map),
     SETS(R.string.nav_sets, R.drawable.ic_mountains),
-    PEAKS(R.string.nav_peaks, R.drawable.ic_list),
-    PROFILE(R.string.profile_title, R.drawable.ic_logout, inMenu = false),
+    PEAKS(R.string.peaks_title, R.drawable.ic_list),
+    PROFILE(R.string.profile_title),
 }
 
 /**
@@ -190,7 +186,7 @@ private fun DrawerContent(current: AppScreen, profile: ProfileUiState, onSelect:
                     Text(profile.nick, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimary)
                     profile.stats?.let { stats ->
                         val kgp = stats.shownSets.find { it.set.id == "kgp" }
-                        val peaks = "${stats.conqueredCount} ${peaksLabel(stats.conqueredCount)}"
+                        val peaks = "${stats.conqueredCount} ${pluralStringResource(R.plurals.profile_peaks, stats.conqueredCount)}"
                         Text(
                             text = if (kgp != null) "$peaks · KGP ${kgp.done}/${kgp.total}" else peaks,
                             style = NumberStyles.tag.copy(letterSpacing = TextUnit.Unspecified),
@@ -202,9 +198,10 @@ private fun DrawerContent(current: AppScreen, profile: ProfileUiState, onSelect:
         }
 
         Spacer(Modifier.height(16.dp))
-        AppScreen.entries.filter { it.inMenu }.forEach { screen ->
+        AppScreen.entries.forEach { screen ->
+            val icon = screen.icon ?: return@forEach
             NavigationDrawerItem(
-                icon = { Icon(painterResource(screen.icon), contentDescription = null) },
+                icon = { Icon(painterResource(icon), contentDescription = null) },
                 label = { Text(stringResource(screen.label), style = MaterialTheme.typography.bodyLarge) },
                 selected = screen == current,
                 onClick = { onSelect(screen) },
