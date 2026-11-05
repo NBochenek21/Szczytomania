@@ -65,6 +65,21 @@
     <string name="peak_card_conquer">Zdobądź szczyt</string>
     <string name="peak_card_rules">Potwierdzenie: GPS w promieniu %1$d m + zdjęcie</string>
 
+    <string name="profile_title">Profil</string>
+    <string name="profile_open">Otwórz profil</string>
+    <string name="profile_member_since">w Szczytomanii od %1$s</string>
+    <string name="profile_highest">najwyżej</string>
+    <string name="profile_highest_peak">najwyżej · %1$s</string>
+    <string name="profile_sign_out">Wyloguj się</string>
+    <!-- Formy po liczbie: 1 / 2–4 / 5+. Wybiera je polishPlural() – plurals Androida brałyby
+         zasady z języka telefonu, a aplikacja jest tylko po polsku. -->
+    <string name="profile_peaks_one">szczyt</string>
+    <string name="profile_peaks_few">szczyty</string>
+    <string name="profile_peaks_many">szczytów</string>
+    <string name="profile_sets_one">zestaw</string>
+    <string name="profile_sets_few">zestawy</string>
+    <string name="profile_sets_many">zestawów</string>
+
     <string name="sets_title">Zestawy gór</string>
     <string name="sets_tab_ready">Gotowe</string>
     <string name="sets_tab_own">Własne · %1$d</string>

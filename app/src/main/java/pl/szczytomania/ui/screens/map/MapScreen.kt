@@ -3,10 +3,13 @@ package pl.szczytomania.ui.screens.map
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,6 +56,7 @@ import pl.szczytomania.map.POLAND_CAMERA
 import pl.szczytomania.map.PeakLayer
 import pl.szczytomania.map.followUserLocation
 import pl.szczytomania.map.showUserLocation
+import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.SquareIconButton
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
 
@@ -64,6 +69,8 @@ private const val PEAK_ZOOM = 12.0
 @Composable
 fun MapScreen(
     onMenuClick: () -> Unit = {},
+    profileInitial: String = "",
+    onProfileClick: () -> Unit = {},
     viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory),
 ) {
     val context = LocalContext.current
@@ -132,6 +139,16 @@ fun MapScreen(
         ) {
             SquareIconButton(R.drawable.ic_menu, stringResource(R.string.menu_open), onMenuClick)
             AppTitlePill()
+            Spacer(Modifier.weight(1f))
+            // Profil – prawy górny róg, jak w karcie projektu i na mockupie mapy.
+            Avatar(
+                initial = profileInitial,
+                size = 52.dp,
+                textStyle = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(onClickLabel = stringResource(R.string.profile_open), role = Role.Button, onClick = onProfileClick),
+            )
         }
 
         Column(
