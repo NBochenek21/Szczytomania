@@ -50,7 +50,10 @@ Nie trafia on do wersji release ani do pliku generowanego skryptami.
 
 Jak przetestować bez wychodzenia w teren:
 
-- pod AGH – telefonem, na miejscu; to jedyny test przejścia wszystkich warunków,
+- pod AGH – telefonem, na miejscu,
+- własny szczyt testowy, np. przy domu – plik `app/src/debug/assets/peaks/peaks_local.json` w tym samym formacie
+  co `peaks_test.json` (id zaczynające się od `test/`). Plik jest w `.gitignore`, więc współrzędne nie trafią
+  do publicznego repozytorium,
 - emulator: pozycja ustawiona w *Extended Controls → Location* jest prawdziwym odczytem dla systemu,
   więc da się sprawdzić odległość; około 100 m od szczytu testowego to np. `50.0654, 19.9233`, 200 m to `50.0663, 19.9233`,
 - fałszywa lokalizacja: aplikacja podmieniająca GPS (*Opcje programisty → Aplikacja do pozorowania lokalizacji*)
@@ -63,6 +66,22 @@ Jak przetestować bez wychodzenia w teren:
   adb shell cmd location providers remove-test-provider gps   # po teście
   ```
   Ostatnią pozycję trzeba wysyłać kilka razy w trakcie sprawdzania, bo aplikacja czeka na świeży odczyt.
+
+## Dane w Firestore
+
+Reguły bezpieczeństwa są w `firebase/firestore.rules`. Po każdej zmianie trzeba je wkleić w konsoli Firebase
+(*Firestore Database → Rules → Publish*). E-mail i hasło są tylko w Authentication, niewidoczne dla innych.
+
+| Dokument | Pola |
+|---|---|
+| `users/{uid}` – profil | `nick` (3–20 znaków), `photoUrl` (na razie `null`), `createdAt` (czas serwera) |
+| `users/{uid}/conquests/{id}` – zdobycz, jedna na szczyt | `peakId` (id z pliku szczytów), `conqueredAt` (czas z telefonu), `serverTime` (czas serwera), `lat`, `lon`, `accuracy` (odczyt GPS, dokładność w m), `photoUrl` (na razie `null`), `photoStatus` (`pending` – zdjęcie czeka na wysłanie) |
+
+- `{id}` zdobyczy to `peakId` z `_` zamiast `/` (np. `node_4366169405`), bo ukośnik w Firestore oddziela
+  kolekcje od dokumentów; dzięki temu ten sam szczyt zapisze się tylko raz,
+- zdobycz zapisuje się po udanym sprawdzeniu GPS (`MapViewModel.checkSummit`), także bez zasięgu –
+  Firestore wyśle ją sam po odzyskaniu sieci,
+- zdobyte szczyty zalogowanego użytkownika daje `ConquestRepository.conqueredPeakIds`.
 
 ## Struktura projektu
 
