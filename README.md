@@ -40,6 +40,25 @@ Plik generują skrypty w `scripts/overpass/` (opis w [scripts/overpass/README.md
 Test `PeaksAssetTest` (`./gradlew testDebugUnitTest`) sprawdza plik: unikalne id, współrzędne w Polsce,
 wypełnione pola.
 
+## Gotowe zestawy gór
+
+Zestawy są w `app/src/main/assets/sets/sets.json` (działają bez zasięgu): Korona Gór Polski (28),
+Najwyższe szczyty Beskidów (7), Sudety – szczyty pasm (15) i Tatry Polskie (13). Każdy zestaw to
+`id`, `name`, `description`, opcjonalna plakietka `badge` i lista `peakIds` z `peaks.json`, od
+najwyższego. Test `PeakSetsTest` pilnuje, żeby każdy szczyt z zestawu istniał w `peaks.json`, a Korona
+Gór Polski zgadzała się z polem `kgp`.
+
+Postęp w zestawach, trójkąty „zdobyty” i status na karcie szczytu biorą zdobyte szczyty z
+`data/repository/ConqueredPeaks.kt`. Na razie to pusty zbiór – po dodaniu zapisu zdobyczy w Firestore
+wystarczy podmienić tam źródło.
+
+## Wygląd
+
+Kolory i czcionki z mockupów są w `ui/theme/` (motyw jasny i ciemny, zgodnie z ustawieniem telefonu).
+Czcionki Rokkitt, Work Sans i IBM Plex Mono pochodzą z Google Fonts (licencja SIL Open Font License),
+teksty licencji są w `docs/licencje-czcionek/`. Wspólne elementy (nagłówek ekranu, plakietki, paski
+postępu, wiersz szczytu) są w `ui/components/`.
+
 ## Sprawdzanie GPS
 
 Stuknij szczyt na mapie i wybierz *Sprawdź GPS*. Warunki zaliczenia (`location/SummitCheck.kt`):

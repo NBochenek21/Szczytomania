@@ -8,10 +8,14 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.maplibre.android.camera.CameraPosition
 import pl.szczytomania.data.model.Peak
+import pl.szczytomania.data.repository.ConqueredPeaks
 import pl.szczytomania.data.repository.PeakRepository
 import pl.szczytomania.location.SummitCheckResult
 import pl.szczytomania.location.SummitChecker
@@ -38,6 +42,16 @@ class MapViewModel(
     val summitCheck: StateFlow<SummitCheckState> = _summitCheck.asStateFlow()
 
     private var checkJob: Job? = null
+
+    /** Zdobyte szczyty – status na karcie szczytu. */
+    val conqueredIds: StateFlow<Set<String>> =
+        ConqueredPeaks.ids.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+
+    /**
+     * Ostatnie położenie kamery. Mapa jest tworzona od nowa przy każdym powrocie z innego
+     * ekranu menu – dzięki temu wraca tam, gdzie użytkownik ją zostawił.
+     */
+    var lastCamera: CameraPosition? = null
 
     init {
         viewModelScope.launch {

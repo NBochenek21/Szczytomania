@@ -52,7 +52,30 @@
 
     <string name="menu_open">Otwórz menu</string>
     <string name="nav_map">Mapa</string>
+    <string name="nav_sets">Zestawy gór</string>
     <string name="nav_peaks">Wszystkie szczyty</string>
+    <string name="drawer_footer">wersja %1$s · © OpenStreetMap contributors</string>
+    <string name="back">Wstecz</string>
+    <string name="close">Zamknij</string>
+
+    <string name="peak_status_conquered">zdobyty</string>
+    <string name="peak_status_to_conquer">do zdobycia</string>
+    <string name="peak_card_kgp">Korona Gór Polski</string>
+    <string name="peak_card_elevation">%1$d m n.p.m.</string>
+    <string name="peak_card_conquer">Zdobądź szczyt</string>
+    <string name="peak_card_rules">Potwierdzenie: GPS w promieniu %1$d m + zdjęcie</string>
+
+    <string name="sets_title">Zestawy gór</string>
+    <string name="sets_tab_ready">Gotowe</string>
+    <string name="sets_tab_own">Własne · %1$d</string>
+    <string name="sets_own_empty">Tu pojawią się Twoje własne zestawy gór. Tworzenie zestawów już wkrótce.</string>
+    <string name="sets_load_error">Nie udało się wczytać zestawów gór.</string>
+    <string name="set_detail_overline">Zestaw gotowy</string>
+    <string name="set_detail_summary">zdobytych · %1$d%%</string>
+    <string name="set_filter_all">Wszystkie</string>
+    <string name="set_filter_conquered">Zdobyte</string>
+    <string name="set_filter_to_conquer">Do zdobycia</string>
+    <string name="set_filter_empty">Brak szczytów w tym widoku.</string>
 
     <string name="peaks_title">Wszystkie szczyty</string>
     <string name="peaks_subtitle">Szczyty Polski z OpenStreetMap</string>
@@ -61,6 +84,10 @@
     <string name="peaks_kgp_badge">KGP</string>
     <string name="peaks_no_results">Brak szczytów dla „%1$s”.</string>
     <string name="peaks_load_error">Nie udało się wczytać listy szczytów.</string>
+    <string name="peaks_sort_label">Sortuj:</string>
+    <string name="peaks_sort_elevation">Wysokość</string>
+    <string name="peaks_sort_name">Nazwa</string>
+    <string name="peaks_sort_range">Pasmo</string>
 
     <string name="osm_attribution">Dane o szczytach i mapy: © OpenStreetMap contributors</string>
 </resources>

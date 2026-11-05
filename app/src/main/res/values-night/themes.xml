@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ciemny motyw telefonu: ciemne tło okna, jak w SzczytomaniaTheme. -->
+    <style name="Theme.Szczytomania" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#1A1F1A</item>
+    </style>
+</resources>
