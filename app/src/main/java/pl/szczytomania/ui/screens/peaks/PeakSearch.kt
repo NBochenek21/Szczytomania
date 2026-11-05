@@ -20,9 +20,6 @@ object PeakSearch {
 
     private val COMBINING_MARKS = Regex("\\p{Mn}+")
 
-    // Collator nie jest bezpieczny dla wielu wątków naraz – każdy wątek dostaje własny.
-    private val polishCollator = ThreadLocal.withInitial { Collator.getInstance(Locale.forLanguageTag("pl")) }
-
     /** "Śnieżnik" -> "snieznik", "ŁYSICA" -> "lysica". */
     fun normalize(text: String): String =
         Normalizer.normalize(text.trim().lowercase(), Normalizer.Form.NFD)
@@ -42,7 +39,8 @@ object PeakSearch {
     }
 
     private fun comparator(sort: PeakSort): Comparator<Peak> {
-        val collator = polishCollator.get()
+        // Nowy Collator przy każdym sortowaniu – nie jest bezpieczny przy użyciu z wielu wątków naraz.
+        val collator = Collator.getInstance(Locale.forLanguageTag("pl"))
         val byName = Comparator<Peak> { a, b -> collator.compare(a.name, b.name) }
         val byElevation = compareByDescending<Peak> { it.elevation }
         return when (sort) {

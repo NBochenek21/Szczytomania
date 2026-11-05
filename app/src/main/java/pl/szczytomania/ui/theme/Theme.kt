@@ -16,6 +16,9 @@ private val LightScheme = lightColorScheme(
     onPrimaryContainer = LightGreen,
     secondary = LightLocation,
     onSecondary = LightCard,
+    // Zaznaczone przyciski segmentowe (np. Logowanie / Rejestracja) – zieleń zamiast domyślnego fioletu.
+    secondaryContainer = LightGreen.copy(alpha = 0.15f),
+    onSecondaryContainer = LightGreen,
     error = LightTrailRed,
     onError = LightCard,
     background = LightBackground,
@@ -39,6 +42,8 @@ private val DarkScheme = darkColorScheme(
     onPrimaryContainer = DarkGreen,
     secondary = DarkLocation,
     onSecondary = DarkBackground,
+    secondaryContainer = DarkGreen.copy(alpha = 0.18f),
+    onSecondaryContainer = DarkGreen,
     error = DarkTrailRed,
     onError = DarkBackground,
     background = DarkBackground,

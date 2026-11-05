@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -48,7 +49,7 @@ import pl.szczytomania.ui.screens.sets.SetDetailScreen
 import pl.szczytomania.ui.screens.sets.SetsScreen
 
 /** Ekrany dostępne z menu (hamburgera). Kolejne pozycje z mockupu dojdą razem z ich ekranami. */
-enum class AppScreen(@StringRes val label: Int, @DrawableRes val icon: Int) {
+enum class AppScreen(@param:StringRes val label: Int, @param:DrawableRes val icon: Int) {
     MAP(R.string.nav_map, R.drawable.ic_map),
     SETS(R.string.nav_sets, R.drawable.ic_mountains),
     PEAKS(R.string.nav_peaks, R.drawable.ic_list),
@@ -123,6 +124,8 @@ private fun DrawerContent(current: AppScreen, onSelect: (AppScreen) -> Unit) {
     ModalDrawerSheet(
         drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerShape = RoundedCornerShape(topEnd = 0.dp, bottomEnd = 0.dp),
+        // Bez odstępu od paska stanu – zielony nagłówek sięga do górnej krawędzi, jak na mockupie.
+        windowInsets = WindowInsets(0),
     ) {
         Column(
             modifier = Modifier
