@@ -33,6 +33,34 @@ service cloud.firestore {
 
       // Usuwanie konta zrobimy w tygodniu 7 (razem z danymi i zdjęciami).
       allow delete: if false;
+
+      // Zdobycze użytkownika: users/{uid}/conquests/{conquestId}, jeden dokument na szczyt.
+      match /conquests/{conquestId} {
+        function conquestFields() {
+          return ['peakId', 'conqueredAt', 'serverTime', 'lat', 'lon', 'accuracy', 'photoUrl', 'photoStatus'];
+        }
+
+        // Na razie widzi je tylko właściciel – znajomym otworzymy je w tygodniu 5.
+        allow read: if isOwner();
+
+        // Id dokumentu to id szczytu z "_" zamiast "/" (np. node_4366169405), więc ten sam szczyt
+        // zapisze się tylko raz. Czas serwera ustawia serwer, a zdjęcie na start czeka na wysłanie.
+        allow create: if isOwner()
+          && request.resource.data.keys().hasAll(conquestFields())
+          && request.resource.data.keys().hasOnly(conquestFields())
+          && request.resource.data.peakId is string
+          && conquestId == request.resource.data.peakId.replace('/', '_')
+          && request.resource.data.conqueredAt is timestamp
+          && request.resource.data.serverTime == request.time
+          && request.resource.data.lat is number
+          && request.resource.data.lon is number
+          && request.resource.data.accuracy is number
+          && request.resource.data.photoUrl == null
+          && request.resource.data.photoStatus == 'pending';
+
+        // Zmianę statusu zdjęcia na "wysłane" dodamy w tygodniu 4, usuwanie – razem z kontem w tygodniu 7.
+        allow update, delete: if false;
+      }
     }
 
     // Wszystko inne pozostaje zablokowane, dopóki nie dopiszemy reguł.
