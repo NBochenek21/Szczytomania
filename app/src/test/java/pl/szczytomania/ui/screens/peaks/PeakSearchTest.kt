@@ -62,6 +62,39 @@ class PeakSearchTest {
         assertEquals(emptyList<String>(), names(PeakSearch.filter(peaks, "Mont Blanc")))
     }
 
+    @Test
+    fun sortsByNameInPolishOrder() {
+        // Zwykłe sortowanie napisów dałoby "Babia Góra, Pilsko, Rysy, Łysica, Śnieżnik".
+        assertEquals(
+            listOf("Babia Góra", "Łysica", "Pilsko", "Rysy", "Śnieżnik"),
+            names(PeakSearch.filter(peaks, "", PeakSort.NAME)),
+        )
+    }
+
+    @Test
+    fun polishLettersComeRightAfterTheirBaseLetter() {
+        val list = listOf(peak("Śnieżka", 1603, "Karkonosze"), peak("Szrenica", 1361, "Karkonosze"),
+            peak("Łysica", 612, "Góry Świętokrzyskie"), peak("Lubomir", 904, "Beskid Makowski"),
+            peak("Mogielica", 1171, "Beskid Wyspowy"), peak("Tarnica", 1346, "Bieszczady"))
+        assertEquals(
+            listOf("Lubomir", "Łysica", "Mogielica", "Szrenica", "Śnieżka", "Tarnica"),
+            names(PeakSearch.filter(list, "", PeakSort.NAME)),
+        )
+    }
+
+    @Test
+    fun sortsByRangeThenFromHighest() {
+        assertEquals(
+            listOf("Babia Góra", "Pilsko", "Łysica", "Śnieżnik", "Rysy"),
+            names(PeakSearch.filter(peaks, "", PeakSort.RANGE)),
+        )
+    }
+
+    @Test
+    fun sortingKeepsSearchFilter() {
+        assertEquals(listOf("Babia Góra", "Pilsko"), names(PeakSearch.filter(peaks, "beskid", PeakSort.NAME)))
+    }
+
     private fun peak(name: String, elevation: Int, range: String) =
         Peak("node/${name.hashCode()}", name, elevation, 50.0, 20.0, range)
 

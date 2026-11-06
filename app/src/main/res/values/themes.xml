@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Szczytomania" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Tło okna w kolorze tła aplikacji – przy starcie nie miga biały ekran. Resztę wyglądu ustawia SzczytomaniaTheme. -->
+    <style name="Theme.Szczytomania" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F2EAD7</item>
+    </style>
 </resources>

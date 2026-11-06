@@ -7,74 +7,41 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import pl.szczytomania.R
-import pl.szczytomania.data.model.Peak
 import pl.szczytomania.location.SummitCheck
 import pl.szczytomania.location.SummitCheckResult
 import pl.szczytomania.location.SummitRules
 import kotlin.math.ceil
 
 /**
- * Prosta karta wybranego szczytu z wynikiem sprawdzania GPS. Pełną kartę i ekran zdobywania
- * (zdjęcie, zapis) dodaje interfejs – wystarczy przenieść tam [SummitCheckDetails].
+ * Stan sprawdzania GPS na karcie szczytu ([PeakCard]): sprawdzanie w toku, wynik albo problem
+ * z lokalizacją. Przy [SummitCheckState.Idle] nic nie pokazuje.
  */
 @Composable
-fun SummitCheckCard(
-    peak: Peak,
-    state: SummitCheckState,
-    onCheck: () -> Unit,
-    onClose: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Card(modifier = modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+fun SummitCheckStatus(state: SummitCheckState, modifier: Modifier = Modifier) {
+    when (state) {
+        SummitCheckState.Idle -> Unit
+        SummitCheckState.Checking -> Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(peak.name, style = MaterialTheme.typography.titleMedium)
-            Text(
-                text = "${stringResource(R.string.peaks_elevation, peak.elevation)} · ${peak.range}",
-                style = MaterialTheme.typography.bodySmall,
-            )
-
-            when (state) {
-                SummitCheckState.Idle -> Unit
-                SummitCheckState.Checking -> Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                    Text(stringResource(R.string.summit_checking), style = MaterialTheme.typography.bodyMedium)
-                }
-                is SummitCheckState.Done -> when (val result = state.result) {
-                    is SummitCheckResult.Checked -> SummitCheckDetails(result.check)
-                    SummitCheckResult.NoPreciseLocation -> Problem(R.string.location_permission_approximate)
-                    SummitCheckResult.LocationOff -> Problem(R.string.summit_location_off)
-                    SummitCheckResult.NoSignal -> Problem(R.string.summit_no_signal)
-                }
-            }
-
-            Row(modifier = Modifier.align(Alignment.End), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                TextButton(onClick = onClose) { Text(stringResource(R.string.summit_close)) }
-                Button(onClick = onCheck, enabled = state != SummitCheckState.Checking) {
-                    Text(
-                        stringResource(
-                            if (state is SummitCheckState.Done) R.string.summit_check_again else R.string.summit_check,
-                        ),
-                    )
-                }
-            }
+            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+            Text(stringResource(R.string.summit_checking), style = MaterialTheme.typography.bodyMedium)
+        }
+        is SummitCheckState.Done -> when (val result = state.result) {
+            is SummitCheckResult.Checked -> SummitCheckDetails(result.check, modifier)
+            SummitCheckResult.NoPreciseLocation -> Problem(R.string.location_permission_approximate)
+            SummitCheckResult.LocationOff -> Problem(R.string.summit_location_off)
+            SummitCheckResult.NoSignal -> Problem(R.string.summit_no_signal)
         }
     }
 }

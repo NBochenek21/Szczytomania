@@ -40,6 +40,15 @@ Plik generują skrypty w `scripts/overpass/` (opis w [scripts/overpass/README.md
 Test `PeaksAssetTest` (`./gradlew testDebugUnitTest`) sprawdza plik: unikalne id, współrzędne w Polsce,
 wypełnione pola.
 
+## Gotowe zestawy gór i wygląd
+
+- Zestawy: `app/src/main/assets/sets/sets.json` (`id`, `name`, `description`, opcjonalnie `badge`,
+  `peakIds` z `peaks.json` od najwyższego). `PeakSetsTest` sprawdza, czy szczyty istnieją.
+- Zdobyte szczyty (postęp, trójkąty, profil) pochodzą z `data/repository/ConqueredPeaks.kt`, czyli ze zdobyczy
+  w Firestore (sekcja *Dane w Firestore*).
+- Kolory i czcionki z mockupów: `ui/theme/`, wspólne elementy: `ui/components/`. Czcionki z Google Fonts
+  (licencja OFL, `docs/licencje-czcionek/OFL.txt`).
+
 ## Sprawdzanie GPS
 
 Stuknij szczyt na mapie i wybierz *Sprawdź GPS*. Warunki zaliczenia (`location/SummitCheck.kt`):
