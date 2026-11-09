@@ -86,12 +86,14 @@ fun PeakStamp(
             )
         }
         Column(Modifier.padding(top = size * 0.12f), horizontalAlignment = Alignment.CenterHorizontally) {
+            // Długie nazwy ("Mięguszowiecki Szczyt Wielki") mniejszą czcionką, w trzech linijkach.
+            val nameSize = (if (big) 0.1f else 0.11f) * (if (name.length > 14) 0.75f else 1f)
             Text(
                 text = name.uppercase(),
-                style = TextStyle(fontFamily = Rokkitt, fontWeight = FontWeight.ExtraBold, fontSize = sp(if (big) 0.1f else 0.11f)),
+                style = TextStyle(fontFamily = Rokkitt, fontWeight = FontWeight.ExtraBold, fontSize = sp(nameSize), lineHeight = sp(nameSize * 1.05f)),
                 color = color,
                 textAlign = TextAlign.Center,
-                maxLines = 2,
+                maxLines = 3,
                 modifier = Modifier.padding(horizontal = size * 0.12f),
             )
             val mono = TextStyle(fontFamily = IbmPlexMono, fontWeight = FontWeight.Medium, fontSize = sp(if (big) 0.065f else 0.09f))
