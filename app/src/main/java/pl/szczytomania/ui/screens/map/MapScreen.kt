@@ -72,6 +72,7 @@ fun MapScreen(
     onMenuClick: () -> Unit = {},
     profileInitial: String = "",
     onProfileClick: () -> Unit = {},
+    onConquer: (String) -> Unit = {},
     viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory),
 ) {
     val context = LocalContext.current
@@ -79,7 +80,6 @@ fun MapScreen(
     val locationPermission = rememberLocationPermissionState()
     val peaks by viewModel.peaks.collectAsStateWithLifecycle()
     val selectedPeak by viewModel.selectedPeak.collectAsStateWithLifecycle()
-    val summitCheck by viewModel.summitCheck.collectAsStateWithLifecycle()
     val conqueredIds by viewModel.conqueredIds.collectAsStateWithLifecycle()
     var loadedMap by remember { mutableStateOf<LoadedMap?>(null) }
 
@@ -184,14 +184,7 @@ fun MapScreen(
                 PeakCard(
                     peak = peak,
                     conquered = peak.id in conqueredIds,
-                    checkState = summitCheck,
-                    onConquer = {
-                        if (locationPermission.access == LocationAccess.PRECISE) {
-                            viewModel.checkSummit()
-                        } else {
-                            locationPermission.request()
-                        }
-                    },
+                    onConquer = { onConquer(peak.id) },
                     onClose = { viewModel.selectPeak(null) },
                 )
             }

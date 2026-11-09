@@ -21,8 +21,15 @@ import pl.szczytomania.location.SummitCheckResult
 import pl.szczytomania.location.SummitRules
 import kotlin.math.ceil
 
+/** Stan sprawdzania GPS dla szczytu. */
+sealed interface SummitCheckState {
+    data object Idle : SummitCheckState
+    data object Checking : SummitCheckState
+    data class Done(val result: SummitCheckResult) : SummitCheckState
+}
+
 /**
- * Stan sprawdzania GPS na karcie szczytu ([PeakCard]): sprawdzanie w toku, wynik albo problem
+ * Stan sprawdzania GPS na ekranie zdobywania ([PeakCard]): sprawdzanie w toku, wynik albo problem
  * z lokalizacją. Przy [SummitCheckState.Idle] nic nie pokazuje.
  */
 @Composable

@@ -11,9 +11,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import pl.szczytomania.data.auth.AuthRepository
 import pl.szczytomania.data.model.Peak
 import pl.szczytomania.location.GpsReading
+import java.util.Date
+
+/** Zdobycz z Firestore – tyle, ile pokazują ekrany "Moje zdobycze" i "Szczyt zdobyty". */
+data class Conquest(
+    val peakId: String,
+    /** Czas z telefonu – kiedy użytkownik był na szczycie. */
+    val conqueredAt: Date,
+    val accuracyMeters: Double?,
+    val photoStatus: String?,
+)
 
 /**
  * Zdobycze w Firestore: podkolekcja `users/{uid}/conquests`. Jeden dokument na szczyt – liczy się
@@ -25,14 +36,16 @@ class ConquestRepository(
 ) {
 
     /**
-     * Id szczytów zdobytych przez zalogowanego użytkownika, na bieżąco – także bez zasięgu
-     * (z pamięci podręcznej Firestore). Idzie za logowaniem: po wylogowaniu daje pusty zbiór,
-     * a po zalogowaniu innej osoby jej szczyty.
+     * Zdobycze zalogowanego użytkownika, na bieżąco – także bez zasięgu (z pamięci podręcznej
+     * Firestore). Idzie za logowaniem: po wylogowaniu pusta lista, po zalogowaniu innej osoby jej zdobycze.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    val conqueredPeakIds: Flow<Set<String>> = AuthRepository(auth).currentUser.flatMapLatest { user ->
-        if (user == null) flowOf(emptySet()) else peakIdsOf(user.uid)
+    val conquests: Flow<List<Conquest>> = AuthRepository(auth).currentUser.flatMapLatest { user ->
+        if (user == null) flowOf(emptyList()) else conquestsOf(user.uid)
     }
+
+    /** Id zdobytych szczytów – dla ekranów, którym wystarczy wiedzieć, co zdobyto. */
+    val conqueredPeakIds: Flow<Set<String>> = conquests.map { list -> list.mapTo(HashSet()) { it.peakId } }
 
     /**
      * Zapisuje zdobycz zalogowanego użytkownika. Nie czekamy na odpowiedź serwera: bez zasięgu zapis
@@ -58,13 +71,22 @@ class ConquestRepository(
             .addOnFailureListener { Log.e(TAG, "Nie udało się zapisać zdobyczy ${peak.id}", it) }
     }
 
-    private fun peakIdsOf(uid: String): Flow<Set<String>> = callbackFlow {
+    private fun conquestsOf(uid: String): Flow<List<Conquest>> = callbackFlow {
         val registration = conquests(uid).addSnapshotListener { snapshot, error ->
             if (error != null) {
                 Log.w(TAG, "Nie udało się odczytać zdobyczy $uid", error)
                 return@addSnapshotListener
             }
-            trySend(snapshot?.documents.orEmpty().mapNotNull { it.getString("peakId") }.toSet())
+            trySend(
+                snapshot?.documents.orEmpty().mapNotNull { doc ->
+                    Conquest(
+                        peakId = doc.getString("peakId") ?: return@mapNotNull null,
+                        conqueredAt = doc.getTimestamp("conqueredAt")?.toDate() ?: Date(0),
+                        accuracyMeters = doc.getDouble("accuracy"),
+                        photoStatus = doc.getString("photoStatus"),
+                    )
+                },
+            )
         }
         awaitClose { registration.remove() }
     }
