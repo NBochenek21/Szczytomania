@@ -222,20 +222,28 @@ fun ProgressBar(fraction: Float) {
     }
 }
 
-/** Postęp z osobnym kwadracikiem na każdy szczyt (Korona Gór Polski, szczegóły zestawu). */
+/**
+ * Postęp z osobnym kwadracikiem na każdy szczyt (Korona Gór Polski, szczegóły zestawu).
+ * [highlight] – kwadracik właśnie zdobytego szczytu, na czerwono (ekran "Szczyt zdobyty!").
+ */
 @Composable
-fun SegmentedProgress(conquered: List<Boolean>) {
+fun SegmentedProgress(conquered: List<Boolean>, highlight: Int = -1) {
     val colors = SzczytomaniaTheme.colors
     val shape = RoundedCornerShape(4.dp)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-        conquered.forEach { done ->
+        conquered.forEachIndexed { index, done ->
+            val fill = when {
+                index == highlight -> colors.trail
+                done -> colors.conquered
+                else -> Color.Transparent
+            }
             Box(
                 Modifier
                     .weight(1f)
                     .height(28.dp)
                     .clip(shape)
-                    .background(if (done) colors.conquered else Color.Transparent)
-                    .border(1.dp, if (done) colors.conquered else colors.lines, shape),
+                    .background(fill)
+                    .border(1.dp, if (fill == Color.Transparent) colors.lines else fill, shape),
             )
         }
     }

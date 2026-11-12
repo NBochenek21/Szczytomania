@@ -30,22 +30,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pl.szczytomania.R
 import pl.szczytomania.data.model.Peak
-import pl.szczytomania.location.SummitCheckResult
 import pl.szczytomania.location.SummitRules
 import pl.szczytomania.ui.components.DashedDivider
 import pl.szczytomania.ui.components.Tag
 import pl.szczytomania.ui.theme.NumberStyles
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
 
-/**
- * Karta szczytu z dołu mapy (mockup 02_Mapa_ekran_glowny). "Zdobądź szczyt" na razie tylko
- * sprawdza GPS – zdjęcie i zapis zdobyczy dochodzą z ekranem zdobywania (tydzień 4).
- */
+/** Karta szczytu z dołu mapy (mockup 02_Mapa_ekran_glowny). "Zdobądź szczyt" otwiera ekran zdobywania. */
 @Composable
 fun PeakCard(
     peak: Peak,
     conquered: Boolean,
-    checkState: SummitCheckState,
     onConquer: () -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
@@ -107,14 +102,9 @@ fun PeakCard(
             }
             DashedDivider()
 
-            SummitCheckStatus(checkState)
-
             if (!conquered) {
-                val failed = checkState is SummitCheckState.Done &&
-                    (checkState.result as? SummitCheckResult.Checked)?.check?.passed != true
                 Button(
                     onClick = onConquer,
-                    enabled = checkState != SummitCheckState.Checking,
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = colors.conquered),
                     modifier = Modifier.fillMaxWidth().height(56.dp),
@@ -122,7 +112,7 @@ fun PeakCard(
                     Icon(painterResource(R.drawable.ic_flag), contentDescription = null, modifier = Modifier.size(22.dp))
                     Spacer(Modifier.width(12.dp))
                     Text(
-                        text = stringResource(if (failed) R.string.summit_check_again else R.string.peak_card_conquer),
+                        text = stringResource(R.string.peak_card_conquer),
                         style = MaterialTheme.typography.titleLarge,
                     )
                 }

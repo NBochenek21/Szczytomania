@@ -48,7 +48,10 @@ import pl.szczytomania.BuildConfig
 import pl.szczytomania.R
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.DashedDivider
+import pl.szczytomania.ui.screens.conquest.ConquestScreen
+import pl.szczytomania.ui.screens.conquest.ConquestViewModel
 import pl.szczytomania.ui.screens.map.MapScreen
+import pl.szczytomania.ui.screens.myconquests.MyConquestsScreen
 import pl.szczytomania.ui.screens.map.MapViewModel
 import pl.szczytomania.ui.screens.map.TrailMark
 import pl.szczytomania.ui.screens.peaks.PeaksScreen
@@ -67,6 +70,7 @@ enum class AppScreen(@param:StringRes val label: Int, @param:DrawableRes val ico
     MAP(R.string.nav_map, R.drawable.ic_map),
     SETS(R.string.nav_sets, R.drawable.ic_mountains),
     PEAKS(R.string.peaks_title, R.drawable.ic_list),
+    MY_CONQUESTS(R.string.nav_my_conquests, R.drawable.ic_check_circle),
     PROFILE(R.string.profile_title),
 }
 
@@ -89,6 +93,13 @@ fun AppNavigation() {
     val uid = remember { FirebaseAuth.getInstance().currentUser?.uid }
     val profileViewModel: ProfileViewModel = viewModel(key = "profile-$uid", factory = ProfileViewModel.Factory)
     val profile by profileViewModel.state.collectAsStateWithLifecycle()
+    // Zdobywanie szczytu: pełny ekran nad pozostałymi, otwierany z karty szczytu.
+    val conquestViewModel: ConquestViewModel = viewModel(factory = ConquestViewModel.Factory)
+    var conquering by rememberSaveable { mutableStateOf(false) }
+    val closeConquest = {
+        conquering = false
+        mapViewModel.selectPeak(null)
+    }
 
     val openMenu: () -> Unit = { scope.launch { drawerState.open() } }
     val showPeakOnMap: (String) -> Unit = { peakId ->
@@ -96,6 +107,7 @@ fun AppNavigation() {
         current = AppScreen.MAP
     }
 
+    BackHandler(enabled = conquering) { closeConquest() }
     BackHandler(enabled = drawerState.isOpen) {
         scope.launch { drawerState.close() }
     }
@@ -122,23 +134,39 @@ fun AppNavigation() {
             )
         },
     ) {
-        val setId = openSetId
-        val key = if (current == AppScreen.SETS && setId != null) "set/$setId" else current.name
-        stateHolder.SaveableStateProvider(key) {
-            when (current) {
-                AppScreen.MAP -> MapScreen(
-                    onMenuClick = openMenu,
-                    profileInitial = profile.initial,
-                    onProfileClick = { current = AppScreen.PROFILE },
-                    viewModel = mapViewModel,
-                )
-                AppScreen.SETS -> if (setId == null) {
-                    SetsScreen(onMenuClick = openMenu, onSetClick = { openSetId = it })
-                } else {
-                    SetDetailScreen(setId = setId, onBack = { openSetId = null }, onPeakClick = showPeakOnMap)
+        if (conquering) {
+            ConquestScreen(
+                viewModel = conquestViewModel,
+                onClose = closeConquest,
+                onMyConquests = {
+                    closeConquest()
+                    current = AppScreen.MY_CONQUESTS
+                },
+            )
+        } else {
+            val setId = openSetId
+            val key = if (current == AppScreen.SETS && setId != null) "set/$setId" else current.name
+            stateHolder.SaveableStateProvider(key) {
+                when (current) {
+                    AppScreen.MAP -> MapScreen(
+                        onMenuClick = openMenu,
+                        profileInitial = profile.initial,
+                        onProfileClick = { current = AppScreen.PROFILE },
+                        onConquer = { peakId ->
+                            conquestViewModel.start(peakId)
+                            conquering = true
+                        },
+                        viewModel = mapViewModel,
+                    )
+                    AppScreen.SETS -> if (setId == null) {
+                        SetsScreen(onMenuClick = openMenu, onSetClick = { openSetId = it })
+                    } else {
+                        SetDetailScreen(setId = setId, onBack = { openSetId = null }, onPeakClick = showPeakOnMap)
+                    }
+                    AppScreen.PEAKS -> PeaksScreen(onMenuClick = openMenu, onPeakClick = showPeakOnMap)
+                    AppScreen.MY_CONQUESTS -> MyConquestsScreen(onMenuClick = openMenu)
+                    AppScreen.PROFILE -> ProfileScreen(onBack = { current = AppScreen.MAP }, viewModel = profileViewModel)
                 }
-                AppScreen.PEAKS -> PeaksScreen(onMenuClick = openMenu, onPeakClick = showPeakOnMap)
-                AppScreen.PROFILE -> ProfileScreen(onBack = { current = AppScreen.MAP }, viewModel = profileViewModel)
             }
         }
     }
