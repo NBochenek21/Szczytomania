@@ -84,13 +84,31 @@ Reguły bezpieczeństwa są w `firebase/firestore.rules`. Po każdej zmianie trz
 | Dokument | Pola |
 |---|---|
 | `users/{uid}` – profil | `nick` (3–20 znaków), `photoUrl` (na razie `null`), `createdAt` (czas serwera) |
-| `users/{uid}/conquests/{id}` – zdobycz, jedna na szczyt | `peakId` (id z pliku szczytów), `conqueredAt` (czas z telefonu), `serverTime` (czas serwera), `lat`, `lon`, `accuracy` (odczyt GPS, dokładność w m), `photoUrl` (na razie `null`), `photoStatus` (`pending` – zdjęcie czeka na wysłanie) |
+| `users/{uid}/conquests/{id}` – zdobycz, jedna na szczyt | `peakId` (id z pliku szczytów), `conqueredAt` (czas z telefonu), `serverTime` (czas serwera), `lat`, `lon`, `accuracy` (odczyt GPS, dokładność w m), `photoUrl` (link do zdjęcia, do wysłania `null`), `photoStatus` (`pending` – zdjęcie czeka na wysłanie, `uploaded` – wysłane) |
 
 - `{id}` zdobyczy to `peakId` z `_` zamiast `/` (np. `node_4366169405`), bo ukośnik w Firestore oddziela
   kolekcje od dokumentów; dzięki temu ten sam szczyt zapisze się tylko raz,
 - zdobycz zapisuje się po udanym sprawdzeniu GPS (`MapViewModel.checkSummit`), także bez zasięgu –
   Firestore wyśle ją sam po odzyskaniu sieci,
-- zdobyte szczyty zalogowanego użytkownika daje `ConquestRepository.conqueredPeakIds`.
+- zdobycze zalogowanego użytkownika daje `ConquestRepository.conquests` (z polem `synced` –
+  `false`, dopóki zapis czeka w telefonie na wysłanie), a same id szczytów – `conqueredPeakIds`,
+- po wysłaniu zdjęcia `ConquestRepository.markPhotoUploaded` zapisuje link i status `uploaded`; reguły
+  pozwalają zmienić w zdobyczy tylko te dwa pola i tylko z `pending` na `uploaded`.
+
+### Bez zasięgu
+
+Firestore trzyma w telefonie kopię danych i kolejkę niewysłanych zapisów (pamięć podręczna jest włączona
+domyślnie). Zdobycz zapisana bez zasięgu od razu jest widoczna w aplikacji, a na serwer trafia sama,
+gdy aplikacja jest uruchomiona i złapie sieć – także po zamknięciu i ponownym otwarciu aplikacji.
+Logowanie i rejestracja wymagają sieci, ale zalogowany użytkownik zostaje zalogowany także bez niej.
+
+Jak sprawdzić:
+
+1. Zaloguj się przy włączonym internecie.
+2. Włącz tryb samolotowy (GPS działa dalej) i zdobądź szczyt testowy – karta od razu pokazuje „zdobyty”,
+   a w konsoli Firebase dokumentu jeszcze nie ma.
+3. Wyłącz tryb samolotowy przy otwartej aplikacji – po chwili dokument pojawia się w konsoli, a `serverTime`
+   jest późniejszy niż `conqueredAt`.
 
 ## Struktura projektu
 

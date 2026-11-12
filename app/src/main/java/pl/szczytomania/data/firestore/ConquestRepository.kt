@@ -5,10 +5,12 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.MetadataChanges
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -23,12 +25,23 @@ data class Conquest(
     /** Czas z telefonu – kiedy użytkownik był na szczycie. */
     val conqueredAt: Date,
     val accuracyMeters: Double?,
+    /** [ConquestRepository.PHOTO_PENDING] albo [ConquestRepository.PHOTO_UPLOADED]. */
     val photoStatus: String?,
+    /** Link do zdjęcia ze szczytu; null, dopóki zdjęcie nie zostanie wysłane. */
+    val photoUrl: String? = null,
+    /**
+     * false, dopóki zapis czeka w telefonie na wysłanie (np. w górach bez zasięgu).
+     * Firestore wyśle go sam po odzyskaniu sieci – wtedy zmieni się na true.
+     */
+    val synced: Boolean = true,
 )
 
 /**
  * Zdobycze w Firestore: podkolekcja `users/{uid}/conquests`. Jeden dokument na szczyt – liczy się
  * pierwsze wejście, tak jak jedna pieczątka na szczyt w "Moich zdobyczach".
+ *
+ * Bez zasięgu wszystko działa na pamięci podręcznej Firestore w telefonie (włączonej domyślnie):
+ * zapisy czekają tam na sieć, a odczyty pokazują dane z telefonu razem z niewysłanymi zapisami.
  */
 class ConquestRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
@@ -45,7 +58,8 @@ class ConquestRepository(
     }
 
     /** Id zdobytych szczytów – dla ekranów, którym wystarczy wiedzieć, co zdobyto. */
-    val conqueredPeakIds: Flow<Set<String>> = conquests.map { list -> list.mapTo(HashSet()) { it.peakId } }
+    val conqueredPeakIds: Flow<Set<String>> =
+        conquests.map { list -> list.mapTo(HashSet()) { it.peakId } }.distinctUntilChanged()
 
     /**
      * Zapisuje zdobycz zalogowanego użytkownika. Nie czekamy na odpowiedź serwera: bez zasięgu zapis
@@ -71,8 +85,21 @@ class ConquestRepository(
             .addOnFailureListener { Log.e(TAG, "Nie udało się zapisać zdobyczy ${peak.id}", it) }
     }
 
+    /**
+     * Po wysłaniu zdjęcia (WorkManager) zapisuje jego link i status "wysłane". Tak jak [save] nie czeka
+     * na serwer – zmiana czeka w telefonie, a Firestore wyśle ją sam, nawet po restarcie aplikacji.
+     */
+    fun markPhotoUploaded(peakId: String, photoUrl: String) {
+        val uid = auth.currentUser?.uid ?: return
+        conquests(uid).document(documentId(peakId))
+            .update(mapOf("photoUrl" to photoUrl, "photoStatus" to PHOTO_UPLOADED))
+            .addOnFailureListener { Log.e(TAG, "Nie udało się zapisać zdjęcia zdobyczy $peakId", it) }
+    }
+
     private fun conquestsOf(uid: String): Flow<List<Conquest>> = callbackFlow {
-        val registration = conquests(uid).addSnapshotListener { snapshot, error ->
+        // MetadataChanges.INCLUDE: nasłuch odzywa się także wtedy, gdy serwer potwierdzi zapis
+        // (synced: false → true), choć same dane zdobyczy się nie zmieniły.
+        val registration = conquests(uid).addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, error ->
             if (error != null) {
                 Log.w(TAG, "Nie udało się odczytać zdobyczy $uid", error)
                 return@addSnapshotListener
@@ -84,12 +111,15 @@ class ConquestRepository(
                         conqueredAt = doc.getTimestamp("conqueredAt")?.toDate() ?: Date(0),
                         accuracyMeters = doc.getDouble("accuracy"),
                         photoStatus = doc.getString("photoStatus"),
+                        photoUrl = doc.getString("photoUrl"),
+                        // Zapis zrobiony w telefonie, którego serwer jeszcze nie potwierdził.
+                        synced = !doc.metadata.hasPendingWrites(),
                     )
                 },
             )
         }
         awaitClose { registration.remove() }
-    }
+    }.distinctUntilChanged()
 
     private fun conquests(uid: String) = db.collection(UserRepository.USERS).document(uid).collection(CONQUESTS)
 
@@ -97,8 +127,11 @@ class ConquestRepository(
         private const val TAG = "ConquestRepository"
         const val CONQUESTS = "conquests"
 
-        /** Zdjęcie czeka na wysłanie. Wysyłanie w tle i status "wysłane" dochodzą w tygodniu 4. */
+        /** Zdjęcie czeka w telefonie na wysłanie. */
         const val PHOTO_PENDING = "pending"
+
+        /** Zdjęcie jest na serwerze, a jego link w `photoUrl`. */
+        const val PHOTO_UPLOADED = "uploaded"
 
         /**
          * Id szczytu z OpenStreetMap ma ukośnik ("node/4366169405"), a ten w ścieżce Firestore
