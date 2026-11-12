@@ -58,8 +58,16 @@ service cloud.firestore {
           && request.resource.data.photoUrl == null
           && request.resource.data.photoStatus == 'pending';
 
-        // Zmianę statusu zdjęcia na "wysłane" dodamy w tygodniu 4, usuwanie – razem z kontem w tygodniu 7.
-        allow update, delete: if false;
+        // Po wysłaniu zdjęcia zmieniają się tylko link i status: z "pending" na "uploaded".
+        // Szczyt, czas i współrzędne zostają takie jak przy zdobyciu.
+        allow update: if isOwner()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['photoUrl', 'photoStatus'])
+          && resource.data.photoStatus == 'pending'
+          && request.resource.data.photoStatus == 'uploaded'
+          && request.resource.data.photoUrl is string;
+
+        // Usuwanie zdobyczy – razem z kontem w tygodniu 7.
+        allow delete: if false;
       }
     }
 
