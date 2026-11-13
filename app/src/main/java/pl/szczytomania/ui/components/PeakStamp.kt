@@ -69,7 +69,14 @@ fun PeakStamp(
                     val path = android.graphics.Path().apply {
                         addCircle(center.x, center.y, textRadius, android.graphics.Path.Direction.CW)
                     }
-                    canvas.nativeCanvas.drawTextOnPath(ringText, path, circumference * 0.6f, 0f, paint)
+                    // Napis zaczyna się w 60% obwodu (z lewej u góry). Obracamy płótno zamiast przesuwać
+                    // początek napisu – drawTextOnPath nie zawija tekstu za koniec okręgu, więc litery
+                    // za końcem ścieżki lądowały w jednym miejscu, jedna na drugiej.
+                    val native = canvas.nativeCanvas
+                    native.save()
+                    native.rotate(360f * 0.6f, center.x, center.y)
+                    native.drawTextOnPath(ringText, path, 0f, 0f, paint)
+                    native.restore()
                 }
             }
             // Trójkąt szczytu nad nazwą.
