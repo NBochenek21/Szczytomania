@@ -69,7 +69,16 @@
     <string name="conquest_step_location">Lokalizacja</string>
     <string name="conquest_step_photo">Zdjęcie</string>
     <string name="conquest_step_save">Zapis</string>
-    <string name="conquest_photo_soon">Aparat dojdzie wkrótce – na razie zapiszesz zdobycz bez zdjęcia.</string>
+    <string name="conquest_photo_hint">Zrób zdjęcie widoku ze szczytu</string>
+    <string name="conquest_take_photo">Zrób zdjęcie</string>
+    <string name="conquest_photo_question">Czy zdjęcie jest w porządku?</string>
+    <string name="conquest_photo_body">Zdobycz zapiszemy od razu w telefonie. Zdjęcie zmniejszymy i wyślemy w tle, gdy będzie zasięg.</string>
+    <string name="conquest_photo_retake">Powtórz</string>
+    <string name="conquest_photo_failed">Nie udało się zrobić zdjęcia. Spróbuj jeszcze raz.</string>
+    <string name="conquest_camera_permission">Aby zrobić zdjęcie ze szczytu, zezwól aplikacji na dostęp do aparatu.</string>
+    <string name="conquest_camera_allow">Zezwól na aparat</string>
+    <string name="conquest_camera_settings">Zezwól w ustawieniach</string>
+    <string name="conquest_camera_error">Nie udało się uruchomić aparatu.</string>
     <string name="conquest_save">Zapisz zdobycz</string>
     <string name="conquest_locked">Aparat odblokuje się, gdy wszystkie warunki będą spełnione.</string>
     <string name="conquest_back_to_map">Wróć do mapy</string>

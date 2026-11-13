@@ -1,0 +1,29 @@
+rules_version = '2';
+
+// Reguły bezpieczeństwa Cloud Storage. Źródłem prawdy jest ten plik –
+// po zmianie wklej go w konsoli Firebase: Storage → Rules → Publish.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Zdjęcia zdobyczy: users/{uid}/conquests/{id szczytu}.jpg
+    match /users/{uid}/conquests/{fileName} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == uid;
+      }
+
+      // Na razie widzi je tylko właściciel – znajomym otworzymy je w tygodniu 5.
+      allow read: if isOwner();
+
+      // Tylko zmniejszone zdjęcie JPEG (ok. 0,3 MB, limit 2 MB) – nikt nie wrzuci dużych plików na nasz koszt.
+      // update – gdy wysyłanie w tle ponawia zdjęcie, które już doszło.
+      allow create, update: if isOwner()
+        && request.resource.contentType == 'image/jpeg'
+        && request.resource.size < 2 * 1024 * 1024;
+
+      // Usuwanie – razem z kontem w tygodniu 7.
+      allow delete: if false;
+    }
+
+    // Wszystko inne pozostaje zablokowane.
+  }
+}

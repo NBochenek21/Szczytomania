@@ -75,6 +75,15 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+
+    // Aparat z podglądem na żywo w ramce ekranu zdobywania (CameraX).
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // Wysyłanie zdjęć w tle – także po zamknięciu aplikacji, gdy wróci zasięg.
+    implementation(libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
 }

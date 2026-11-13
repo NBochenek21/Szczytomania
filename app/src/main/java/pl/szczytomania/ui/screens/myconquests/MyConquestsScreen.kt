@@ -1,5 +1,7 @@
 package pl.szczytomania.ui.screens.myconquests
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,12 +25,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -48,6 +54,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import pl.szczytomania.R
+import pl.szczytomania.camera.ConquestPhotos
+import pl.szczytomania.data.firestore.ConquestRepository
 import pl.szczytomania.data.repository.ConqueredPeaks
 import pl.szczytomania.data.repository.PeakRepository
 import pl.szczytomania.ui.components.CenteredMessage
@@ -147,13 +155,26 @@ private fun StampBook(groups: List<Pair<Date, List<ConquestEntry>>>, stampColors
 private fun ConquestDialog(entry: ConquestEntry, onDismiss: () -> Unit) {
     val peak = entry.peak
     val conquest = entry.conquest
+    // Zdjęcie ze szczytu: z telefonu albo pobrane ze Storage. Do tego czasu – samo tło.
+    val context = LocalContext.current
+    val uploaded = conquest.photoStatus == ConquestRepository.PHOTO_UPLOADED
+    val photo by produceState<Bitmap?>(null, conquest.peakId, uploaded) {
+        value = ConquestPhotos(context).load(conquest.peakId, uploaded)
+    }
     Dialog(onDismissRequest = onDismiss) {
         Column(Modifier.fillMaxWidth().framed(borderWidth = 1.5.dp).padding(14.dp)) {
-            // Zdjęcie pokażemy, gdy dojdzie aparat i wysyłanie (Kacper) – na razie jego miejsce.
             Box(
                 Modifier.fillMaxWidth().aspectRatio(4f / 3f).clip(RoundedCornerShape(6.dp)).background(Color(0xFF5E7A8C)),
                 contentAlignment = Alignment.TopEnd,
             ) {
+                photo?.let {
+                    Image(
+                        bitmap = remember(it) { it.asImageBitmap() },
+                        contentDescription = peak.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.matchParentSize(),
+                    )
+                }
                 Box(
                     Modifier.padding(10.dp).size(44.dp).clip(CircleShape).background(Color(0xCC2C3A42)).clickable(onClick = onDismiss),
                     contentAlignment = Alignment.Center,
@@ -170,8 +191,9 @@ private fun ConquestDialog(entry: ConquestEntry, onDismiss: () -> Unit) {
             Text(SimpleDateFormat("dd.MM.yyyy, HH:mm", pl).format(conquest.conqueredAt), style = NumberStyles.elevation, color = MaterialTheme.colorScheme.onSurface)
             DashedDivider(Modifier.padding(vertical = 12.dp))
             val gps = conquest.accuracyMeters?.let { stringResource(R.string.my_conquests_gps, kotlin.math.ceil(it).toInt()) }
+            val photoPending = conquest.photoStatus != ConquestRepository.PHOTO_UPLOADED
             Text(
-                text = listOfNotNull(stringResource(R.string.my_conquests_photo_pending), gps).joinToString(" · "),
+                text = listOfNotNull(stringResource(R.string.my_conquests_photo_pending).takeIf { photoPending }, gps).joinToString(" · "),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Start,

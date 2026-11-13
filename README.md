@@ -88,7 +88,7 @@ Reguły bezpieczeństwa są w `firebase/firestore.rules`. Po każdej zmianie trz
 
 - `{id}` zdobyczy to `peakId` z `_` zamiast `/` (np. `node_4366169405`), bo ukośnik w Firestore oddziela
   kolekcje od dokumentów; dzięki temu ten sam szczyt zapisze się tylko raz,
-- zdobycz zapisuje się po udanym sprawdzeniu GPS (`MapViewModel.checkSummit`), także bez zasięgu –
+- zdobycz zapisuje się po udanym sprawdzeniu GPS i zdjęciu (`ConquestViewModel.save`), także bez zasięgu –
   Firestore wyśle ją sam po odzyskaniu sieci,
 - zdobycze zalogowanego użytkownika daje `ConquestRepository.conquests` (z polem `synced` –
   `false`, dopóki zapis czeka w telefonie na wysłanie), a same id szczytów – `conqueredPeakIds`,
@@ -109,6 +109,27 @@ Jak sprawdzić:
    a w konsoli Firebase dokumentu jeszcze nie ma.
 3. Wyłącz tryb samolotowy przy otwartej aplikacji – po chwili dokument pojawia się w konsoli, a `serverTime`
    jest późniejszy niż `conqueredAt`.
+
+## Zdjęcia ze szczytu
+
+Po udanym sprawdzeniu GPS ekran zdobywania pokazuje w ramce podgląd na żywo z tylnego aparatu (CameraX,
+`camera/CameraViewfinder.kt`, uprawnienie CAMERA – o zgodę aplikacja pyta przy pierwszym zdjęciu). Zdjęcie
+ma ten sam kadr co ramka. W emulatorze aparat ustawia się w *Device Manager → Edit → Camera* (np. *VirtualScene*
+albo kamera laptopa). Zdjęcie:
+
+1. jest zmniejszane do 1600 px dłuższego boku i zapisywane jako JPEG (ok. 0,3 MB) bez danych EXIF, czyli
+   bez pozycji GPS i modelu telefonu – `camera/PhotoShrink.kt`,
+2. zostaje w pamięci aplikacji (`files/photos/{uid}/{id}.jpg`), a zdobycz zapisuje się ze statusem `pending`,
+3. trafia do Cloud Storage w tle (`work/PhotoUploadWorker.kt`, WorkManager): dopiero gdy jest internet,
+   także po zamknięciu aplikacji, z ponawianiem po błędzie. Potem zdobycz dostaje `photoUrl` i status `uploaded`.
+
+Cloud Storage wymaga planu Blaze (lokalizacja `us-central1` – w niej działa darmowy limit 5 GB).
+Zdjęcia są w `users/{uid}/conquests/{id}.jpg`. Reguły w `firebase/storage.rules` wkleja się w konsoli
+(*Storage → Rules → Publish*): wysłać może tylko właściciel, tylko JPEG do 2 MB.
+
+Jak sprawdzić: zdobądź szczyt testowy, zrób zdjęcie i zapisz. Po chwili zdjęcie jest w konsoli (*Storage*),
+a zdobycz w Firestore ma `photoStatus: uploaded`. W trybie samolotowym zdjęcie czeka w telefonie i wysyła się
+samo po powrocie zasięgu.
 
 ## Struktura projektu
 
