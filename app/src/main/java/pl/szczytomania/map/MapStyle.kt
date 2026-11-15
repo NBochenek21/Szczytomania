@@ -10,9 +10,12 @@ object MapStyle {
     // Bez klucza używamy darmowego stylu OpenFreeMap (też OpenStreetMap), żeby mapa działała od razu.
     private const val OPENFREEMAP_LIBERTY = "https://tiles.openfreemap.org/styles/liberty"
 
+    private val hasMapTilerKey get() = BuildConfig.MAPTILER_API_KEY.isNotBlank()
+
     val url: String
-        get() = BuildConfig.MAPTILER_API_KEY
-            .takeIf { it.isNotBlank() }
-            ?.let { MAPTILER_OUTDOOR + it }
-            ?: OPENFREEMAP_LIBERTY
+        get() = if (hasMapTilerKey) MAPTILER_OUTDOOR + BuildConfig.MAPTILER_API_KEY else OPENFREEMAP_LIBERTY
+
+    /** Dostawca kafelków – do podpisu "Mapy: …" pod pobranymi regionami. */
+    val provider: String
+        get() = if (hasMapTilerKey) "MapTiler" else "OpenFreeMap"
 }

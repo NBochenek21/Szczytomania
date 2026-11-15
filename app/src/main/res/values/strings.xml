@@ -63,6 +63,28 @@
     <string name="peak_card_rules">Potwierdzenie: GPS w promieniu %1$d m + zdjęcie</string>
 
     <string name="nav_my_conquests">Moje zdobycze</string>
+    <string name="nav_offline_maps">Mapy offline</string>
+
+    <string name="offline_title">Mapy offline</string>
+    <string name="offline_subtitle">Pobierz region przed wyjściem w góry</string>
+    <string name="offline_legend_done">pobrane</string>
+    <string name="offline_legend_in_progress">pobieranie</string>
+    <string name="offline_legend_available">dostępne</string>
+    <string name="offline_storage">Zajęte w telefonie</string>
+    <string name="offline_megabytes">%1$d MB</string>
+    <string name="offline_downloaded">pobrano %1$s · %2$d MB</string>
+    <string name="offline_progress">%1$d%% · %2$d MB</string>
+    <string name="offline_waiting_for_network">czeka na internet · %1$d MB</string>
+    <string name="offline_interrupted">przerwano · %1$d%%</string>
+    <string name="offline_estimate">ok. %1$d MB</string>
+    <string name="offline_download">Pobierz</string>
+    <string name="offline_resume">Wznów</string>
+    <string name="offline_cancel">Anuluj</string>
+    <string name="offline_delete">Usuń mapę: %1$s</string>
+    <string name="offline_cancel_download">Przerwij pobieranie: %1$s</string>
+    <string name="offline_footer">Mapy: %1$s · © OpenStreetMap contributors. Pobieraj przez Wi-Fi.</string>
+    <string name="offline_metered_title">Nie jesteś w sieci Wi-Fi</string>
+    <string name="offline_metered_text">Mapa „%1$s” to ok. %2$d MB. Pobrać ją przez dane komórkowe?</string>
 
     <string name="conquest_title">Zdobywanie szczytu</string>
     <string name="conquest_subtitle">%1$s · %2$d m</string>
