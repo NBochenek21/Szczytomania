@@ -131,6 +131,24 @@ Jak sprawdzić: zdobądź szczyt testowy, zrób zdjęcie i zapisz. Po chwili zdj
 a zdobycz w Firestore ma `photoStatus: uploaded`. W trybie samolotowym zdjęcie czeka w telefonie i wysyła się
 samo po powrocie zasięgu.
 
+## Mapy offline
+
+Ekran *Mapy offline* (menu) pobiera mapę wybranego regionu na telefon. Bez internetu MapLibre bierze
+kafelki z bazy na telefonie, więc mapa pobranego regionu działa w górach bez zasięgu.
+
+- Regiony są w `map/offline/MapRegion.kt` (`MapRegions.all`). Test `MapRegionsTest` pilnuje, żeby każdy
+  szczyt z `peaks.json` leżał w którymś regionie – po dodaniu szczytów z nowego pasma trzeba dopisać region.
+- Pobierane są przybliżenia 6–14; na 14 kafelki wektorowe mają już wszystkie szczegóły (szlaki, ścieżki).
+- Pobieranie trwa także po wyjściu z ekranu. Przerwane (np. zamknięcie aplikacji) można wznowić.
+- Na danych komórkowych aplikacja pyta przed pobraniem.
+- Pobrany region działa tylko z tym samym stylem mapy. Po dopisaniu lub zmianie `MAPTILER_API_KEY`
+  stare regiony są usuwane i trzeba je pobrać ponownie.
+
+Jak przetestować w emulatorze: pobierz region, wyłącz internet (`adb shell svc wifi disable` i
+`adb shell svc data disable`), uruchom aplikację ponownie i otwórz szczyt z tego regionu z listy
+*Wszystkie szczyty*. Szczyt z niepobranego regionu pokaże pustą mapę. Wolne łącze, żeby zdążyć przerwać
+pobieranie: `adb emu network speed edge` (z powrotem: `full`).
+
 ## Struktura projektu
 
 ```

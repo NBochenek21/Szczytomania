@@ -59,6 +59,7 @@ import pl.szczytomania.ui.screens.profile.ProfileScreen
 import pl.szczytomania.ui.screens.profile.ProfileUiState
 import pl.szczytomania.ui.screens.profile.ProfileViewModel
 import pl.szczytomania.ui.screens.sets.SetDetailScreen
+import pl.szczytomania.ui.screens.settings.OfflineMapsScreen
 import pl.szczytomania.ui.screens.sets.SetsScreen
 import pl.szczytomania.ui.theme.NumberStyles
 
@@ -71,6 +72,7 @@ enum class AppScreen(@param:StringRes val label: Int, @param:DrawableRes val ico
     SETS(R.string.nav_sets, R.drawable.ic_mountains),
     PEAKS(R.string.peaks_title, R.drawable.ic_list),
     MY_CONQUESTS(R.string.nav_my_conquests, R.drawable.ic_check_circle),
+    OFFLINE_MAPS(R.string.nav_offline_maps, R.drawable.ic_download),
     PROFILE(R.string.profile_title),
 }
 
@@ -165,6 +167,7 @@ fun AppNavigation() {
                     }
                     AppScreen.PEAKS -> PeaksScreen(onMenuClick = openMenu, onPeakClick = showPeakOnMap)
                     AppScreen.MY_CONQUESTS -> MyConquestsScreen(onMenuClick = openMenu)
+                    AppScreen.OFFLINE_MAPS -> OfflineMapsScreen(onMenuClick = openMenu)
                     AppScreen.PROFILE -> ProfileScreen(onBack = { current = AppScreen.MAP }, viewModel = profileViewModel)
                 }
             }
