@@ -71,6 +71,29 @@ service cloud.firestore {
       }
     }
 
+    // Własne zestawy gór: sets/{setId}. Widzi je właściciel i osoby z listy sharedWith
+    // (udostępnianie znajomym dojdzie w tygodniu 7 – na razie lista jest zawsze pusta).
+    match /sets/{setId} {
+      allow read: if request.auth != null
+        && (resource.data.ownerId == request.auth.uid || request.auth.uid in resource.data.sharedWith);
+
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['name', 'ownerId', 'peakIds', 'sharedWith', 'createdAt'])
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 40
+        && request.resource.data.peakIds is list
+        && request.resource.data.peakIds.size() >= 1
+        && request.resource.data.peakIds.size() <= 300
+        && request.resource.data.sharedWith == []
+        && request.resource.data.createdAt == request.time;
+
+      // Edycja i udostępnianie – tydzień 7. Usunąć może tylko właściciel.
+      allow update: if false;
+      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;
+    }
+
     // Wszystko inne pozostaje zablokowane, dopóki nie dopiszemy reguł.
   }
 }

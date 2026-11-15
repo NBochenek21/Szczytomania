@@ -1,5 +1,6 @@
 package pl.szczytomania.data.auth
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.awaitClose
@@ -31,4 +32,27 @@ class AuthRepository(private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     }
 
     fun signOut() = auth.signOut()
+
+    /** Adres e-mail zalogowanego użytkownika. */
+    val email: String? get() = auth.currentUser?.email
+
+    /**
+     * Zmiana adresu e-mail. Firebase wymaga potwierdzenia obecnym hasłem, a nowy adres zaczyna działać
+     * dopiero po kliknięciu linku, który Firebase wysyła na ten adres.
+     */
+    suspend fun changeEmail(currentPassword: String, newEmail: String) {
+        val user = reauthenticate(currentPassword)
+        user.verifyBeforeUpdateEmail(newEmail).await()
+    }
+
+    /** Zmiana hasła – po potwierdzeniu obecnym hasłem. */
+    suspend fun changePassword(currentPassword: String, newPassword: String) {
+        reauthenticate(currentPassword).updatePassword(newPassword).await()
+    }
+
+    private suspend fun reauthenticate(password: String): FirebaseUser {
+        val user = checkNotNull(auth.currentUser) { "Brak zalogowanego użytkownika" }
+        user.reauthenticate(EmailAuthProvider.getCredential(checkNotNull(user.email), password)).await()
+        return user
+    }
 }
