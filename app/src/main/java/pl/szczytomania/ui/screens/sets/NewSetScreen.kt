@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -120,7 +121,7 @@ fun NewSetScreen(
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
-            placeholder = { Text(stringResource(R.string.new_set_search)) },
+            placeholder = { Text(stringResource(R.string.new_set_search), maxLines = 1, overflow = TextOverflow.Ellipsis) },
             leadingIcon = { Icon(painterResource(R.drawable.ic_search), contentDescription = null) },
             singleLine = true,
             shape = RoundedCornerShape(14.dp),

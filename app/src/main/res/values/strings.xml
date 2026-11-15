@@ -180,7 +180,7 @@
     <string name="new_set_title">Nowy zestaw</string>
     <string name="new_set_name">Nazwa zestawu</string>
     <string name="new_set_name_placeholder">np. Beskidzkie weekendy</string>
-    <string name="new_set_search">Dodaj szczyt – szukaj po nazwie lub paśmie</string>
+    <string name="new_set_search">Dodaj szczyt – nazwa lub pasmo</string>
     <plurals name="new_set_selected">
         <item quantity="one">Wybrane szczyty · %d szczyt</item>
         <item quantity="few">Wybrane szczyty · %d szczyty</item>
