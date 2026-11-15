@@ -38,6 +38,12 @@ class UserRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
             .addOnFailureListener { Log.e(TAG, "Nie udało się zapisać profilu $uid", it) }
     }
 
+    /** Zmiana nicku. Jak przy zakładaniu profilu – bez czekania na serwer, działa też bez zasięgu. */
+    fun updateNick(uid: String, nick: String) {
+        db.collection(USERS).document(uid).update("nick", nick)
+            .addOnFailureListener { Log.e(TAG, "Nie udało się zmienić nicku $uid", it) }
+    }
+
     /**
      * Profil użytkownika na bieżąco (także bez zasięgu – z pamięci podręcznej Firestore).
      * null, gdy profilu nie ma albo nie udało się go odczytać.

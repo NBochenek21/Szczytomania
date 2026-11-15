@@ -21,6 +21,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -45,6 +51,7 @@ import pl.szczytomania.ui.theme.SzczytomaniaTheme
 fun SetsScreen(
     onMenuClick: () -> Unit,
     onSetClick: (String) -> Unit,
+    onCreateSet: () -> Unit,
     viewModel: SetsViewModel = viewModel(factory = SetsViewModel.Factory),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -61,16 +68,14 @@ fun SetsScreen(
                 navDescription = stringResource(R.string.menu_open),
                 onNavClick = onMenuClick,
             )
-            // Własne zestawy dochodzą w tygodniu 5 – na razie zawsze 0.
             SegmentedTabs(
-                labels = listOf(stringResource(R.string.sets_tab_ready), stringResource(R.string.sets_tab_own, 0)),
+                labels = listOf(stringResource(R.string.sets_tab_ready), stringResource(R.string.sets_tab_own, state.own.size)),
                 selectedIndex = tab,
                 onSelect = { tab = it },
             )
         }
 
         when {
-            tab == 1 -> CenteredMessage(stringResource(R.string.sets_own_empty))
             state.isLoading -> LoadingBox()
             state.loadError -> CenteredMessage(stringResource(R.string.sets_load_error))
             else -> LazyColumn(
@@ -78,7 +83,21 @@ fun SetsScreen(
                 contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                items(state.sets, key = { it.set.id }) { SetCard(it, onClick = { onSetClick(it.set.id) }) }
+                if (tab == 0) {
+                    items(state.sets, key = { it.set.id }) { SetCard(it, onClick = { onSetClick(it.set.id) }) }
+                } else {
+                    items(state.own, key = { it.set.id }) { SetCard(it, onClick = { onSetClick(it.set.id) }, own = true) }
+                    item { CreateSetButton(onCreateSet) }
+                    if (state.own.isEmpty()) {
+                        item {
+                            Text(
+                                stringResource(R.string.sets_own_empty),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -86,7 +105,7 @@ fun SetsScreen(
 
 /** Karta zestawu. Zestaw z plakietką (Korona Gór Polski) jest wyróżniony: opis i kwadraciki postępu. */
 @Composable
-private fun SetCard(progress: SetProgress, onClick: () -> Unit) {
+private fun SetCard(progress: SetProgress, onClick: () -> Unit, own: Boolean = false) {
     val featured = progress.set.badge != null
     Column(
         modifier = Modifier
@@ -112,6 +131,38 @@ private fun SetCard(progress: SetProgress, onClick: () -> Unit) {
         } else {
             ProgressBar(progress.fraction)
         }
+        if (own) {
+            val (names, more) = progress.previewNames()
+            Text(
+                text = if (more > 0) stringResource(R.string.sets_own_preview_more, names, more) else names,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+/** "+ Utwórz własny zestaw" – przerywana ramka jak na mockupie 03_Zestawy_gor_wlasne. */
+@Composable
+private fun CreateSetButton(onClick: () -> Unit) {
+    val dash = MaterialTheme.colorScheme.onSurfaceVariant
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .drawBehind {
+                drawRoundRect(
+                    color = dash,
+                    cornerRadius = CornerRadius(18.dp.toPx()),
+                    style = Stroke(width = 1.5.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(6.dp.toPx(), 4.dp.toPx()))),
+                )
+            }
+            .clickable(onClick = onClick)
+            .padding(vertical = 22.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text("+  " + stringResource(R.string.sets_create), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onBackground)
     }
 }
 

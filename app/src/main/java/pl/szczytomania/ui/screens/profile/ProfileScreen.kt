@@ -25,7 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
+import pl.szczytomania.ui.components.PillButton
+import pl.szczytomania.ui.theme.ThemeMode
+import pl.szczytomania.ui.theme.ThemeSettings
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,7 +51,12 @@ import java.util.Locale
  * Motyw, edycja konta, ustawienia, mapy regionów i prywatność dochodzą w tygodniu 5.
  */
 @Composable
-fun ProfileScreen(onBack: () -> Unit, viewModel: ProfileViewModel) {
+fun ProfileScreen(
+    onBack: () -> Unit,
+    onEditAccount: () -> Unit,
+    onOfflineMaps: () -> Unit,
+    viewModel: ProfileViewModel,
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     // "listopada 2026" – miesiąc w dopełniaczu, pasuje do "w Szczytomanii od …".
     val memberSince = remember(state.memberSince) {
@@ -115,21 +125,57 @@ fun ProfileScreen(onBack: () -> Unit, viewModel: ProfileViewModel) {
             }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .framed()
-                .clickable(onClick = viewModel::signOut, role = Role.Button)
-                .padding(horizontal = 20.dp, vertical = 18.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(painterResource(R.drawable.ic_logout), contentDescription = null, tint = SzczytomaniaTheme.colors.trail)
-            Text(
-                text = stringResource(R.string.profile_sign_out),
-                style = MaterialTheme.typography.titleMedium,
-                color = SzczytomaniaTheme.colors.trail,
-                modifier = Modifier.padding(start = 16.dp),
-            )
+        // Ustawienia (mockup 11_Profil): motyw, edycja konta, pobrane mapy, wylogowanie.
+        Column(Modifier.fillMaxWidth().framed()) {
+            SettingsRow(R.drawable.ic_moon, stringResource(R.string.settings_theme)) {
+                val context = LocalContext.current
+                val dark = when (ThemeSettings.mode.collectAsStateWithLifecycle().value) {
+                    ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                    ThemeMode.LIGHT -> false
+                    ThemeMode.DARK -> true
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    PillButton(stringResource(R.string.settings_theme_light), selected = !dark, onClick = { ThemeSettings.set(context, ThemeMode.LIGHT) })
+                    PillButton(stringResource(R.string.settings_theme_dark), selected = dark, onClick = { ThemeSettings.set(context, ThemeMode.DARK) })
+                }
+            }
+            DashedDivider(Modifier.padding(horizontal = 16.dp))
+            SettingsRow(R.drawable.ic_person, stringResource(R.string.account_title), onClick = onEditAccount)
+            DashedDivider(Modifier.padding(horizontal = 16.dp))
+            SettingsRow(R.drawable.ic_download, stringResource(R.string.settings_offline_maps), onClick = onOfflineMaps)
+            DashedDivider(Modifier.padding(horizontal = 16.dp))
+            SettingsRow(R.drawable.ic_logout, stringResource(R.string.profile_sign_out), onClick = viewModel::signOut, danger = true)
+        }
+    }
+}
+
+/** Wiersz karty ustawień: ikona, nazwa i po prawej strzałka albo własna zawartość (np. przełącznik motywu). */
+@Composable
+private fun SettingsRow(
+    icon: Int,
+    label: String,
+    onClick: (() -> Unit)? = null,
+    danger: Boolean = false,
+    trailing: (@Composable () -> Unit)? = null,
+) {
+    val color = if (danger) SzczytomaniaTheme.colors.trail else MaterialTheme.colorScheme.onSurface
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick, role = Role.Button) else Modifier)
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(painterResource(icon), contentDescription = null, tint = color)
+        Text(
+            text = label,
+            style = if (danger) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,
+            color = color,
+            modifier = Modifier.weight(1f).padding(start = 16.dp),
+        )
+        when {
+            trailing != null -> trailing()
+            onClick != null && !danger -> Text("›", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

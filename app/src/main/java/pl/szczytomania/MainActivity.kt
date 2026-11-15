@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,6 +15,8 @@ import pl.szczytomania.data.auth.AuthRepository
 import pl.szczytomania.ui.navigation.AppNavigation
 import pl.szczytomania.ui.screens.auth.AuthScreen
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
+import pl.szczytomania.ui.theme.ThemeMode
+import pl.szczytomania.ui.theme.ThemeSettings
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -27,8 +30,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        ThemeSettings.load(this)
         setContent {
-            SzczytomaniaTheme {
+            val themeMode by ThemeSettings.mode.collectAsStateWithLifecycle()
+            val dark = when (themeMode) {
+                ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+            }
+            SzczytomaniaTheme(darkTheme = dark) {
                 // Niezalogowany widzi ekran logowania, zalogowany – mapę z menu. Wartość początkowa
                 // z FirebaseAuth, żeby po starcie aplikacji nie mignął ekran logowania.
                 val authRepository = remember { AuthRepository() }

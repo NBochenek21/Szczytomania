@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -27,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pl.szczytomania.R
+import pl.szczytomania.data.firestore.OwnSetRepository
+import pl.szczytomania.ui.theme.SzczytomaniaTheme
 import pl.szczytomania.ui.components.CenteredMessage
 import pl.szczytomania.ui.components.DashedDivider
 import pl.szczytomania.ui.components.LoadingBox
@@ -41,7 +46,7 @@ import pl.szczytomania.ui.theme.NumberStyles
 // Przy większej liczbie szczytów kwadraciki byłyby za wąskie – wtedy zwykły pasek.
 private const val MAX_SEGMENTS = 40
 
-/** Szczegóły gotowego zestawu (mockup 02_Szczegoly_zestawu): postęp, filtry i lista szczytów. */
+/** Szczegóły gotowego albo własnego zestawu (mockup 02_Szczegoly_zestawu): postęp, filtry i lista szczytów. */
 @Composable
 fun SetDetailScreen(
     setId: String,
@@ -52,21 +57,46 @@ fun SetDetailScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val progress = state.set(setId)
     var filter by rememberSaveable { mutableStateOf(SetFilter.ALL) }
+    val own = OwnSetRepository.isOwn(setId)
+    var confirmDelete by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).systemBarsPadding()) {
         ScreenHeader(
             title = progress?.set?.name.orEmpty(),
-            overline = stringResource(R.string.set_detail_overline),
+            overline = stringResource(if (own) R.string.set_detail_overline_own else R.string.set_detail_overline),
             navIcon = R.drawable.ic_arrow_back,
             navDescription = stringResource(R.string.back),
             onNavClick = onBack,
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
         )
         when {
-            progress != null -> SetDetailContent(progress, filter, { filter = it }, onPeakClick)
+            progress != null -> {
+                if (own) {
+                    TextButton(onClick = { confirmDelete = true }, modifier = Modifier.padding(start = 8.dp)) {
+                        Text(stringResource(R.string.set_delete), color = SzczytomaniaTheme.colors.trail)
+                    }
+                }
+                SetDetailContent(progress, filter, { filter = it }, onPeakClick)
+            }
             state.isLoading -> LoadingBox()
             else -> CenteredMessage(stringResource(R.string.sets_load_error))
         }
+    }
+
+    if (confirmDelete && progress != null) {
+        AlertDialog(
+            onDismissRequest = { confirmDelete = false },
+            title = { Text(stringResource(R.string.set_delete_confirm_title, progress.set.name)) },
+            text = { Text(stringResource(R.string.set_delete_confirm_body)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmDelete = false
+                    viewModel.deleteOwnSet(setId)
+                    onBack()
+                }) { Text(stringResource(R.string.set_delete), color = SzczytomaniaTheme.colors.trail) }
+            },
+            dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text(stringResource(R.string.cancel)) } },
+        )
     }
 }
 

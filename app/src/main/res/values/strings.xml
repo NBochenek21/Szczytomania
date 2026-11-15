@@ -131,6 +131,24 @@
     <string name="my_conquests_gps">GPS ± %1$d m</string>
 
     <string name="profile_title">Profil</string>
+    <string name="settings_theme">Motyw</string>
+    <string name="settings_theme_light">Jasny</string>
+    <string name="settings_theme_dark">Ciemny</string>
+    <string name="settings_offline_maps">Pobrane mapy regionów</string>
+    <string name="account_title">Edycja konta</string>
+    <string name="account_nick_save">Zapisz nick</string>
+    <string name="account_nick_saved">Nick zapisany.</string>
+    <string name="account_email_current">Obecny adres: %1$s</string>
+    <string name="account_email_new">Nowy adres e-mail</string>
+    <string name="account_email_change">Zmień e-mail</string>
+    <string name="account_email_link_sent">Wysłaliśmy link na nowy adres. Po jego kliknięciu logujesz się nowym adresem.</string>
+    <string name="account_current_password">Obecne hasło</string>
+    <string name="account_current_password_empty">Wpisz obecne hasło – Firebase wymaga go przy zmianie e-maila i hasła.</string>
+    <string name="account_password_new">Nowe hasło (co najmniej 8 znaków)</string>
+    <string name="account_password_change">Zmień hasło</string>
+    <string name="account_password_changed">Hasło zmienione.</string>
+    <string name="account_wrong_password">Nieprawidłowe obecne hasło.</string>
+    <string name="account_busy">Chwileczkę…</string>
     <string name="profile_open">Otwórz profil</string>
     <string name="profile_member_since">w Szczytomanii od %1$s</string>
     <string name="profile_highest">najwyżej</string>
@@ -151,7 +169,31 @@
 
     <string name="sets_tab_ready">Gotowe</string>
     <string name="sets_tab_own">Własne · %1$d</string>
-    <string name="sets_own_empty">Tu pojawią się Twoje własne zestawy gór. Tworzenie zestawów już wkrótce.</string>
+    <string name="sets_own_empty">Ułóż własną listę szczytów – np. na weekendy albo z jednego pasma – i śledź postęp tak jak w gotowych zestawach.</string>
+    <string name="sets_create">Utwórz własny zestaw</string>
+    <string name="sets_own_preview_more">%1$s i %2$d kolejnych</string>
+    <string name="set_detail_overline_own">Zestaw własny</string>
+    <string name="set_delete">Usuń zestaw</string>
+    <string name="set_delete_confirm_title">Usunąć zestaw „%1$s”?</string>
+    <string name="set_delete_confirm_body">Zdobyte szczyty zostaną – usuwamy tylko listę.</string>
+    <string name="cancel">Anuluj</string>
+    <string name="new_set_title">Nowy zestaw</string>
+    <string name="new_set_name">Nazwa zestawu</string>
+    <string name="new_set_name_placeholder">np. Beskidzkie weekendy</string>
+    <string name="new_set_search">Dodaj szczyt – szukaj po nazwie lub paśmie</string>
+    <plurals name="new_set_selected">
+        <item quantity="one">Wybrane szczyty · %d szczyt</item>
+        <item quantity="few">Wybrane szczyty · %d szczyty</item>
+        <item quantity="many">Wybrane szczyty · %d szczytów</item>
+        <item quantity="other">Wybrane szczyty · %d szczytu</item>
+    </plurals>
+    <plurals name="new_set_save">
+        <item quantity="one">Zapisz zestaw · %d szczyt</item>
+        <item quantity="few">Zapisz zestaw · %d szczyty</item>
+        <item quantity="many">Zapisz zestaw · %d szczytów</item>
+        <item quantity="other">Zapisz zestaw · %d szczytu</item>
+    </plurals>
+    <string name="new_set_save_empty">Wybierz szczyty i nazwij zestaw</string>
     <string name="sets_load_error">Nie udało się wczytać zestawów gór.</string>
     <string name="set_detail_overline">Zestaw gotowy</string>
     <string name="set_detail_summary">zdobytych · %1$d%%</string>

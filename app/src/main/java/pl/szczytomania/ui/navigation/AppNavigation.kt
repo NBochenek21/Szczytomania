@@ -55,9 +55,12 @@ import pl.szczytomania.ui.screens.myconquests.MyConquestsScreen
 import pl.szczytomania.ui.screens.map.MapViewModel
 import pl.szczytomania.ui.screens.map.TrailMark
 import pl.szczytomania.ui.screens.peaks.PeaksScreen
+import pl.szczytomania.ui.screens.profile.EditAccountScreen
+import pl.szczytomania.ui.screens.profile.EditAccountViewModel
 import pl.szczytomania.ui.screens.profile.ProfileScreen
 import pl.szczytomania.ui.screens.profile.ProfileUiState
 import pl.szczytomania.ui.screens.profile.ProfileViewModel
+import pl.szczytomania.ui.screens.sets.NewSetScreen
 import pl.szczytomania.ui.screens.sets.SetDetailScreen
 import pl.szczytomania.ui.screens.settings.OfflineMapsScreen
 import pl.szczytomania.ui.screens.sets.SetsScreen
@@ -85,6 +88,9 @@ fun AppNavigation() {
     var current by rememberSaveable { mutableStateOf(AppScreen.MAP) }
     // Otwarty zestaw (szczegóły) w zakładce "Zestawy gór"; null = lista zestawów.
     var openSetId by rememberSaveable { mutableStateOf<String?>(null) }
+    // Ekrany "pod spodem": nowy zestaw (w Zestawach gór) i edycja konta (w Profilu).
+    var creatingSet by rememberSaveable { mutableStateOf(false) }
+    var editingAccount by rememberSaveable { mutableStateOf(false) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     // Zachowuje stan ekranu (np. to, że już pytaliśmy o lokalizację) po przejściu na inny i z powrotem.
@@ -113,10 +119,13 @@ fun AppNavigation() {
     BackHandler(enabled = drawerState.isOpen) {
         scope.launch { drawerState.close() }
     }
-    BackHandler(enabled = drawerState.isClosed && current == AppScreen.SETS && openSetId != null) {
+    val subScreenOpen = openSetId != null || creatingSet || editingAccount
+    BackHandler(enabled = drawerState.isClosed && subScreenOpen) {
         openSetId = null
+        creatingSet = false
+        editingAccount = false
     }
-    BackHandler(enabled = drawerState.isClosed && current != AppScreen.MAP && openSetId == null) {
+    BackHandler(enabled = drawerState.isClosed && current != AppScreen.MAP && !subScreenOpen) {
         current = AppScreen.MAP
     }
 
@@ -130,7 +139,9 @@ fun AppNavigation() {
                 profile = profile,
                 onSelect = { screen ->
                     current = screen
-                    if (screen == AppScreen.SETS) openSetId = null
+                    openSetId = null
+                    creatingSet = false
+                    editingAccount = false
                     scope.launch { drawerState.close() }
                 },
             )
@@ -147,7 +158,12 @@ fun AppNavigation() {
             )
         } else {
             val setId = openSetId
-            val key = if (current == AppScreen.SETS && setId != null) "set/$setId" else current.name
+            val key = when {
+                current == AppScreen.SETS && creatingSet -> "new-set"
+                current == AppScreen.SETS && setId != null -> "set/$setId"
+                current == AppScreen.PROFILE && editingAccount -> "account"
+                else -> current.name
+            }
             stateHolder.SaveableStateProvider(key) {
                 when (current) {
                     AppScreen.MAP -> MapScreen(
@@ -160,15 +176,28 @@ fun AppNavigation() {
                         },
                         viewModel = mapViewModel,
                     )
-                    AppScreen.SETS -> if (setId == null) {
-                        SetsScreen(onMenuClick = openMenu, onSetClick = { openSetId = it })
-                    } else {
-                        SetDetailScreen(setId = setId, onBack = { openSetId = null }, onPeakClick = showPeakOnMap)
+                    AppScreen.SETS -> when {
+                        creatingSet -> NewSetScreen(onClose = { creatingSet = false }, onSaved = { creatingSet = false })
+                        setId == null -> SetsScreen(onMenuClick = openMenu, onSetClick = { openSetId = it }, onCreateSet = { creatingSet = true })
+                        else -> SetDetailScreen(setId = setId, onBack = { openSetId = null }, onPeakClick = showPeakOnMap)
                     }
                     AppScreen.PEAKS -> PeaksScreen(onMenuClick = openMenu, onPeakClick = showPeakOnMap)
                     AppScreen.MY_CONQUESTS -> MyConquestsScreen(onMenuClick = openMenu)
                     AppScreen.OFFLINE_MAPS -> OfflineMapsScreen(onMenuClick = openMenu)
-                    AppScreen.PROFILE -> ProfileScreen(onBack = { current = AppScreen.MAP }, viewModel = profileViewModel)
+                    AppScreen.PROFILE -> if (editingAccount) {
+                        EditAccountScreen(
+                            currentNick = profile.nick,
+                            onBack = { editingAccount = false },
+                            viewModel = viewModel(key = "account-$uid", factory = EditAccountViewModel.Factory),
+                        )
+                    } else {
+                        ProfileScreen(
+                            onBack = { current = AppScreen.MAP },
+                            onEditAccount = { editingAccount = true },
+                            onOfflineMaps = { current = AppScreen.OFFLINE_MAPS },
+                            viewModel = profileViewModel,
+                        )
+                    }
                 }
             }
         }
