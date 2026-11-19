@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import pl.szczytomania.R
 import pl.szczytomania.data.auth.AuthRepository
+import pl.szczytomania.data.firestore.NickTakenException
 import pl.szczytomania.data.firestore.UserRepository
 
 enum class AuthMode { LOGIN, REGISTER }
@@ -56,6 +58,7 @@ class AuthViewModel(
 
         val validationError = when {
             s.mode == AuthMode.REGISTER && nick.length !in NICK_LENGTH -> R.string.auth_error_nick_length
+            s.mode == AuthMode.REGISTER && !UserRepository.isValidNickFormat(nick) -> R.string.auth_error_nick_chars
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> R.string.auth_error_email_invalid
             s.mode == AuthMode.REGISTER && s.password.length < MIN_PASSWORD_LENGTH -> R.string.auth_error_password_short
             s.password.isEmpty() -> R.string.auth_error_password_empty
@@ -70,6 +73,8 @@ class AuthViewModel(
             when (s.mode) {
                 AuthMode.LOGIN -> authRepository.signIn(email, s.password)
                 AuthMode.REGISTER -> {
+                    // Nick sprawdzamy przed założeniem konta, żeby nie zostało konto bez profilu.
+                    if (!userRepository.isNickFree(nick)) throw NickTakenException(nick)
                     val user = authRepository.register(email, s.password)
                     userRepository.createProfile(user.uid, nick)
                 }
@@ -104,6 +109,10 @@ class AuthViewModel(
     @StringRes
     private fun errorMessage(e: Throwable, mode: AuthMode): Int = when (e) {
         is FirebaseNetworkException -> R.string.auth_error_network
+        // Sprawdzanie nicku bez zasięgu: Firestore nie ma odpowiedzi serwera.
+        is FirebaseFirestoreException ->
+            if (e.code == FirebaseFirestoreException.Code.UNAVAILABLE) R.string.auth_error_network else R.string.auth_error_unknown
+        is NickTakenException -> R.string.auth_error_nick_taken
         is FirebaseTooManyRequestsException -> R.string.auth_error_too_many_requests
         is FirebaseAuthUserCollisionException -> R.string.auth_error_email_taken
         // Musi być przed InvalidCredentials, bo dziedziczy po nim.

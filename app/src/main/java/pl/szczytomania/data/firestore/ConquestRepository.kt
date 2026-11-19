@@ -96,12 +96,19 @@ class ConquestRepository(
             .addOnFailureListener { Log.e(TAG, "Nie udało się zapisać zdjęcia zdobyczy $peakId", it) }
     }
 
-    private fun conquestsOf(uid: String): Flow<List<Conquest>> = callbackFlow {
+    /**
+     * Zdobycze znajomego (albo osoby, która nas zaprosiła), na bieżąco. Reguły wpuszczają tylko
+     * znajomych – przy braku dostępu (np. po usunięciu ze znajomych) pusta lista.
+     */
+    fun friendConquests(uid: String): Flow<List<Conquest>> = conquestsOf(uid, emptyOnError = true)
+
+    private fun conquestsOf(uid: String, emptyOnError: Boolean = false): Flow<List<Conquest>> = callbackFlow {
         // MetadataChanges.INCLUDE: nasłuch odzywa się także wtedy, gdy serwer potwierdzi zapis
         // (synced: false → true), choć same dane zdobyczy się nie zmieniły.
         val registration = conquests(uid).addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, error ->
             if (error != null) {
                 Log.w(TAG, "Nie udało się odczytać zdobyczy $uid", error)
+                if (emptyOnError) trySend(emptyList())
                 return@addSnapshotListener
             }
             trySend(

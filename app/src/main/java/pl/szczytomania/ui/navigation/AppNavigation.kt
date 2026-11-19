@@ -6,6 +6,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import pl.szczytomania.ui.theme.SzczytomaniaTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +31,7 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +54,13 @@ import pl.szczytomania.BuildConfig
 import pl.szczytomania.R
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.DashedDivider
+import pl.szczytomania.data.firestore.UserRepository
+import pl.szczytomania.data.repository.Friends
 import pl.szczytomania.ui.screens.conquest.ConquestScreen
+import pl.szczytomania.ui.screens.friends.FriendProfileScreen
+import pl.szczytomania.ui.screens.friends.FriendProfileViewModel
+import pl.szczytomania.ui.screens.friends.FriendsScreen
+import pl.szczytomania.ui.screens.friends.FriendsViewModel
 import pl.szczytomania.ui.screens.conquest.ConquestViewModel
 import pl.szczytomania.ui.screens.map.MapScreen
 import pl.szczytomania.ui.screens.myconquests.MyConquestsScreen
@@ -75,6 +87,7 @@ enum class AppScreen(@param:StringRes val label: Int, @param:DrawableRes val ico
     SETS(R.string.nav_sets, R.drawable.ic_mountains),
     PEAKS(R.string.peaks_title, R.drawable.ic_list),
     MY_CONQUESTS(R.string.nav_my_conquests, R.drawable.ic_check_circle),
+    FRIENDS(R.string.nav_friends, R.drawable.ic_friends),
     OFFLINE_MAPS(R.string.nav_offline_maps, R.drawable.ic_download),
     PROFILE(R.string.profile_title),
 }
@@ -91,6 +104,8 @@ fun AppNavigation() {
     // Ekrany "pod spodem": nowy zestaw (w Zestawach gór) i edycja konta (w Profilu).
     var creatingSet by rememberSaveable { mutableStateOf(false) }
     var editingAccount by rememberSaveable { mutableStateOf(false) }
+    // Otwarty profil znajomego (uid) w zakładce "Znajomi"; null = lista znajomych.
+    var openFriendUid by rememberSaveable { mutableStateOf<String?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     // Zachowuje stan ekranu (np. to, że już pytaliśmy o lokalizację) po przejściu na inny i z powrotem.
@@ -101,6 +116,11 @@ fun AppNavigation() {
     val uid = remember { FirebaseAuth.getInstance().currentUser?.uid }
     val profileViewModel: ProfileViewModel = viewModel(key = "profile-$uid", factory = ProfileViewModel.Factory)
     val profile by profileViewModel.state.collectAsStateWithLifecycle()
+    val friendsViewModel: FriendsViewModel = viewModel(key = "friends-$uid", factory = FriendsViewModel.Factory)
+    // Czerwone kółko przy "Znajomi" w menu – liczba zaproszeń czekających na odpowiedź.
+    val invitations by Friends.incomingCount.collectAsStateWithLifecycle(initialValue = 0)
+    // Konta sprzed wyszukiwania znajomych dostają nickLower i rezerwację nicku (raz, w tle).
+    LaunchedEffect(uid) { uid?.let { UserRepository().ensureSearchable(it) } }
     // Zdobywanie szczytu: pełny ekran nad pozostałymi, otwierany z karty szczytu.
     val conquestViewModel: ConquestViewModel = viewModel(factory = ConquestViewModel.Factory)
     var conquering by rememberSaveable { mutableStateOf(false) }
@@ -119,11 +139,12 @@ fun AppNavigation() {
     BackHandler(enabled = drawerState.isOpen) {
         scope.launch { drawerState.close() }
     }
-    val subScreenOpen = openSetId != null || creatingSet || editingAccount
+    val subScreenOpen = openSetId != null || creatingSet || editingAccount || openFriendUid != null
     BackHandler(enabled = drawerState.isClosed && subScreenOpen) {
         openSetId = null
         creatingSet = false
         editingAccount = false
+        openFriendUid = null
     }
     BackHandler(enabled = drawerState.isClosed && current != AppScreen.MAP && !subScreenOpen) {
         current = AppScreen.MAP
@@ -137,11 +158,13 @@ fun AppNavigation() {
             DrawerContent(
                 current = current,
                 profile = profile,
+                invitations = invitations,
                 onSelect = { screen ->
                     current = screen
                     openSetId = null
                     creatingSet = false
                     editingAccount = false
+                    openFriendUid = null
                     scope.launch { drawerState.close() }
                 },
             )
@@ -158,10 +181,12 @@ fun AppNavigation() {
             )
         } else {
             val setId = openSetId
+            val friendUid = openFriendUid
             val key = when {
                 current == AppScreen.SETS && creatingSet -> "new-set"
                 current == AppScreen.SETS && setId != null -> "set/$setId"
                 current == AppScreen.PROFILE && editingAccount -> "account"
+                current == AppScreen.FRIENDS && friendUid != null -> "friend/$friendUid"
                 else -> current.name
             }
             stateHolder.SaveableStateProvider(key) {
@@ -183,6 +208,15 @@ fun AppNavigation() {
                     }
                     AppScreen.PEAKS -> PeaksScreen(onMenuClick = openMenu, onPeakClick = showPeakOnMap)
                     AppScreen.MY_CONQUESTS -> MyConquestsScreen(onMenuClick = openMenu)
+                    AppScreen.FRIENDS -> if (friendUid == null) {
+                        FriendsScreen(onMenuClick = openMenu, onFriendClick = { openFriendUid = it }, viewModel = friendsViewModel)
+                    } else {
+                        FriendProfileScreen(
+                            friendUid = friendUid,
+                            onBack = { openFriendUid = null },
+                            viewModel = viewModel(key = "friend-$uid-$friendUid", factory = FriendProfileViewModel.factory(friendUid)),
+                        )
+                    }
                     AppScreen.OFFLINE_MAPS -> OfflineMapsScreen(onMenuClick = openMenu)
                     AppScreen.PROFILE -> if (editingAccount) {
                         EditAccountScreen(
@@ -206,7 +240,7 @@ fun AppNavigation() {
 
 /** Zawartość menu (mockup 03_Menu_hamburger): zielony nagłówek, pozycje i stopka. */
 @Composable
-private fun DrawerContent(current: AppScreen, profile: ProfileUiState, onSelect: (AppScreen) -> Unit) {
+private fun DrawerContent(current: AppScreen, profile: ProfileUiState, invitations: Int, onSelect: (AppScreen) -> Unit) {
     ModalDrawerSheet(
         drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerShape = RoundedCornerShape(topEnd = 0.dp, bottomEnd = 0.dp),
@@ -265,6 +299,11 @@ private fun DrawerContent(current: AppScreen, profile: ProfileUiState, onSelect:
                 label = { Text(stringResource(screen.label), style = MaterialTheme.typography.bodyLarge) },
                 selected = screen == current,
                 onClick = { onSelect(screen) },
+                badge = if (screen == AppScreen.FRIENDS && invitations > 0) {
+                    { CountBadge(invitations) }
+                } else {
+                    null
+                },
                 shape = RoundedCornerShape(14.dp),
                 colors = NavigationDrawerItemDefaults.colors(
                     selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -285,5 +324,16 @@ private fun DrawerContent(current: AppScreen, profile: ProfileUiState, onSelect:
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.navigationBarsPadding().padding(horizontal = 24.dp, vertical = 16.dp),
         )
+    }
+}
+
+/** Czerwone kółko z liczbą (zaproszenia do znajomych) – jak na mockupie menu. */
+@Composable
+private fun CountBadge(count: Int) {
+    Box(
+        Modifier.size(28.dp).clip(CircleShape).background(SzczytomaniaTheme.colors.trail),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(count.toString(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onPrimary)
     }
 }

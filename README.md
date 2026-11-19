@@ -83,7 +83,9 @@ Reguły bezpieczeństwa są w `firebase/firestore.rules`. Po każdej zmianie trz
 
 | Dokument | Pola |
 |---|---|
-| `users/{uid}` – profil | `nick` (3–20 znaków), `photoUrl` (na razie `null`), `createdAt` (czas serwera) |
+| `users/{uid}` – profil | `nick` (3–20 znaków: litery bez polskich znaków, cyfry, `.` `_` `-`), `nickLower` (nick małymi literami – do wyszukiwania), `photoUrl` (na razie `null`), `createdAt` (czas serwera) |
+| `nicks/{nick małymi literami}` – zajęty nick | `uid` właściciela |
+| `friendships/{uid1_uid2}` – znajomość, jedna na parę osób | `users` (oba uid), `from` (kto zaprosił), `to`, `status` (`pending` – zaproszenie, `accepted` – znajomi), `createdAt`, `acceptedAt` (czas serwera) |
 | `users/{uid}/conquests/{id}` – zdobycz, jedna na szczyt | `peakId` (id z pliku szczytów), `conqueredAt` (czas z telefonu), `serverTime` (czas serwera), `lat`, `lon`, `accuracy` (odczyt GPS, dokładność w m), `photoUrl` (link do zdjęcia, do wysłania `null`), `photoStatus` (`pending` – zdjęcie czeka na wysłanie, `uploaded` – wysłane) |
 
 - `{id}` zdobyczy to `peakId` z `_` zamiast `/` (np. `node_4366169405`), bo ukośnik w Firestore oddziela
@@ -148,6 +150,33 @@ Jak przetestować w emulatorze: pobierz region, wyłącz internet (`adb shell sv
 `adb shell svc data disable`), uruchom aplikację ponownie i otwórz szczyt z tego regionu z listy
 *Wszystkie szczyty*. Szczyt z niepobranego regionu pokaże pustą mapę. Wolne łącze, żeby zdążyć przerwać
 pobieranie: `adb emu network speed edge` (z powrotem: `full`).
+
+## Znajomi
+
+Menu → *Znajomi* (mockupy 08–10). Czerwone kółko w menu to liczba zaproszeń czekających na odpowiedź.
+
+- *Dodaj* – wyszukiwanie po początku nicku, bez względu na wielkość liter (`UserRepository.searchByNick`),
+  przycisk *Zaproś*, a przy osobie, która już nas zaprosiła – *Akceptuj*. Niżej własny nick z *Udostępnij*.
+  Po e-mailu nie szukamy: adresy są tylko w Authentication i inni ich nie widzą (karta projektu),
+- zaproszenie: karta z *Akceptuj* / *Odrzuć*; wysłane zaproszenia można anulować,
+- *Ostatnio na szczytach* – najnowsze zdobycze znajomych, lista znajomych z liczbą szczytów i postępem w KGP,
+- profil znajomego: statystyki, wspólne szczyty, wyścig w Koronie Gór Polski (paski rosną animacją
+  `animateFloatAsState`), jego zdobycze z oznaczeniem *Ty też*, *Usuń ze znajomych*.
+
+Reguły (`firebase/firestore.rules`):
+
+- zaprosić można tylko we własnym imieniu i tylko istniejącego użytkownika; id dokumentu to posortowane
+  uid obu osób (`FriendRepository.pairId`), więc ta sama para nie dostanie dwóch zaproszeń,
+- zaakceptować może tylko zaproszony; odrzucić, anulować i usunąć ze znajomych – każda z dwóch osób,
+- zdobycze widzi właściciel, jego znajomi i osoba, którą właściciel zaprosił (żeby przy zaproszeniu widziała,
+  ile ma szczytów),
+- nicki są unikalne: profil i dokument w `nicks` zapisują się razem, a dokument nicku może powstać tylko raz.
+  Rejestracja i zmiana nicku sprawdzają wcześniej, czy nick jest wolny (wymaga internetu). Konta założone
+  wcześniej dostają `nickLower` i wpis w `nicks` same po zalogowaniu (`UserRepository.ensureSearchable`).
+
+Jak sprawdzić (dwa konta, np. telefon i emulator): na koncie A *Dodaj* → wpisz początek nicku B → *Zaproś*.
+Na koncie B w menu pojawia się czerwone *1*, na ekranie Znajomi – zaproszenie z liczbą szczytów A → *Akceptuj*.
+Obie osoby widzą się na liście, a po dotknięciu – profil z wyścigiem w KGP i zdobyczami.
 
 ## Struktura projektu
 

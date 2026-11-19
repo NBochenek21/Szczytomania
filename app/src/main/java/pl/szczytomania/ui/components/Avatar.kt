@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
@@ -35,8 +36,10 @@ fun Avatar(
     dashedRing: Boolean = false,
     /** Odwrócone kolory (białe kółko, zielona litera) – na zielonym nagłówku menu. */
     inverted: Boolean = false,
+    /** Kolor kółka – znajomi mają różne (patrz [avatarColor]); domyślnie zielony. */
+    color: Color? = null,
 ) {
-    val green = SzczytomaniaTheme.colors.conquered
+    val green = color ?: SzczytomaniaTheme.colors.conquered
     val light = MaterialTheme.colorScheme.onPrimary
     Box(modifier = modifier.size(size), contentAlignment = Alignment.Center) {
         if (dashedRing) {
@@ -62,4 +65,16 @@ fun Avatar(
             Text(initial, style = textStyle, color = if (inverted) green else light)
         }
     }
+}
+
+/** Kolor awatara znajomego – stały dla danej osoby (z jej uid), jak różnokolorowe kółka na mockupie "Znajomi". */
+@Composable
+fun avatarColor(uid: String): Color {
+    val palette = listOf(
+        SzczytomaniaTheme.colors.conquered,
+        SzczytomaniaTheme.colors.trail,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    return palette[Math.floorMod(uid.hashCode(), palette.size)]
 }

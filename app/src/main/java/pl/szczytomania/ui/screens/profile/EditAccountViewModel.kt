@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import pl.szczytomania.R
 import pl.szczytomania.data.auth.AuthRepository
+import pl.szczytomania.data.firestore.NickTakenException
 import pl.szczytomania.data.firestore.UserRepository
 
 /** Część ekranu edycji konta – każda ma własny przycisk i komunikat. */
@@ -49,11 +51,12 @@ class EditAccountViewModel(
     private val _state = MutableStateFlow(EditAccountUiState(email = auth.email.orEmpty()))
     val state: StateFlow<EditAccountUiState> = _state.asStateFlow()
 
+    /** Nick musi być wolny, więc zmiana wymaga internetu (patrz [UserRepository.changeNick]). */
     fun saveNick(nick: String) {
         val id = uid ?: return
         if (!isValidNick(nick)) return fail(AccountSection.NICK, R.string.auth_error_nick_length)
-        users.updateNick(id, nick.trim())
-        _state.update { it.copy(message = AccountMessage(AccountSection.NICK, R.string.account_nick_saved, true)) }
+        if (!UserRepository.isValidNickFormat(nick)) return fail(AccountSection.NICK, R.string.auth_error_nick_chars)
+        run(AccountSection.NICK, R.string.account_nick_saved) { users.changeNick(id, nick.trim()) }
     }
 
     fun changeEmail(newEmail: String, currentPassword: String) {
@@ -87,6 +90,9 @@ class EditAccountViewModel(
     @StringRes
     private fun errorMessage(e: Exception): Int = when (e) {
         is FirebaseNetworkException -> R.string.auth_error_network
+        is NickTakenException -> R.string.auth_error_nick_taken
+        is FirebaseFirestoreException ->
+            if (e.code == FirebaseFirestoreException.Code.UNAVAILABLE) R.string.account_nick_offline else R.string.auth_error_unknown
         is FirebaseTooManyRequestsException -> R.string.auth_error_too_many_requests
         is FirebaseAuthUserCollisionException -> R.string.auth_error_email_taken
         is FirebaseAuthWeakPasswordException -> R.string.auth_error_password_short
