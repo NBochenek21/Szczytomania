@@ -37,6 +37,8 @@
     <string name="auth_forgot_password">Nie pamiętasz hasła?</string>
     <string name="auth_reset_sent">Jeśli konto %1$s istnieje, wysłaliśmy na nie link do zmiany hasła.</string>
     <string name="auth_error_nick_length">Nick musi mieć od 3 do 20 znaków.</string>
+    <string name="auth_error_nick_chars">Nick może mieć tylko litery bez polskich znaków, cyfry oraz . _ -</string>
+    <string name="auth_error_nick_taken">Ten nick jest już zajęty. Wybierz inny.</string>
     <string name="auth_error_email_invalid">Wpisz poprawny adres e-mail.</string>
     <string name="auth_error_password_short">Hasło musi mieć co najmniej 8 znaków.</string>
     <string name="auth_error_password_empty">Wpisz hasło.</string>
@@ -138,6 +140,7 @@
     <string name="account_title">Edycja konta</string>
     <string name="account_nick_save">Zapisz nick</string>
     <string name="account_nick_saved">Nick zapisany.</string>
+    <string name="account_nick_offline">Zmiana nicku wymaga internetu – trzeba sprawdzić, czy nick jest wolny.</string>
     <string name="account_email_current">Obecny adres: %1$s</string>
     <string name="account_email_new">Nowy adres e-mail</string>
     <string name="account_email_change">Zmień e-mail</string>
@@ -213,6 +216,48 @@
     <string name="peaks_sort_elevation">Wysokość</string>
     <string name="peaks_sort_name">Nazwa</string>
     <string name="peaks_sort_range">Pasmo</string>
+
+    <string name="nav_friends">Znajomi</string>
+    <string name="friends_add">Dodaj</string>
+    <string name="friends_invitation_body">chce dodać Cię do znajomych</string>
+    <string name="friends_accept">Akceptuj</string>
+    <string name="friends_reject">Odrzuć</string>
+    <string name="friends_recent">Ostatnio na szczytach</string>
+    <string name="friends_conquered_verb">zdobył(a)</string>
+    <string name="friends_today">dziś</string>
+    <string name="friends_yesterday">wczoraj</string>
+    <string name="friends_days_ago">%1$d dni temu</string>
+    <string name="friends_list">Znajomi · %1$d</string>
+    <string name="friends_empty">Nie masz jeszcze znajomych. Dotknij „Dodaj” i wyszukaj kogoś po nicku.</string>
+    <string name="friends_sent">Wysłane zaproszenia</string>
+    <string name="friends_sent_waiting">czeka na akceptację</string>
+    <string name="add_friend_title">Dodaj znajomego</string>
+    <string name="add_friend_subtitle">Wyszukaj po nicku.</string>
+    <string name="add_friend_placeholder">Początek nicku</string>
+    <string name="add_friend_invite">Zaproś</string>
+    <string name="add_friend_already">już znajomy</string>
+    <string name="add_friend_invited">zaproszenie wysłane</string>
+    <string name="add_friend_invites_you">zaprasza Cię</string>
+    <string name="add_friend_no_results">Nie ma nikogo o nicku zaczynającym się od „%1$s”.</string>
+    <string name="add_friend_error">Nie udało się wyszukać. Wyszukiwanie wymaga internetu.</string>
+    <string name="add_friend_my_nick">Twój nick – podaj go znajomym</string>
+    <string name="add_friend_share">Udostępnij</string>
+    <string name="add_friend_share_text">Dodaj mnie do znajomych w Szczytomanii – mój nick: %1$s</string>
+    <string name="add_friend_footer">Znajomy zobaczy zaproszenie w aplikacji i musi je zaakceptować.</string>
+    <string name="friend_since">znajomi od %1$s</string>
+    <string name="friend_common">wspólne z Tobą</string>
+    <string name="friend_kgp_friend_leads">%1$s prowadzi o %2$d</string>
+    <string name="friend_kgp_you_lead">Prowadzisz o %1$d</string>
+    <string name="friend_kgp_tie">Remis</string>
+    <string name="friend_you">Ty</string>
+    <string name="friend_conquests">Zdobycze · %1$s</string>
+    <string name="friend_no_conquests">%1$s nie ma jeszcze zdobyczy.</string>
+    <string name="friend_you_too">Ty też</string>
+    <string name="friend_show_all">Pokaż wszystkie (%1$d)</string>
+    <string name="friend_remove">Usuń ze znajomych</string>
+    <string name="friend_remove_title">Usunąć %1$s ze znajomych?</string>
+    <string name="friend_remove_body">Przestaniecie widzieć nawzajem swoje zdobycze. Zaproszenie można potem wysłać ponownie.</string>
+    <string name="friend_remove_confirm">Usuń</string>
 
     <string name="osm_attribution">Dane o szczytach i mapy: © OpenStreetMap contributors</string>
 </resources>

@@ -5,30 +5,59 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Id znajomości dwóch osób: ich uid posortowane i połączone "_" – ta sama para ma zawsze
+    // ten sam dokument, więc nie da się wysłać dwóch zaproszeń. Aplikacja liczy je tak samo
+    // (FriendRepository.pairId).
+    function pairId(a, b) {
+      return a < b ? a + '_' + b : b + '_' + a;
+    }
+
+    function friendshipPath(a, b) {
+      return /databases/$(database)/documents/friendships/$(pairId(a, b));
+    }
+
     // Profil użytkownika: dokument users/{uid}.
     match /users/{uid} {
       function isOwner() {
-        return request.auth != null && request.auth.uid == uid;
+        return signedIn() && request.auth.uid == uid;
       }
 
+      // Nick: 3–20 znaków – litery bez polskich znaków, cyfry, kropka, podkreślenie, myślnik
+      // (lower() w regułach nie zmienia wielkości polskich liter, a nick jest też id dokumentu w nicks).
+      // nickLower to nick małymi literami – po nim działa wyszukiwanie znajomych. Nick musi być
+      // zarezerwowany w nicks dla tego użytkownika w tym samym zapisie, więc dwie osoby nie mogą
+      // mieć tego samego nicku.
       function validNick() {
-        return request.resource.data.nick is string
-          && request.resource.data.nick.size() >= 3
-          && request.resource.data.nick.size() <= 20;
+        let nick = request.resource.data.nick;
+        return nick is string
+          && nick.matches('[A-Za-z0-9._-]{3,20}')
+          && request.resource.data.nickLower == nick.lower()
+          && getAfter(/databases/$(database)/documents/nicks/$(nick.lower())).data.uid == uid;
+      }
+
+      // Zdobycze może zobaczyć znajomy (zaproszenie zaakceptowane) i osoba, którą właściciel
+      // zaprosił – żeby przy zaproszeniu widziała, ile ma szczytów.
+      function canSeeConquests() {
+        let friendship = get(friendshipPath(request.auth.uid, uid)).data;
+        return friendship.status == 'accepted' || friendship.from == uid;
       }
 
       // Nick i zdjęcie widzi każdy zalogowany (potrzebne do wyszukiwania znajomych).
-      allow read: if request.auth != null;
+      allow read: if signedIn();
 
       // Profil zakłada tylko właściciel, z czasem serwera i bez dodatkowych pól.
       allow create: if isOwner()
-        && request.resource.data.keys().hasOnly(['nick', 'photoUrl', 'createdAt'])
+        && request.resource.data.keys().hasOnly(['nick', 'nickLower', 'photoUrl', 'createdAt'])
         && validNick()
         && request.resource.data.createdAt == request.time;
 
       // Właściciel może zmienić nick i zdjęcie, ale nie datę założenia konta.
       allow update: if isOwner()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nick', 'photoUrl'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nick', 'nickLower', 'photoUrl'])
         && validNick();
 
       // Usuwanie konta zrobimy w tygodniu 7 (razem z danymi i zdjęciami).
@@ -40,8 +69,7 @@ service cloud.firestore {
           return ['peakId', 'conqueredAt', 'serverTime', 'lat', 'lon', 'accuracy', 'photoUrl', 'photoStatus'];
         }
 
-        // Na razie widzi je tylko właściciel – znajomym otworzymy je w tygodniu 5.
-        allow read: if isOwner();
+        allow read: if isOwner() || canSeeConquests();
 
         // Id dokumentu to id szczytu z "_" zamiast "/" (np. node_4366169405), więc ten sam szczyt
         // zapisze się tylko raz. Czas serwera ustawia serwer, a zdjęcie na start czeka na wysłanie.
@@ -69,6 +97,57 @@ service cloud.firestore {
         // Usuwanie zdobyczy – razem z kontem w tygodniu 7.
         allow delete: if false;
       }
+    }
+
+    // Zajęte nicki: nicks/{nick małymi literami} → uid właściciela. Dokument może powstać tylko raz,
+    // więc nick ma jedna osoba. Rezerwacja idzie w jednym zapisie z profilem (patrz validNick).
+    match /nicks/{nick} {
+      // Rejestracja sprawdza, czy nick jest wolny, zanim powstanie konto – więc odczyt jednego nicku
+      // jest dostępny też bez logowania. Listy wszystkich nicków pobrać się nie da.
+      allow get: if true;
+      allow list: if false;
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.nickLower == nick;
+
+      // Stary nick zwalnia się przy zmianie nicku – tylko właściciel i tylko gdy profil ma już inny.
+      allow delete: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.nickLower != nick;
+
+      allow update: if false;
+    }
+
+    // Znajomości: friendships/{uid1_uid2} – dwie osoby i status (zaproszenie / zaakceptowane).
+    match /friendships/{friendshipId} {
+      // Widzą ją tylko te dwie osoby (aplikacja pyta o nie zapytaniem "users array-contains uid").
+      allow read: if signedIn() && request.auth.uid in resource.data.users;
+
+      // Zaproszenie wysyła się tylko we własnym imieniu, do istniejącego użytkownika, nie do siebie.
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['users', 'from', 'to', 'status', 'createdAt'])
+        && request.resource.data.from == request.auth.uid
+        && request.resource.data.to is string
+        && request.resource.data.to != request.auth.uid
+        && friendshipId == pairId(request.auth.uid, request.resource.data.to)
+        && request.resource.data.users.size() == 2
+        && request.resource.data.users.hasAll([request.auth.uid, request.resource.data.to])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.createdAt == request.time
+        && exists(/databases/$(database)/documents/users/$(request.resource.data.to));
+
+      // Zaakceptować może tylko zaproszony – zmienia się tylko status i dochodzi czas akceptacji.
+      allow update: if signedIn()
+        && resource.data.to == request.auth.uid
+        && resource.data.status == 'pending'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'acceptedAt'])
+        && request.resource.data.status == 'accepted'
+        && request.resource.data.acceptedAt == request.time;
+
+      // Odrzucenie, anulowanie zaproszenia albo usunięcie ze znajomych – każda z dwóch osób.
+      allow delete: if signedIn() && request.auth.uid in resource.data.users;
     }
 
     // Własne zestawy gór: sets/{setId}. Widzi je właściciel i osoby z listy sharedWith
