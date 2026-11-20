@@ -49,6 +49,20 @@ class OwnSetsTest {
     }
 
     @Test
+    fun sharedSetsAreFoundAndFriendsNamed() {
+        val shared = SetProgress.of(PeakSet("own:x", "Od Jakuba", "", listOf("node/1")), peaks, emptySet())
+        val state = SetsUiState(
+            isLoading = false,
+            sharedWithMe = listOf(shared),
+            sharing = mapOf("own:x" to SetSharing(ownerId = "uidJ", sharedWith = listOf("me"), mine = false)),
+            friends = listOf("uidJ" to "Jakub"),
+        )
+        assertEquals("Od Jakuba", state.set("own:x")?.set?.name)
+        assertEquals("Jakub", state.nick("uidJ"))
+        assertEquals(null, state.nick("obcy"))
+    }
+
+    @Test
     fun accountValidationMatchesRegistrationRules() {
         assertTrue(isValidNick("mik"))
         assertFalse(isValidNick("ab"))
