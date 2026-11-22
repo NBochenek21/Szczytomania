@@ -151,6 +151,17 @@ Jak przetestować w emulatorze: pobierz region, wyłącz internet (`adb shell sv
 *Wszystkie szczyty*. Szczyt z niepobranego regionu pokaże pustą mapę. Wolne łącze, żeby zdążyć przerwać
 pobieranie: `adb emu network speed edge` (z powrotem: `full`).
 
+### Mapa bez internetu
+
+- Pasek pod górnym paskiem mapy mówi, że nie ma internetu, a przy przybliżeniu na pasmo – czy ten
+  obszar jest pobrany. Gdy nie jest, ma przycisk *Mapy offline* (`map/offline/OfflineHint.kt`).
+- Gdy przy starcie nie ma internetu, a stylu mapy nie ma w telefonie (żaden region nie był pobrany),
+  mapa przełącza się na styl zapasowy: tło i kontur Polski, na nich szczyty i pozycja użytkownika
+  (`MapStyle.fallbackJson`). Po powrocie internetu sama wczytuje właściwy styl.
+- Zdobyte szczyty są na mapie zielone, do zdobycia – szare (legenda z mockupu mapy).
+- Szczyt wybrany z listy (szczytów, zestawu) przybliża mapę, także gdy był widoczny na oddalonej mapie.
+  Stuknięcie trójkąta na mapie tylko otwiera kartę – kamera zostaje.
+
 ## Znajomi
 
 Menu → *Znajomi* (mockupy 08–10). Czerwone kółko w menu to liczba zaproszeń czekających na odpowiedź.
@@ -177,6 +188,45 @@ Reguły (`firebase/firestore.rules`):
 Jak sprawdzić (dwa konta, np. telefon i emulator): na koncie A *Dodaj* → wpisz początek nicku B → *Zaproś*.
 Na koncie B w menu pojawia się czerwone *1*, na ekranie Znajomi – zaproszenie z liczbą szczytów A → *Akceptuj*.
 Obie osoby widzą się na liście, a po dotknięciu – profil z wyścigiem w KGP i zdobyczami.
+
+## Powiadomienia push
+
+Powiadomienia wysyłają Cloud Functions (`firebase/functions`) przez Firebase Cloud Messaging, gdy:
+
+- znajomy zdobył szczyt (`users/{uid}/conquests` – nowy dokument; zdobycz zapisana w górach bez zasięgu
+  trafia na serwer później, wtedy też dopiero idzie powiadomienie),
+- ktoś zaprasza do znajomych (`friendships` – nowy dokument),
+- ktoś przyjął nasze zaproszenie (`friendships` – status `pending` → `accepted`).
+
+Funkcja wysyła same dane (typ, uid i nick nadawcy, id szczytu), a tekst składa aplikacja – ma plik szczytów,
+więc pokazuje np. „kuba na szczycie! · Rysy · 2499 m · Tatry” (`notifications/Notifications.kt`).
+Dotknięcie otwiera profil znajomego, a przy zaproszeniu – listę Znajomi.
+
+- Token telefonu jest w `users/{uid}/devices/{token}` (`notifications/PushTokens.kt`) – widzi go tylko
+  właściciel, bo profil czyta każdy zalogowany. Funkcja usuwa tokeny, których FCM już nie zna.
+- O zgodę na powiadomienia (Android 13+) aplikacja pyta raz, przy pierwszym wejściu na ekran Znajomi.
+  W profilu jest przełącznik *Powiadomienia*; wyłączony usuwa token z Firestore.
+- Przy wylogowaniu token jest usuwany i unieważniany – telefon nie dostaje powiadomień tamtego konta.
+
+Wdrożenie (raz, potem po zmianach w `firebase/functions` albo regułach) – wymaga Node.js 22 i Firebase CLI
+(`npm install -g firebase-tools`, `firebase login`):
+
+```
+cd firebase/functions && npm install && cd ../..
+firebase deploy --only functions,firestore:rules
+```
+
+Region funkcji (`firebase/functions/index.js`) musi pasować do lokalizacji bazy Firestore – domyślnie
+`us-central1`. Testy logiki: `cd firebase/functions && npm test`.
+
+Jak sprawdzić bez serwera (build debug): udawana wiadomość push przez `notifications/DebugPushReceiver.kt`:
+
+```
+adb shell am broadcast -n pl.szczytomania/.notifications.DebugPushReceiver --es type friend_conquest --es uid abc --es nick kuba --es peakId node/4366169405
+```
+
+`type` to też `friend_invite` i `friend_accepted` (bez `peakId`). Z serwerem: dwa konta znajomych na dwóch
+telefonach – zdobycz jednego daje powiadomienie na drugim.
 
 ## Struktura projektu
 

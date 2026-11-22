@@ -85,6 +85,9 @@ fun MapLibreMapView(
  * telefonu), wczytuje styl zapasowy – szczyty i pozycja użytkownika działają dalej – a po powrocie
  * internetu próbuje jeszcze raz. Jeśli styl nie wczytał się mimo internetu (np. zły klucz MapTiler),
  * zostaje zapasowy: ponawianie w kółko nic by nie dało.
+ *
+ * Bez sieci MapLibre nie zgłasza błędu, tylko czeka na połączenie – dlatego bez internetu dajemy
+ * mu [OFFLINE_WAIT_MS] na wczytanie stylu z pamięci telefonu, a potem przełączamy na zapasowy.
  */
 private class StyleLoader(
     private val context: Context,
@@ -94,17 +97,29 @@ private class StyleLoader(
     private val mainThread = Handler(Looper.getMainLooper())
     private var stopWatching: (() -> Unit)? = null
     private var usingFallback = false
+    private var styleLoaded = false
 
     fun start(mapView: MapView, map: MapLibreMap, onLoaded: (Style) -> Unit) {
         mapView.addOnDidFailLoadingMapListener { error ->
-            if (usingFallback || fallbackJson == null) return@addOnDidFailLoadingMapListener
             Log.w(TAG, "Nie udało się wczytać stylu mapy: $error")
-            usingFallback = true
-            val wasOnline = context.isOnline()
-            map.setStyle(Style.Builder().fromJson(fallbackJson)) { onLoaded(it) }
-            if (!wasOnline) retryWhenOnline(map, onLoaded)
+            useFallback(map, onLoaded)
         }
-        map.setStyle(Style.Builder().fromUri(styleUrl)) { onLoaded(it) }
+        loadStyle(map, onLoaded)
+        mainThread.postDelayed({ if (!styleLoaded && !context.isOnline()) useFallback(map, onLoaded) }, OFFLINE_WAIT_MS)
+    }
+
+    private fun loadStyle(map: MapLibreMap, onLoaded: (Style) -> Unit) {
+        map.setStyle(Style.Builder().fromUri(styleUrl)) {
+            styleLoaded = true
+            onLoaded(it)
+        }
+    }
+
+    private fun useFallback(map: MapLibreMap, onLoaded: (Style) -> Unit) {
+        if (usingFallback || styleLoaded || fallbackJson == null) return
+        usingFallback = true
+        map.setStyle(Style.Builder().fromJson(fallbackJson)) { onLoaded(it) }
+        if (!context.isOnline()) retryWhenOnline(map, onLoaded)
     }
 
     private fun retryWhenOnline(map: MapLibreMap, onLoaded: (Style) -> Unit) {
@@ -115,17 +130,21 @@ private class StyleLoader(
                 if (!usingFallback) return@post
                 stop()
                 usingFallback = false
-                map.setStyle(Style.Builder().fromUri(styleUrl)) { onLoaded(it) }
+                loadStyle(map, onLoaded)
             }
         }
     }
 
     fun stop() {
+        mainThread.removeCallbacksAndMessages(null)
         stopWatching?.invoke()
         stopWatching = null
     }
 
     private companion object {
         const val TAG = "MapLibreMapView"
+
+        // Styl z pamięci telefonu wczytuje się w ułamku sekundy – po tym czasie go tam nie ma.
+        const val OFFLINE_WAIT_MS = 4_000L
     }
 }
