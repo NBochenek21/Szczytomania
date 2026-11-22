@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pl.szczytomania.R
+import pl.szczytomania.notifications.rememberNotificationsSwitch
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.DashedDivider
 import pl.szczytomania.ui.components.ProgressBar
@@ -143,6 +145,12 @@ fun ProfileScreen(
             SettingsRow(R.drawable.ic_person, stringResource(R.string.account_title), onClick = onEditAccount)
             DashedDivider(Modifier.padding(horizontal = 16.dp))
             SettingsRow(R.drawable.ic_download, stringResource(R.string.settings_offline_maps), onClick = onOfflineMaps)
+            DashedDivider(Modifier.padding(horizontal = 16.dp))
+            // Powiadomienia push o znajomych (zdobycze, zaproszenia) – notifications/.
+            val notifications = rememberNotificationsSwitch()
+            SettingsRow(R.drawable.ic_bell, stringResource(R.string.settings_notifications), onClick = notifications::toggle) {
+                Switch(checked = notifications.checked, onCheckedChange = { notifications.toggle() })
+            }
             DashedDivider(Modifier.padding(horizontal = 16.dp))
             SettingsRow(R.drawable.ic_logout, stringResource(R.string.profile_sign_out), onClick = viewModel::signOut, danger = true)
         }

@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,11 +16,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -55,6 +58,11 @@ import pl.szczytomania.map.MapStyle
 import pl.szczytomania.map.POLAND_CAMERA
 import pl.szczytomania.map.PeakLayer
 import pl.szczytomania.map.followUserLocation
+import pl.szczytomania.map.offline.OfflineHint
+import pl.szczytomania.map.offline.OfflineMaps
+import pl.szczytomania.map.offline.RegionDownload
+import pl.szczytomania.map.offline.offlineHint
+import pl.szczytomania.map.rememberIsOnline
 import pl.szczytomania.map.showUserLocation
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.SquareIconButton
@@ -67,12 +75,16 @@ private class LoadedMap(val map: MapLibreMap, val style: Style)
 // Przybliżenie przy przejściu do szczytu wybranego z listy.
 private const val PEAK_ZOOM = 12.0
 
+// Szczyt wybrany z listy przy mapie oddalonej bardziej niż to – przybliżamy, nawet jeśli jest widoczny.
+private const val PEAK_MIN_ZOOM = 9.0
+
 @Composable
 fun MapScreen(
     onMenuClick: () -> Unit = {},
     profileInitial: String = "",
     onProfileClick: () -> Unit = {},
     onConquer: (String) -> Unit = {},
+    onOfflineMaps: () -> Unit = {},
     viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory),
 ) {
     val context = LocalContext.current
@@ -82,6 +94,20 @@ fun MapScreen(
     val selectedPeak by viewModel.selectedPeak.collectAsStateWithLifecycle()
     val conqueredIds by viewModel.conqueredIds.collectAsStateWithLifecycle()
     var loadedMap by remember { mutableStateOf<LoadedMap?>(null) }
+    // Szczyt wybrany stuknięciem w mapę – wtedy kamera zostaje, gdzie jest (z listy – przesuwamy ją).
+    var selectedOnMap by remember { mutableStateOf(false) }
+
+    // Bez internetu: czy oglądany obszar jest pobrany (Mapy offline).
+    val online by rememberIsOnline()
+    val downloads by remember { OfflineMaps.get(context).state }.collectAsStateWithLifecycle()
+    var camera by remember { mutableStateOf(viewModel.lastCamera) }
+    val hint = offlineHint(
+        online = online,
+        lat = camera?.target?.latitude,
+        lon = camera?.target?.longitude,
+        zoom = camera?.zoom,
+        downloaded = downloads.filterValues { it is RegionDownload.Done }.keys,
+    )
 
     BackHandler(enabled = selectedPeak != null) { viewModel.selectPeak(null) }
 
@@ -94,14 +120,18 @@ fun MapScreen(
         }
     }
 
-    LaunchedEffect(loadedMap, peaks) {
-        loadedMap?.let { PeakLayer.setPeaks(it.style, peaks) }
+    LaunchedEffect(loadedMap, peaks, conqueredIds) {
+        loadedMap?.let { PeakLayer.setPeaks(it.style, peaks, conqueredIds) }
     }
 
-    // Wybrany szczyt poza widokiem (np. otwarty z listy szczytów) – przesuwamy mapę na niego.
+    // Szczyt wybrany z listy (szczytów, zestawu) – przesuwamy i przybliżamy mapę na niego.
     LaunchedEffect(loadedMap, selectedPeak?.id) {
         val loaded = loadedMap ?: return@LaunchedEffect
         val peak = selectedPeak ?: return@LaunchedEffect
+        if (selectedOnMap) {
+            selectedOnMap = false
+            return@LaunchedEffect
+        }
         loaded.map.showPeak(peak)
     }
 
@@ -122,12 +152,22 @@ fun MapScreen(
             modifier = Modifier.fillMaxSize(),
             // Mapa powstaje od nowa po powrocie z innego ekranu menu – wraca tam, gdzie była.
             initialCamera = viewModel.lastCamera ?: POLAND_CAMERA,
+            fallbackStyleJson = MapStyle.fallbackJson,
             onStyleLoaded = { map, style ->
                 PeakLayer.addTo(style, context)
-                map.addOnCameraIdleListener { viewModel.lastCamera = map.cameraPosition }
-                map.addOnMapClickListener { point ->
-                    viewModel.selectPeak(PeakLayer.peakIdAt(map, point, density))
-                    true
+                // Po stylu zapasowym, a potem właściwym, ta funkcja wywoła się drugi raz –
+                // słuchacze mapy dodajemy tylko raz.
+                if (loadedMap?.map !== map) {
+                    map.addOnCameraIdleListener {
+                        viewModel.lastCamera = map.cameraPosition
+                        camera = map.cameraPosition
+                    }
+                    map.addOnMapClickListener { point ->
+                        val id = PeakLayer.peakIdAt(map, point, density)
+                        selectedOnMap = id != null
+                        viewModel.selectPeak(id)
+                        true
+                    }
                 }
                 loadedMap = LoadedMap(map, style)
             },
@@ -149,6 +189,14 @@ fun MapScreen(
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(onClickLabel = stringResource(R.string.profile_open), role = Role.Button, onClick = onProfileClick),
+            )
+        }
+
+        if (hint != OfflineHint.NONE) {
+            OfflineBanner(
+                hint = hint,
+                onOfflineMaps = onOfflineMaps,
+                modifier = Modifier.align(Alignment.TopCenter).padding(start = 16.dp, end = 16.dp, top = 84.dp),
             )
         }
 
@@ -221,12 +269,47 @@ fun TrailMark(modifier: Modifier = Modifier) {
     }
 }
 
-/** Przesuwa mapę na szczyt, jeśli nie jest widoczny, i przestaje wtedy podążać za użytkownikiem. */
+/**
+ * Przesuwa mapę na szczyt, jeśli nie jest widoczny albo mapa jest mocno oddalona (np. cała Polska),
+ * i przestaje wtedy podążać za użytkownikiem.
+ */
 private fun MapLibreMap.showPeak(peak: Peak) {
     val target = LatLng(peak.lat, peak.lon)
-    if (projection.visibleRegion.latLngBounds.contains(target)) return
+    if (projection.visibleRegion.latLngBounds.contains(target) && cameraPosition.zoom >= PEAK_MIN_ZOOM) return
     if (locationComponent.isLocationComponentActivated) locationComponent.cameraMode = CameraMode.NONE
     animateCamera(CameraUpdateFactory.newLatLngZoom(target, maxOf(cameraPosition.zoom, PEAK_ZOOM)))
+}
+
+/** Pasek "bez internetu" pod górnym paskiem mapy – mówi, czy oglądany obszar jest w telefonie. */
+@Composable
+private fun OfflineBanner(hint: OfflineHint, onOfflineMaps: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.framed(radius = 14.dp).padding(start = 14.dp, end = 6.dp, top = 6.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_cloud_off),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(18.dp),
+        )
+        Text(
+            text = stringResource(
+                when (hint) {
+                    OfflineHint.AREA_DOWNLOADED -> R.string.map_offline_downloaded
+                    OfflineHint.AREA_MISSING -> R.string.map_offline_missing
+                    else -> R.string.map_offline
+                },
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f, fill = false).padding(vertical = 8.dp),
+        )
+        if (hint == OfflineHint.AREA_MISSING) {
+            TextButton(onClick = onOfflineMaps) { Text(stringResource(R.string.map_offline_open)) }
+        }
+    }
 }
 
 @Composable

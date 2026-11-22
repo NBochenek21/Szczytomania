@@ -7,6 +7,10 @@
     <string name="location_permission_grant">Zezwól</string>
     <string name="location_permission_open_settings">Otwórz ustawienia</string>
 
+    <string name="map_offline">Bez internetu – mapa z pamięci telefonu</string>
+    <string name="map_offline_downloaded">Bez internetu – ten obszar jest pobrany</string>
+    <string name="map_offline_missing">Bez internetu – tego regionu nie pobrano</string>
+    <string name="map_offline_open">Mapy offline</string>
     <string name="map_center_on_me">Pokaż moją pozycję</string>
 
     <string name="summit_check_again">Sprawdź ponownie</string>
@@ -137,6 +141,18 @@
     <string name="settings_theme_light">Jasny</string>
     <string name="settings_theme_dark">Ciemny</string>
     <string name="settings_offline_maps">Pobrane mapy regionów</string>
+    <string name="settings_notifications">Powiadomienia</string>
+
+    <string name="notification_channel_friends">Znajomi</string>
+    <string name="notification_channel_friends_description">Zdobycze znajomych i zaproszenia do znajomych</string>
+    <string name="notification_someone">Ktoś</string>
+    <string name="notification_conquest_title">%1$s na szczycie!</string>
+    <string name="notification_conquest_text">%1$s · %2$d m · %3$s</string>
+    <string name="notification_conquest_unknown_peak">Nowa zdobycz – zobacz w aplikacji.</string>
+    <string name="notification_invite_title">Zaproszenie do znajomych</string>
+    <string name="notification_invite_text">%1$s zaprasza Cię do znajomych.</string>
+    <string name="notification_accepted_title">Nowy znajomy</string>
+    <string name="notification_accepted_text">%1$s jest teraz w Twoich znajomych.</string>
     <string name="account_title">Edycja konta</string>
     <string name="account_nick_save">Zapisz nick</string>
     <string name="account_nick_saved">Nick zapisany.</string>

@@ -41,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +53,8 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import pl.szczytomania.BuildConfig
 import pl.szczytomania.R
+import pl.szczytomania.notifications.Notifications
+import pl.szczytomania.notifications.PushTokens
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.DashedDivider
 import pl.szczytomania.data.firestore.UserRepository
@@ -124,6 +127,22 @@ fun AppNavigation() {
     // Zdobywanie szczytu: pełny ekran nad pozostałymi, otwierany z karty szczytu.
     val conquestViewModel: ConquestViewModel = viewModel(factory = ConquestViewModel.Factory)
     var conquering by rememberSaveable { mutableStateOf(false) }
+    // Token tego telefonu do powiadomień push (Cloud Functions wysyłają na niego wiadomości).
+    val context = LocalContext.current
+    LaunchedEffect(uid) { if (uid != null) PushTokens.register(context) }
+    // Dotknięte powiadomienie: profil znajomego albo lista znajomych (zaproszenie).
+    val notificationTarget by Notifications.target.collectAsStateWithLifecycle()
+    LaunchedEffect(notificationTarget) {
+        val target = notificationTarget ?: return@LaunchedEffect
+        Notifications.consumeTarget()
+        conquering = false
+        openSetId = null
+        creatingSet = false
+        editingAccount = false
+        current = AppScreen.FRIENDS
+        openFriendUid = target.friendUid
+        drawerState.close()
+    }
     val closeConquest = {
         conquering = false
         mapViewModel.selectPeak(null)
@@ -199,6 +218,7 @@ fun AppNavigation() {
                             conquestViewModel.start(peakId)
                             conquering = true
                         },
+                        onOfflineMaps = { current = AppScreen.OFFLINE_MAPS },
                         viewModel = mapViewModel,
                     )
                     AppScreen.SETS -> when {

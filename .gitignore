@@ -22,3 +22,6 @@ Thumbs.db
 # Import szczytów: surowe odpowiedzi Overpass (duże, odtwarzalne skryptem pobierz.py)
 scripts/overpass/surowe/
 __pycache__/
+
+# Cloud Functions – zależności instaluje npm
+node_modules/

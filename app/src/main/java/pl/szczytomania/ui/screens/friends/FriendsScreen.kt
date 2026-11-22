@@ -57,6 +57,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pl.szczytomania.R
+import pl.szczytomania.notifications.AskForNotificationsOnce
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.DashedDivider
 import pl.szczytomania.ui.components.LoadingBox
@@ -90,6 +91,7 @@ internal fun SectionLabel(text: String, modifier: Modifier = Modifier) {
 @Composable
 fun FriendsScreen(onMenuClick: () -> Unit, onFriendClick: (String) -> Unit, viewModel: FriendsViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    AskForNotificationsOnce()
     var adding by rememberSaveable { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).systemBarsPadding()) {
