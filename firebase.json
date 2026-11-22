@@ -1,0 +1,13 @@
+{
+  "firestore": {
+    "rules": "firebase/firestore.rules"
+  },
+  "storage": {
+    "rules": "firebase/storage.rules"
+  },
+  "functions": {
+    "source": "firebase/functions",
+    "runtime": "nodejs22",
+    "ignore": ["node_modules", "test", ".git", "*.log"]
+  }
+}

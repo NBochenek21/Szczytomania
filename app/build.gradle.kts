@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.messaging)
 
     // Aparat z podglądem na żywo w ramce ekranu zdobywania (CameraX).
     implementation(libs.androidx.camera.camera2)

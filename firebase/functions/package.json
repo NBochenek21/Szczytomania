@@ -1,0 +1,16 @@
+{
+  "name": "szczytomania-functions",
+  "description": "Cloud Functions Szczytomanii: powiadomienia push dla znajomych",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.1",
+    "firebase-functions": "^7.4.0"
+  }
+}

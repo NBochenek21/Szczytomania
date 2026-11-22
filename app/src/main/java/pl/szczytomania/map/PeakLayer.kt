@@ -13,12 +13,14 @@ import org.maplibre.android.maps.Style
 import org.maplibre.android.style.expressions.Expression.get
 import org.maplibre.android.style.expressions.Expression.literal
 import org.maplibre.android.style.expressions.Expression.step
+import org.maplibre.android.style.expressions.Expression.switchCase
 import org.maplibre.android.style.expressions.Expression.stop
 import org.maplibre.android.style.expressions.Expression.zoom
 import org.maplibre.android.style.layers.Property
 import org.maplibre.android.style.layers.PropertyFactory.iconAllowOverlap
 import org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacement
 import org.maplibre.android.style.layers.PropertyFactory.iconImage
+import org.maplibre.android.style.layers.PropertyFactory.symbolSortKey
 import org.maplibre.android.style.layers.PropertyFactory.textAnchor
 import org.maplibre.android.style.layers.PropertyFactory.textColor
 import org.maplibre.android.style.layers.PropertyFactory.textField
@@ -37,15 +39,17 @@ import pl.szczytomania.data.model.Peak
 import pl.szczytomania.location.distanceMeters
 import kotlin.math.roundToInt
 
-/** Warstwa szczytów na mapie: szary trójkąt i nazwa pod nim. */
+/** Warstwa szczytów na mapie: trójkąt (szary – do zdobycia, zielony – zdobyty) i nazwa pod nim. */
 object PeakLayer {
 
     private const val SOURCE_ID = "peaks"
     private const val LAYER_ID = "peaks"
     private const val ICON_ID = "peak"
+    private const val ICON_CONQUERED_ID = "peak-conquered"
 
     private const val PROPERTY_ID = "id"
     private const val PROPERTY_NAME = "name"
+    private const val PROPERTY_CONQUERED = "conquered"
 
     // Poniżej tego przybliżenia (widok całej Polski) pokazujemy same trójkąty, bez nazw.
     private const val NAMES_MIN_ZOOM = 7f
@@ -58,11 +62,15 @@ object PeakLayer {
 
     /** Dodaje pustą warstwę do świeżo wczytanego stylu. Szczyty ustawia [setPeaks]. */
     fun addTo(style: Style, context: Context) {
-        style.addImage(ICON_ID, peakIcon(context.resources.displayMetrics.density))
+        val density = context.resources.displayMetrics.density
+        style.addImage(ICON_ID, peakIcon(density, PEAK_COLOR))
+        style.addImage(ICON_CONQUERED_ID, peakIcon(density, CONQUERED_COLOR))
         style.addSource(GeoJsonSource(SOURCE_ID))
         style.addLayer(
             SymbolLayer(LAYER_ID, SOURCE_ID).withProperties(
-                iconImage(ICON_ID),
+                iconImage(switchCase(get(PROPERTY_CONQUERED), literal(ICON_CONQUERED_ID), literal(ICON_ID))),
+                // Zdobyte rysujemy na wierzchu – przy gęstych pasmach widać, co już zaliczone.
+                symbolSortKey(switchCase(get(PROPERTY_CONQUERED), literal(1f), literal(0f))),
                 iconAllowOverlap(true),
                 iconIgnorePlacement(true),
                 textField(step(zoom(), literal(""), stop(NAMES_MIN_ZOOM, get(PROPERTY_NAME)))),
@@ -79,11 +87,12 @@ object PeakLayer {
         )
     }
 
-    fun setPeaks(style: Style, peaks: List<Peak>) {
+    fun setPeaks(style: Style, peaks: List<Peak>, conqueredIds: Set<String> = emptySet()) {
         val features = peaks.map { peak ->
             Feature.fromGeometry(Point.fromLngLat(peak.lon, peak.lat)).apply {
                 addStringProperty(PROPERTY_ID, peak.id)
                 addStringProperty(PROPERTY_NAME, peak.name)
+                addBooleanProperty(PROPERTY_CONQUERED, peak.id in conqueredIds)
             }
         }
         style.getSourceAs<GeoJsonSource>(SOURCE_ID)?.setGeoJson(FeatureCollection.fromFeatures(features))
@@ -101,7 +110,7 @@ object PeakLayer {
             ?.getStringProperty(PROPERTY_ID)
     }
 
-    private fun peakIcon(density: Float): Bitmap {
+    private fun peakIcon(density: Float, fill: Int): Bitmap {
         val size = (20 * density).roundToInt()
         val stroke = 1.5f * density
         val triangle = Path().apply {
@@ -113,7 +122,7 @@ object PeakLayer {
         return createBitmap(size, size).also { bitmap ->
             val canvas = Canvas(bitmap)
             canvas.drawPath(triangle, Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = PEAK_COLOR
+                color = fill
                 style = Paint.Style.FILL
             })
             canvas.drawPath(triangle, Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -127,5 +136,8 @@ object PeakLayer {
 
     // Szary = szczyt do zdobycia (legenda z mockupu mapy).
     private const val PEAK_COLOR = 0xFF6B7280.toInt()
+
+    // Zielony = zdobyty (ten sam co "zdobyte" w aplikacji).
+    private const val CONQUERED_COLOR = 0xFF2F5D3A.toInt()
     private const val OUTLINE_COLOR = 0xFFFFFFFF.toInt()
 }

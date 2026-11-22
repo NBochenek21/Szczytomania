@@ -1,6 +1,7 @@
 package pl.szczytomania
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.auth.FirebaseAuth
 import pl.szczytomania.data.auth.AuthRepository
+import pl.szczytomania.notifications.Notifications
 import pl.szczytomania.ui.navigation.AppNavigation
 import pl.szczytomania.ui.screens.auth.AuthScreen
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
@@ -31,6 +33,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         ThemeSettings.load(this)
+        // Dotknięte powiadomienie: przejście do znajomego (AppNavigation).
+        if (savedInstanceState == null) Notifications.handleIntent(intent)
         setContent {
             val themeMode by ThemeSettings.mode.collectAsStateWithLifecycle()
             val dark = when (themeMode) {
@@ -48,5 +52,11 @@ class MainActivity : ComponentActivity() {
                 if (user == null) AuthScreen() else AppNavigation()
             }
         }
+    }
+
+    // Aplikacja była już otwarta, a użytkownik dotknął powiadomienia.
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        Notifications.handleIntent(intent)
     }
 }

@@ -22,6 +22,7 @@ import pl.szczytomania.data.repository.PeakRepository
 import pl.szczytomania.ui.screens.sets.SetsData
 import pl.szczytomania.ui.screens.sets.loadSetsData
 import java.util.Date
+import pl.szczytomania.notifications.PushTokens
 
 data class ProfileUiState(
     val nick: String = "",
@@ -69,7 +70,13 @@ class ProfileViewModel(
     }
 
     /** Po wylogowaniu MainActivity sama pokazuje ekran logowania. */
-    fun signOut() = authRepository.signOut()
+    // Najpierw token powiadomień – po wylogowaniu ten telefon nie dostaje już powiadomień tego konta.
+    fun signOut() {
+        viewModelScope.launch {
+            PushTokens.signOut()
+            authRepository.signOut()
+        }
+    }
 
     companion object {
         val Factory = viewModelFactory {

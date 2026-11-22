@@ -63,6 +63,17 @@ service cloud.firestore {
       // Usuwanie konta zrobimy w tygodniu 7 (razem z danymi i zdjęciami).
       allow delete: if false;
 
+      // Telefony do powiadomień push: users/{uid}/devices/{token FCM}. Widzi i zmienia je tylko
+      // właściciel – profil czyta każdy zalogowany, więc tokeny nie mogą być w nim. Powiadomienia
+      // wysyła Cloud Function (firebase/functions), która ma dostęp administratora.
+      match /devices/{token} {
+        allow read, delete: if isOwner();
+        allow create, update: if isOwner()
+          && token.size() <= 500
+          && request.resource.data.keys().hasOnly(['updatedAt'])
+          && request.resource.data.updatedAt == request.time;
+      }
+
       // Zdobycze użytkownika: users/{uid}/conquests/{conquestId}, jeden dokument na szczyt.
       match /conquests/{conquestId} {
         function conquestFields() {
