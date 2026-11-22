@@ -192,6 +192,15 @@
     <string name="sets_create">Utwórz własny zestaw</string>
     <string name="sets_own_preview_more">%1$s i %2$d kolejnych</string>
     <string name="set_detail_overline_own">Zestaw własny</string>
+    <string name="set_detail_overline_shared">Zestaw od znajomego</string>
+    <string name="sets_shared_with_me">Udostępnione Tobie</string>
+    <string name="sets_shared_with">Udostępniony: %1$s</string>
+    <string name="sets_shared_from">Od: %1$s</string>
+    <string name="sets_friend_unknown">znajomy</string>
+    <string name="set_share">Udostępnij znajomym</string>
+    <string name="set_share_title">Komu udostępnić zestaw?</string>
+    <string name="set_share_save">Zapisz</string>
+    <string name="set_share_no_friends">Nie masz jeszcze znajomych. Dodaj ich w menu → Znajomi.</string>
     <string name="set_delete">Usuń zestaw</string>
     <string name="set_delete_confirm_title">Usunąć zestaw „%1$s”?</string>
     <string name="set_delete_confirm_body">Zdobyte szczyty zostaną – usuwamy tylko listę.</string>

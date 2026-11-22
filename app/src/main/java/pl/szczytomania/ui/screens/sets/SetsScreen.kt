@@ -21,6 +21,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.material3.Icon
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -86,8 +88,23 @@ fun SetsScreen(
                 if (tab == 0) {
                     items(state.sets, key = { it.set.id }) { SetCard(it, onClick = { onSetClick(it.set.id) }) }
                 } else {
-                    items(state.own, key = { it.set.id }) { SetCard(it, onClick = { onSetClick(it.set.id) }, own = true) }
+                    items(state.own, key = { it.set.id }) {
+                        SetCard(it, onClick = { onSetClick(it.set.id) }, own = true, sharingLine = sharingLine(state, it.set.id))
+                    }
                     item { CreateSetButton(onCreateSet) }
+                    if (state.sharedWithMe.isNotEmpty()) {
+                        item {
+                            Text(
+                                stringResource(R.string.sets_shared_with_me).uppercase(),
+                                style = NumberStyles.tag,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = 8.dp),
+                            )
+                        }
+                        items(state.sharedWithMe, key = { it.set.id }) {
+                            SetCard(it, onClick = { onSetClick(it.set.id) }, own = true, sharingLine = sharingLine(state, it.set.id))
+                        }
+                    }
                     if (state.own.isEmpty()) {
                         item {
                             Text(
@@ -105,7 +122,7 @@ fun SetsScreen(
 
 /** Karta zestawu. Zestaw z plakietką (Korona Gór Polski) jest wyróżniony: opis i kwadraciki postępu. */
 @Composable
-private fun SetCard(progress: SetProgress, onClick: () -> Unit, own: Boolean = false) {
+private fun SetCard(progress: SetProgress, onClick: () -> Unit, own: Boolean = false, sharingLine: String? = null) {
     val featured = progress.set.badge != null
     Column(
         modifier = Modifier
@@ -139,6 +156,31 @@ private fun SetCard(progress: SetProgress, onClick: () -> Unit, own: Boolean = f
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+        if (sharingLine != null) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(painterResource(R.drawable.ic_person), contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    sharingLine,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 8.dp),
+                )
+            }
+        }
+    }
+}
+
+/** "Udostępniony: Jakub, Ola" na własnym zestawie albo "Od: Jakub" na zestawie od znajomego. */
+@Composable
+internal fun sharingLine(state: SetsUiState, setId: String): String? {
+    val sharing = state.sharing[setId] ?: return null
+    val friendName = stringResource(R.string.sets_friend_unknown)
+    return if (sharing.mine) {
+        sharing.sharedWith.takeIf { it.isNotEmpty() }
+            ?.joinToString(", ") { state.nick(it) ?: friendName }
+            ?.let { stringResource(R.string.sets_shared_with, it) }
+    } else {
+        stringResource(R.string.sets_shared_from, state.nick(sharing.ownerId) ?: friendName)
     }
 }
 

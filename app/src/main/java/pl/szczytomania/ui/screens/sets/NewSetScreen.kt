@@ -63,6 +63,8 @@ fun NewSetScreen(
     var query by rememberSaveable { mutableStateOf("") }
     // Kolejność wyboru – w takiej kolejności pokazujemy "pigułki".
     var selected by rememberSaveable { mutableStateOf(listOf<String>()) }
+    var share by rememberSaveable { mutableStateOf(false) }
+    var shareWith by rememberSaveable { mutableStateOf(listOf<String>()) }
     val peaksById = remember(state.allPeaks) { state.allPeaks.associateBy { it.id } }
     val results = remember(state.allPeaks, query) { PeakSearch.filter(state.allPeaks, query) }
     val green = SzczytomaniaTheme.colors.conquered
@@ -148,10 +150,18 @@ fun NewSetScreen(
                 DashedDivider(Modifier.padding(horizontal = 12.dp))
             }
         }
+        // "Udostępnij znajomym" (mockup 04): po zaznaczeniu – wybór znajomych.
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { share = !share }) {
+            Checkbox(checked = share, onCheckedChange = { share = it }, colors = CheckboxDefaults.colors(checkedColor = green))
+            Text(stringResource(R.string.set_share), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
+        }
+        if (share) {
+            FriendPicker(state.friends, shareWith) { uid -> shareWith = if (uid in shareWith) shareWith - uid else shareWith + uid }
+        }
         val valid = isValidSetName(name) && selected.isNotEmpty()
         Button(
             onClick = {
-                viewModel.createOwnSet(name, selected.toSet())
+                viewModel.createOwnSet(name, selected.toSet(), if (share) shareWith else emptyList())
                 onSaved()
             },
             enabled = valid,

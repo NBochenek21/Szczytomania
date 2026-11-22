@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pl.szczytomania.R
-import pl.szczytomania.data.firestore.OwnSetRepository
 import pl.szczytomania.ui.theme.SzczytomaniaTheme
 import pl.szczytomania.ui.components.CenteredMessage
 import pl.szczytomania.ui.components.DashedDivider
@@ -57,13 +56,21 @@ fun SetDetailScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val progress = state.set(setId)
     var filter by rememberSaveable { mutableStateOf(SetFilter.ALL) }
-    val own = OwnSetRepository.isOwn(setId)
+    val sharing = state.sharing[setId]
+    val mine = sharing?.mine == true
     var confirmDelete by remember { mutableStateOf(false) }
+    var sharingOpen by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).systemBarsPadding()) {
         ScreenHeader(
             title = progress?.set?.name.orEmpty(),
-            overline = stringResource(if (own) R.string.set_detail_overline_own else R.string.set_detail_overline),
+            overline = stringResource(
+                when {
+                    sharing == null -> R.string.set_detail_overline
+                    mine -> R.string.set_detail_overline_own
+                    else -> R.string.set_detail_overline_shared
+                },
+            ),
             navIcon = R.drawable.ic_arrow_back,
             navDescription = stringResource(R.string.back),
             onNavClick = onBack,
@@ -71,9 +78,18 @@ fun SetDetailScreen(
         )
         when {
             progress != null -> {
-                if (own) {
-                    TextButton(onClick = { confirmDelete = true }, modifier = Modifier.padding(start = 8.dp)) {
-                        Text(stringResource(R.string.set_delete), color = SzczytomaniaTheme.colors.trail)
+                sharingLine(state, setId)?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(start = 20.dp, bottom = 8.dp),
+                    )
+                }
+                if (mine) {
+                    Row(modifier = Modifier.padding(start = 8.dp)) {
+                        TextButton(onClick = { sharingOpen = true }) { Text(stringResource(R.string.set_share), color = SzczytomaniaTheme.colors.conquered) }
+                        TextButton(onClick = { confirmDelete = true }) { Text(stringResource(R.string.set_delete), color = SzczytomaniaTheme.colors.trail) }
                     }
                 }
                 SetDetailContent(progress, filter, { filter = it }, onPeakClick)
@@ -81,6 +97,18 @@ fun SetDetailScreen(
             state.isLoading -> LoadingBox()
             else -> CenteredMessage(stringResource(R.string.sets_load_error))
         }
+    }
+
+    if (sharingOpen && sharing != null) {
+        ShareSetDialog(
+            friends = state.friends,
+            initial = sharing.sharedWith,
+            onSave = {
+                viewModel.shareOwnSet(setId, it)
+                sharingOpen = false
+            },
+            onDismiss = { sharingOpen = false },
+        )
     }
 
     if (confirmDelete && progress != null) {
