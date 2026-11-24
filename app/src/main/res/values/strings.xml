@@ -284,5 +284,36 @@
     <string name="friend_remove_body">Przestaniecie widzieć nawzajem swoje zdobycze. Zaproszenie można potem wysłać ponownie.</string>
     <string name="friend_remove_confirm">Usuń</string>
 
+    <!-- Wyzwania -->
+    <string name="nav_challenges">Wyzwania</string>
+    <string name="challenges_new">Nowe wyzwanie</string>
+    <string name="challenges_empty">Rzuć znajomym wyzwanie: kto pierwszy zdobędzie cały zestaw albo kto zdobędzie więcej szczytów do wybranej daty.</string>
+    <string name="challenge_mode_first">Kto pierwszy</string>
+    <string name="challenge_mode_most">Kto więcej do daty</string>
+    <string name="challenge_until">Do %1$s</string>
+    <string name="challenge_running">Trwa</string>
+    <string name="challenge_finished">Zakończone</string>
+    <string name="challenge_winner">Wygrywa: %1$s</string>
+    <string name="challenge_you_win">Wygrywasz!</string>
+    <string name="challenge_my_place">Twoje miejsce: %1$d z %2$d</string>
+    <string name="challenge_since">Liczą się szczyty zdobyte od %1$s.</string>
+    <string name="challenge_ranking">Ranking</string>
+    <string name="challenge_you">Ty</string>
+    <string name="challenge_completed">cały zestaw %1$s</string>
+    <string name="challenge_unknown">Uczestnik</string>
+    <string name="challenge_gone">Tego wyzwania już nie ma.</string>
+    <string name="challenge_delete">Usuń wyzwanie</string>
+    <string name="challenge_delete_confirm_title">Usunąć wyzwanie „%1$s”?</string>
+    <string name="challenge_delete_confirm_body">Wyzwanie zniknie u wszystkich uczestników. Zdobyte szczyty zostaną.</string>
+    <string name="new_challenge_set">Zestaw</string>
+    <string name="new_challenge_mode">Rodzaj wyścigu</string>
+    <string name="new_challenge_length">Czas trwania</string>
+    <string name="new_challenge_week">Tydzień</string>
+    <string name="new_challenge_two_weeks">2 tygodnie</string>
+    <string name="new_challenge_month">Miesiąc</string>
+    <string name="new_challenge_friends">Znajomi (najwyżej 9)</string>
+    <string name="new_challenge_save">Rzuć wyzwanie</string>
+    <string name="new_challenge_save_empty">Wybierz zestaw i znajomych</string>
+
     <string name="osm_attribution">Dane o szczytach i mapy: © OpenStreetMap contributors</string>
 </resources>

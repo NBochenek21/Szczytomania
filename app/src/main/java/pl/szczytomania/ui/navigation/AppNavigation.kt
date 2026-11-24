@@ -58,7 +58,12 @@ import pl.szczytomania.notifications.PushTokens
 import pl.szczytomania.ui.components.Avatar
 import pl.szczytomania.ui.components.DashedDivider
 import pl.szczytomania.data.firestore.UserRepository
+import pl.szczytomania.data.repository.Challenges
 import pl.szczytomania.data.repository.Friends
+import pl.szczytomania.ui.screens.challenges.ChallengeDetailScreen
+import pl.szczytomania.ui.screens.challenges.ChallengesScreen
+import pl.szczytomania.ui.screens.challenges.ChallengesViewModel
+import pl.szczytomania.ui.screens.challenges.NewChallengeScreen
 import pl.szczytomania.ui.screens.conquest.ConquestScreen
 import pl.szczytomania.ui.screens.friends.FriendProfileScreen
 import pl.szczytomania.ui.screens.friends.FriendProfileViewModel
@@ -91,6 +96,7 @@ enum class AppScreen(@param:StringRes val label: Int, @param:DrawableRes val ico
     PEAKS(R.string.peaks_title, R.drawable.ic_list),
     MY_CONQUESTS(R.string.nav_my_conquests, R.drawable.ic_check_circle),
     FRIENDS(R.string.nav_friends, R.drawable.ic_friends),
+    CHALLENGES(R.string.nav_challenges, R.drawable.ic_flag),
     OFFLINE_MAPS(R.string.nav_offline_maps, R.drawable.ic_download),
     PROFILE(R.string.profile_title),
 }
@@ -109,6 +115,9 @@ fun AppNavigation() {
     var editingAccount by rememberSaveable { mutableStateOf(false) }
     // Otwarty profil znajomego (uid) w zakładce "Znajomi"; null = lista znajomych.
     var openFriendUid by rememberSaveable { mutableStateOf<String?>(null) }
+    // Otwarte wyzwanie (id) i zakładanie nowego w zakładce "Wyzwania".
+    var openChallengeId by rememberSaveable { mutableStateOf<String?>(null) }
+    var creatingChallenge by rememberSaveable { mutableStateOf(false) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     // Zachowuje stan ekranu (np. to, że już pytaliśmy o lokalizację) po przejściu na inny i z powrotem.
@@ -124,6 +133,9 @@ fun AppNavigation() {
     val invitations by Friends.incomingCount.collectAsStateWithLifecycle(initialValue = 0)
     // Konta sprzed wyszukiwania znajomych dostają nickLower i rezerwację nicku (raz, w tle).
     LaunchedEffect(uid) { uid?.let { UserRepository().ensureSearchable(it) } }
+    // Wyniki w wyzwaniach liczy telefon ze zdobyczy – aktualizujemy je, dopóki aplikacja jest otwarta.
+    val challengesViewModel: ChallengesViewModel = viewModel(key = "challenges-$uid", factory = ChallengesViewModel.Factory)
+    LaunchedEffect(uid) { uid?.let { Challenges.keepMyScoresUpToDate(it) } }
     // Zdobywanie szczytu: pełny ekran nad pozostałymi, otwierany z karty szczytu.
     val conquestViewModel: ConquestViewModel = viewModel(factory = ConquestViewModel.Factory)
     var conquering by rememberSaveable { mutableStateOf(false) }
@@ -139,6 +151,8 @@ fun AppNavigation() {
         openSetId = null
         creatingSet = false
         editingAccount = false
+        openChallengeId = null
+        creatingChallenge = false
         current = AppScreen.FRIENDS
         openFriendUid = target.friendUid
         drawerState.close()
@@ -158,12 +172,15 @@ fun AppNavigation() {
     BackHandler(enabled = drawerState.isOpen) {
         scope.launch { drawerState.close() }
     }
-    val subScreenOpen = openSetId != null || creatingSet || editingAccount || openFriendUid != null
+    val subScreenOpen = openSetId != null || creatingSet || editingAccount || openFriendUid != null ||
+        openChallengeId != null || creatingChallenge
     BackHandler(enabled = drawerState.isClosed && subScreenOpen) {
         openSetId = null
         creatingSet = false
         editingAccount = false
         openFriendUid = null
+        openChallengeId = null
+        creatingChallenge = false
     }
     BackHandler(enabled = drawerState.isClosed && current != AppScreen.MAP && !subScreenOpen) {
         current = AppScreen.MAP
@@ -184,6 +201,8 @@ fun AppNavigation() {
                     creatingSet = false
                     editingAccount = false
                     openFriendUid = null
+                    openChallengeId = null
+                    creatingChallenge = false
                     scope.launch { drawerState.close() }
                 },
             )
@@ -201,11 +220,14 @@ fun AppNavigation() {
         } else {
             val setId = openSetId
             val friendUid = openFriendUid
+            val challengeId = openChallengeId
             val key = when {
                 current == AppScreen.SETS && creatingSet -> "new-set"
                 current == AppScreen.SETS && setId != null -> "set/$setId"
                 current == AppScreen.PROFILE && editingAccount -> "account"
                 current == AppScreen.FRIENDS && friendUid != null -> "friend/$friendUid"
+                current == AppScreen.CHALLENGES && creatingChallenge -> "new-challenge"
+                current == AppScreen.CHALLENGES && challengeId != null -> "challenge/$challengeId"
                 else -> current.name
             }
             stateHolder.SaveableStateProvider(key) {
@@ -236,6 +258,16 @@ fun AppNavigation() {
                             onBack = { openFriendUid = null },
                             viewModel = viewModel(key = "friend-$uid-$friendUid", factory = FriendProfileViewModel.factory(friendUid)),
                         )
+                    }
+                    AppScreen.CHALLENGES -> when {
+                        creatingChallenge -> NewChallengeScreen(onClose = { creatingChallenge = false }, viewModel = challengesViewModel)
+                        challengeId == null -> ChallengesScreen(
+                            onMenuClick = openMenu,
+                            onChallengeClick = { openChallengeId = it },
+                            onCreate = { creatingChallenge = true },
+                            viewModel = challengesViewModel,
+                        )
+                        else -> ChallengeDetailScreen(challengeId, onBack = { openChallengeId = null }, viewModel = challengesViewModel)
                     }
                     AppScreen.OFFLINE_MAPS -> OfflineMapsScreen(onMenuClick = openMenu)
                     AppScreen.PROFILE -> if (editingAccount) {
