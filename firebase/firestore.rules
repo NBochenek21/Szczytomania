@@ -191,6 +191,48 @@ service cloud.firestore {
       allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;
     }
 
+    // Wyzwania (wyścigi) ze znajomymi: challenges/{id}. Widzą je tylko uczestnicy.
+    // Każdy uczestnik zapisuje tylko swój wynik w scores.{uid} – liczy go jego telefon ze zdobyczy.
+    match /challenges/{challengeId} {
+      function participant() {
+        return signedIn() && request.auth.uid in resource.data.participants;
+      }
+
+      allow read: if participant();
+
+      // Zakłada właściciel: zestaw (nazwa + szczyty), tryb, 2–10 uczestników (z nim samym),
+      // data końca tylko w wyścigu "kto więcej do daty" i zawsze w przyszłości, na start bez wyników.
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['ownerId', 'setName', 'peakIds', 'mode', 'participants', 'createdAt', 'endsAt', 'scores'])
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.setName is string
+        && request.resource.data.setName.size() >= 1
+        && request.resource.data.setName.size() <= 60
+        && request.resource.data.peakIds is list
+        && request.resource.data.peakIds.size() >= 1
+        && request.resource.data.peakIds.size() <= 300
+        && request.resource.data.participants is list
+        && request.resource.data.participants.size() >= 2
+        && request.resource.data.participants.size() <= 10
+        && request.auth.uid in request.resource.data.participants
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.scores == {}
+        && ((request.resource.data.mode == 'first' && request.resource.data.endsAt == null)
+          || (request.resource.data.mode == 'most' && request.resource.data.endsAt is timestamp
+            && request.resource.data.endsAt > request.time));
+
+      // Uczestnik zmienia tylko własny wynik: liczba zdobytych szczytów zestawu i czas ukończenia.
+      allow update: if participant()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['scores'])
+        && request.resource.data.scores.diff(resource.data.scores).affectedKeys().hasOnly([request.auth.uid])
+        && request.resource.data.scores[request.auth.uid].keys().hasOnly(['done', 'completedAt'])
+        && request.resource.data.scores[request.auth.uid].done is int
+        && request.resource.data.scores[request.auth.uid].done >= 0
+        && request.resource.data.scores[request.auth.uid].done <= resource.data.peakIds.size();
+
+      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+    }
+
     // Wszystko inne pozostaje zablokowane, dopóki nie dopiszemy reguł.
   }
 }

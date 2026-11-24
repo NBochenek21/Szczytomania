@@ -1,5 +1,9 @@
 package pl.szczytomania.ui.screens.conquest
 
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.Animatable
 import androidx.camera.core.ImageCapture
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -349,6 +353,7 @@ private fun ConquestSuccess(summary: ConquestSummary, onClose: () -> Unit, onMyC
             color = SzczytomaniaTheme.colors.trail,
             size = 220.dp,
             ringText = stringResource(if (peak.kgp) R.string.stamp_ring_kgp else R.string.stamp_ring),
+            modifier = Modifier.stampIn(),
         )
         Text(stringResource(R.string.success_title), style = MaterialTheme.typography.displaySmall, color = MaterialTheme.colorScheme.onBackground)
         Text(
@@ -383,3 +388,24 @@ private fun ConquestSuccess(summary: ConquestSummary, onClose: () -> Unit, onMyC
         }
     }
 }
+
+/**
+ * Animacja "przybicia pieczątki": pieczątka spada z góry powiększona i lekko obrócona,
+ * a potem sprężyście dociska się do kartki. Odtwarza się raz, przy wejściu na ekran.
+ */
+@Composable
+private fun Modifier.stampIn(): Modifier {
+    val progress = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        progress.animateTo(1f, spring(dampingRatio = 0.45f, stiffness = Spring.StiffnessMediumLow))
+    }
+    return graphicsLayer {
+        val p = progress.value
+        val scale = 2.2f - 1.2f * p
+        scaleX = scale
+        scaleY = scale
+        rotationZ = -18f * (1f - p)
+        alpha = (p * 2.5f).coerceIn(0f, 1f)
+    }
+}
+
