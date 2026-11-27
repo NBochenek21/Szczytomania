@@ -86,6 +86,7 @@ Reguły bezpieczeństwa są w `firebase/firestore.rules`. Po każdej zmianie trz
 | `users/{uid}` – profil | `nick` (3–20 znaków: litery bez polskich znaków, cyfry, `.` `_` `-`), `nickLower` (nick małymi literami – do wyszukiwania), `photoUrl` (na razie `null`), `createdAt` (czas serwera) |
 | `nicks/{nick małymi literami}` – zajęty nick | `uid` właściciela |
 | `friendships/{uid1_uid2}` – znajomość, jedna na parę osób | `users` (oba uid), `from` (kto zaprosił), `to`, `status` (`pending` – zaproszenie, `accepted` – znajomi), `createdAt`, `acceptedAt` (czas serwera) |
+| `challenges/{id}` – wyzwanie (wyścig na zestaw) | `ownerId`, `setName`, `peakIds` (kopia szczytów zestawu), `mode` (`first` – kto pierwszy, `most` – kto więcej do daty), `participants` (właściciel na pierwszym miejscu i 1–9 jego znajomych, bez powtórzeń), `createdAt` (start, czas serwera), `endsAt` (tylko w `most`, najwyżej ~rok naprzód), `scores.{uid}` = `{done, completedAt}` – każdy zapisuje tylko swój wynik |
 | `users/{uid}/conquests/{id}` – zdobycz, jedna na szczyt | `peakId` (id z pliku szczytów), `conqueredAt` (czas z telefonu), `serverTime` (czas serwera), `lat`, `lon`, `accuracy` (odczyt GPS, dokładność w m), `photoUrl` (link do zdjęcia, do wysłania `null`), `photoStatus` (`pending` – zdjęcie czeka na wysłanie, `uploaded` – wysłane) |
 
 - `{id}` zdobyczy to `peakId` z `_` zamiast `/` (np. `node_4366169405`), bo ukośnik w Firestore oddziela
